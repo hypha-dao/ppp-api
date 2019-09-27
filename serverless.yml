@@ -1,0 +1,240 @@
+# NOTE: update this with your service name
+service: ds-contact-api
+
+# Use the serverless-webpack plugin to transpile ES6
+plugins:
+  - serverless-webpack
+  - serverless-offline
+
+# serverless-webpack configuration
+# Enable auto-packing of external modules
+custom:
+  # Our stage is based on what is passed in when running serverless
+  # commands. Or fallsback to what we have set in the provider section.
+  stage: ${opt:stage, self:provider.stage}
+  # Set the table name here so we can use it while testing locally
+  contactsTableName: ${self:custom.stage}-contacts
+  messagesTableName: ${self:custom.stage}-messages
+  chatsTableName: ${self:custom.stage}-chats
+  appsTableName: ${self:custom.stage}-apps
+  userPoolName: ${self:custom.stage}-comm-profile-service
+  userPoolClientName: ${self:custom.stage}-comm-profile-app
+  # Set our DynamoDB throughput for prod and all other non-prod stages.
+  tableThroughputs:
+    prod: 5
+    default: 1
+  tableThroughput: ${self:custom.tableThroughputs.${self:custom.stage}, self:custom.tableThroughputs.default}
+  # Load our webpack config
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+  # Load our secret environment variables based on the current stage.
+  # Fallback to default if it is not in prod.
+  environment: ${file(env.yml):${self:custom.stage}, file(env.yml):default}
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  stage: dev
+  region: us-east-1
+  apiKeys:
+    - ${self:custom.stage}-ds-contact
+    - ${self:custom.stage}-trada
+    - ${self:custom.stage}-gyftie
+  usagePlan:
+    quota:
+      limit: 1000
+      period: DAY
+    throttle:
+      burstLimit: 200
+      rateLimit: 100
+
+  environment:
+    contactsTableName: ${self:custom.contactsTableName}
+    messagesTableName: ${self:custom.messagesTableName}
+    chatsTableName: ${self:custom.chatsTableName}
+    appsTableName: ${self:custom.appsTableName}
+    twilioAccountSid: ${self:custom.environment.twilioAccountSid}
+    twilioAuthToken: ${self:custom.environment.twilioAuthToken}
+    msgPrefix: ${self:custom.environment.msgPrefix}
+    sendGridKey: ${self:custom.environment.sendGridKey}
+    userPoolName: ${self:custom.userPoolName}
+    userPoolClientName: ${self:custom.userPoolClientName}
+    historyEndpoint: ${self:custom.environment.historyEndpoint}
+    authUtilContract: ${self:custom.environment.authUtilContract}
+    authRetries: ${self:custom.environment.authRetries}
+    startAuthTimeout: ${self:custom.environment.startAuthTimeout}
+    minAuthTimeout: ${self:custom.environment.minAuthTimeout}
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:BatchGetItem
+        - dynamodb:BatchWriteItem
+        - dynamodb:TransactWrite
+        - dynamodb:TransactGet
+      Resource:
+        - "Fn::GetAtt": [ ContactsTable, Arn ]
+        - "Fn::GetAtt": [ MessagesTable, Arn ]
+        - "Fn::GetAtt": [ ChatsTable, Arn ]
+        - "Fn::GetAtt": [ AppsTable, Arn ]
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+      Resource: 
+        - { "Fn::Join": [ "/", [ 
+            { "Fn::GetAtt": ["ContactsTable", "Arn" ] }, "index", "*" 
+          ]]}
+        - { "Fn::Join": [ "/", [ 
+            { "Fn::GetAtt": ["MessagesTable", "Arn" ] }, "index", "*" 
+          ]]}
+        - { "Fn::Join": [ "/", [ 
+            { "Fn::GetAtt": ["ChatsTable", "Arn" ] }, "index", "*" 
+          ]]}
+        - { "Fn::Join": [ "/", [ 
+            { "Fn::GetAtt": ["AppsTable", "Arn" ] }, "index", "*" 
+          ]]}
+    - Effect: Allow
+      Action:
+        - secretsmanager:Describe*
+        - secretsmanager:Get*
+        - secretsmanager:List
+      Resource: "*"
+    - Effect: Allow
+      Action:
+        - cognito-idp:ListUsers
+      Resource: "*"
+    
+
+functions:
+  register:
+    handler: register.main
+    events:
+      - http:
+          path: register
+          method: post
+          authorizer: aws_iam
+          cors: true
+
+  sendmsg:
+    handler: sendmsg.main
+    events:
+      - http:
+          path: send-msg
+          method: post
+          authorizer: aws_iam
+          cors: true
+
+  sendmsgprv:
+    handler: sendmsg.main
+    events:
+      - http:
+          path: send-msg-prv
+          method: post
+          private: true
+          cors: true
+    
+  getappdata:
+    handler: getappdata.main
+    events:
+      - http:
+          path: get-app-data
+          method: post
+          authorizer: aws_iam
+          cors: true
+
+  getmessages:
+    handler: getmessages.main
+    events:
+      - http:
+          path: get-messages
+          method: post
+          authorizer: aws_iam
+          cors: true  
+
+  verifysms:
+    handler: verifyotp.sms
+    events:
+      - http:
+          path: verify-sms
+          method: post
+          authorizer: aws_iam
+          cors: true  
+
+  verifyemail:
+    handler: verifyotp.email
+    events:
+      - http:
+          path: verify-email
+          method: post
+          authorizer: aws_iam
+          cors: true
+          
+  getcontact:
+    handler: getcontact.main
+    events:
+      - http:
+          path: get-contact
+          method: post
+          authorizer: aws_iam
+          cors: true
+  getchats:
+    handler: getchats.main
+    events:
+      - http:
+          path: get-chats
+          method: post
+          authorizer: aws_iam
+          cors: true
+  search-contacts:
+    handler: search-contacts.main
+    events:
+      - http:
+          path: search-contacts
+          method: post
+          authorizer: aws_iam
+          cors: true
+  pre-sign-up:
+    handler: pre-sign-up.main
+    events:
+      - cognitoUserPool:
+          pool: CommProfileServicePool1
+          trigger: PreSignUp
+  create-auth-challenge:
+    handler: create-auth-challenge.main
+    events:
+      - cognitoUserPool:
+          pool: CommProfileServicePool1
+          trigger: CreateAuthChallenge
+  verify-auth-challenge:
+    handler: verify-auth-challenge.main
+    events:
+      - cognitoUserPool:
+          pool: CommProfileServicePool1
+          trigger: VerifyAuthChallengeResponse
+  define-auth-challenge:
+    handler: define-auth-challenge.main
+    events:
+      - cognitoUserPool:
+          pool: CommProfileServicePool1
+          trigger: DefineAuthChallenge
+          
+resources:
+  # Congnito User Pool
+  - ${file(resources/cognito-user-pool.yml)}
+  # Congnito Identity Pool
+  - ${file(resources/cognito-identity-pool.yml)}
+  # API Gateway Errors
+  - ${file(resources/api-gateway-errors.yml)}
+  # DynamoDB
+  - ${file(resources/contacts-table.yml)}
+  - ${file(resources/messages-table.yml)}
+  - ${file(resources/apps-table.yml)}
+  - ${file(resources/chats-table.yml)}
+  # S3 Bucket
+  - ${file(resources/s3-bucket.yml)}

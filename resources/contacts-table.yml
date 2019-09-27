@@ -1,0 +1,31 @@
+Resources:
+  ContactsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:custom.contactsTableName}
+      AttributeDefinitions:
+        - AttributeName: appEosAccount
+          AttributeType: S
+        - AttributeName: eosAccount
+          AttributeType: S
+        - AttributeName: appId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: appEosAccount
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: GSI_appId_eosAccount
+          KeySchema:
+            - AttributeName: appId
+              KeyType: HASH
+            - AttributeName: eosAccount
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: ${self:custom.tableThroughput}
+            WriteCapacityUnits: ${self:custom.tableThroughput}
+      # Set the capacity based on the stage
+      ProvisionedThroughput:
+        ReadCapacityUnits: ${self:custom.tableThroughput}
+        WriteCapacityUnits: ${self:custom.tableThroughput}

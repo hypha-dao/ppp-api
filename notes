@@ -1,0 +1,8 @@
+aws dynamodb query \
+--table-name dev-contacts \
+--index-name "GSI_eosAccount" \
+--key-condition-expression "eosAccount = :eosAccount" \
+--filter-expression "appId = :appId" \
+--expression-attribute-values '{
+   ":eosAccount": {"S": "zombiejigsaw"},
+   ":appId": {"S": "gyftie"}}' 
