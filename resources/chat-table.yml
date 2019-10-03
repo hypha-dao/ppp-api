@@ -1,0 +1,46 @@
+Resources:
+  ChatTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:custom.chatTableName}
+      AttributeDefinitions:
+        - AttributeName: appEosAccount
+          AttributeType: S
+        - AttributeName: counterPartyAccount
+          AttributeType: S
+        - AttributeName: eosAccount
+          AttributeType: S
+        - AttributeName: sentAt
+          AttributeType: N
+      KeySchema:
+        - AttributeName: appEosAccount
+          KeyType: HASH
+        - AttributeName: counterPartyAccount
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: GSI_appEosAccount_sentAt
+          KeySchema:
+            - AttributeName: appEosAccount
+              KeyType: HASH
+            - AttributeName: sentAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: ${self:custom.tableThroughput}
+            WriteCapacityUnits: ${self:custom.tableThroughput}
+        - IndexName: GSI_eosAccount_sentAt
+          KeySchema:
+            - AttributeName: eosAccount
+              KeyType: HASH
+            - AttributeName: sentAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: ${self:custom.tableThroughput}
+            WriteCapacityUnits: ${self:custom.tableThroughput}
+      # Set the capacity based on the stage
+      ProvisionedThroughput:
+        ReadCapacityUnits: ${self:custom.tableThroughput}
+        WriteCapacityUnits: ${self:custom.tableThroughput}

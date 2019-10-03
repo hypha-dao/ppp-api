@@ -1,5 +1,6 @@
-import AWS from "aws-sdk";
-import { Util } from "../util";
+import assert from 'assert';
+import AWS from 'aws-sdk';
+import { Util } from '../util';
 
 AWS.config.update({ region: 'us-east-1' });
 
@@ -82,15 +83,19 @@ class BaseDao {
         return this.transact('transactWrite', items);
     }
 
-    async transactPut(items) {
-        items = items.map((item) => {
+    _toPutItems(items) {
+        return items.map((item) => {
             return {
                 Put: {
+                    TableName: this.tableName,
                     Item: item,
                 },
             };
         });
-        return this.transactWrite(items);
+    }
+
+    async transactPut(items) {
+        return this.transactWrite(this._toPutItems(items));
     }
 
     async transactGet(items) {
@@ -118,19 +123,57 @@ class BaseDao {
         return results;
     }
 
-    async batchGetByHash(prop, keys, queryOpts = {}) {
-        keys = Util.removeDuplicates(keys);
-        keys = keys.map((key) => { return { [prop]: key } });
-        return this.batchGet(keys, queryOpts);
+    _toHashRange(keys) {
+        const { hashProp, rangeProp } = this.idProps;
+
+        if (!keys.length || keys[0][hashProp]) {
+            return keys;
+        }
+        const pKeys = [];
+        for (let key of keys) {
+            key = Array.isArray(key) ? key : [key];
+            let [hash, range] = key;
+            if (rangeProp) {
+                assert(range, 'Key must include values for hash and range props');
+                hash = Array.isArray(hash) ? hash : [hash];
+                range = Array.isArray(range) ? range : [range];
+                let singleProp;
+                let multiProp;
+                let singleValue;
+                let multiValue;
+                if (hash.length > 1) {
+                    multiProp = hashProp;
+                    multiValue = hash;
+                    singleProp = rangeProp;
+                    singleValue = range[0];
+                } else {
+                    multiProp = rangeProp;
+                    multiValue = range;
+                    singleProp = hashProp;
+                    singleValue = hash[0];
+                }
+                for (const val of multiValue) {
+                    pKeys.push({
+                        [singleProp]: singleValue,
+                        [multiProp]: val,
+                    });
+                }
+            } else {
+                pKeys.push({ [hashProp]: hash });
+            }
+        }
+        return pKeys;
     }
 
+
     async batchGet(keys, queryOpts = {}) {
-        queryOpts.Keys = keys;
+        queryOpts.Keys = this._toHashRange(keys);
         return this._batchGet({ [this.tableName]: queryOpts });
     }
 
     async transact(op, items) {
         this._iterateTransactItems(items, (item) => this._preProcessQuery(item));
+        console.log('Transact items:', JSON.stringify(items, null, 2));
         return this.db[op]({ TransactItems: items }).promise();
     }
 

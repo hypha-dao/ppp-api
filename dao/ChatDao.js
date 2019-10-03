@@ -1,17 +1,17 @@
 import BaseDao from "./BaseDao";
-import { ContactDao } from '.';
+import { ProfileDao } from '.';
 
 class ChatDao extends BaseDao {
     constructor() {
         super(
-            process.env.chatsTableName,
+            process.env.chatTableName,
             {
                 hashProp: 'eosAccount',
                 rangeProp: 'counterPartyAccount'
             },
             false
         );
-        this.contactDao = new ContactDao();
+        this.profileDao = new ProfileDao();
     }
 
     async findByEOSAccount(
@@ -24,7 +24,7 @@ class ChatDao extends BaseDao {
 
         const appEosAccount = this.appAttribute(appId, eosAccount);
         const readParams = {
-            IndexName: 'GSI_appEosAccountSentAt',
+            IndexName: 'GSI_appEosAccount_sentAt',
             KeyConditionExpression: 'appEosAccount = :appEosAccount',
             ExpressionAttributeValues: {
                 ':appEosAccount': appEosAccount,
@@ -35,50 +35,28 @@ class ChatDao extends BaseDao {
         const results = await this.query(readParams, limit, lastEvaluatedKey);
 
         if (hydrateUser) {
-            results.items = await this.contactDao.hydrateWithUser(appId, results.items, 'counterPartyAccount');
+            results.items = await this.profileDao.hydrateWithUser(appId, results.items, 'counterPartyAccount');
         }
         return results;
     }
 
-    getChatItemsFromMessage(messageRecord) {
+    getChatItems(chatRecords) {
         const {
-            appId,
-            eosAccount,
-            senderAccount,
-            message,
-            sentAt
-        } = messageRecord;
-
-        return [
-            {
-                Put: {
-                    TableName: this.tableName,
-                    Item: {
-                        appEosAccount: this.appAttribute(appId, eosAccount),
-                        eosAccount,
-                        appId,
-                        sentAt,
-                        message,
-                        counterPartyAccount: senderAccount,
-                        isSender: false,
-                    }
-                },
-            },
-            {
-                Put: {
-                    TableName: this.tableName,
-                    Item: {
-                        appEosAccount: this.appAttribute(appId, senderAccount),
-                        eosAccount: senderAccount,
-                        appId,
-                        sentAt,
-                        message,
-                        counterPartyAccount: eosAccount,
-                        isSender: true,
-                    }
-                }
+            receiver,
+            sender,
+            receiver: {
+                appId,
+                eosAccount,
+                counterPartyAccount: senderAccount,
             }
-        ];
+        } = chatRecords;
+
+        receiver.appEosAccount = this.appAttribute(appId, eosAccount);
+        sender.appEosAccount = this.appAttribute(appId, senderAccount);
+        return this._toPutItems([
+            receiver,
+            sender,
+        ]);
     }
 }
 

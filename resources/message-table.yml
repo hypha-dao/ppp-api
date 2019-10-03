@@ -1,0 +1,44 @@
+Resources:
+  MessageTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:custom.messageTableName}
+      AttributeDefinitions:
+        - AttributeName: messageKey
+          AttributeType: S
+        - AttributeName: appParticipants
+          AttributeType: S
+        - AttributeName: participants
+          AttributeType: S
+        - AttributeName: sentAt
+          AttributeType: N
+      KeySchema:
+        - AttributeName: messageKey
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: GSI_appParticipants_sentAt
+          KeySchema:
+            - AttributeName: appParticipants
+              KeyType: HASH
+            - AttributeName: sentAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: ${self:custom.tableThroughput}
+            WriteCapacityUnits: ${self:custom.tableThroughput}
+        - IndexName: GSI_participants_sentAt
+          KeySchema:
+            - AttributeName: participants
+              KeyType: HASH
+            - AttributeName: sentAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: ${self:custom.tableThroughput}
+            WriteCapacityUnits: ${self:custom.tableThroughput}
+      # Set the capacity based on the stage
+      ProvisionedThroughput:
+        ReadCapacityUnits: ${self:custom.tableThroughput}
+        WriteCapacityUnits: ${self:custom.tableThroughput}

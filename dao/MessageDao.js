@@ -1,11 +1,10 @@
-import uuid from "uuid";
 import BaseDao from "./BaseDao";
 import ChatDao from './ChatDao';
 
 class MessageDao extends BaseDao {
     constructor() {
         super(
-            process.env.messagesTableName,
+            process.env.messageTableName,
             'messageKey',
             false
         );
@@ -28,7 +27,7 @@ class MessageDao extends BaseDao {
         const appParticipants = this.participantsAttribute(appId, eosAccount1, eosAccount2);
         console.log('getMessagesByParticipants- appParticipants: ', appParticipants);
         const readParams = {
-            IndexName: 'GSI_appParticipants',
+            IndexName: 'GSI_appParticipants_sentAt',
             KeyConditionExpression: 'appParticipants = :appParticipants',
             ExpressionAttributeValues: {
                 ':appParticipants': appParticipants,
@@ -39,23 +38,26 @@ class MessageDao extends BaseDao {
         return await this.query(readParams, limit, lastEvaluatedKey);
     }
 
-    async save(messageRecord) {
-        const { appId, eosAccount, senderAccount } = messageRecord;
-        messageRecord.messageKey = uuid.v1();
-        messageRecord.sentAt = Date.now();
-        messageRecord.appParticipants = this.participantsAttribute(appId, eosAccount, senderAccount);
+    async save(records) {
+        const {
+            msgRecord,
+            chatRecords,
+            msgRecord: {
+                appId,
+                eosAccount,
+                senderAccount,
+            } } = records;
+        msgRecord.appParticipants = this.participantsAttribute(appId, eosAccount, senderAccount);
 
-        let transactItems = this.chatDao.getChatItemsFromMessage(messageRecord);
+        let transactItems = this.chatDao.getChatItems(chatRecords);
         transactItems.push({
             Put: {
-                Item: messageRecord
+                Item: msgRecord
             },
         });
-        console.log("transact items : ", transactItems);
         await this.transactWrite(transactItems);
-        return messageRecord.messageKey;
+        return msgRecord.messageKey;
     }
-
 }
 
 export default MessageDao;

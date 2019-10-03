@@ -1,27 +1,21 @@
 Resources:
-  ChatsTable:
+  AppTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: ${self:custom.chatsTableName}
+      TableName: ${self:custom.appTableName}
       AttributeDefinitions:
-        - AttributeName: appEosAccount
+        - AttributeName: appId
           AttributeType: S
-        - AttributeName: counterPartyAccount
-          AttributeType: S
-        - AttributeName: sentAt
-          AttributeType: N
+        - AttributeName: domain
+          AttributeType: S         
       KeySchema:
-        - AttributeName: appEosAccount
+        - AttributeName: appId
           KeyType: HASH
-        - AttributeName: counterPartyAccount
-          KeyType: RANGE
       GlobalSecondaryIndexes:
-        - IndexName: GSI_appEosAccountSentAt
+        - IndexName: GSI_domain
           KeySchema:
-            - AttributeName: appEosAccount
+            - AttributeName: domain
               KeyType: HASH
-            - AttributeName: sentAt
-              KeyType: RANGE
           Projection:
             ProjectionType: ALL
           ProvisionedThroughput:

@@ -3,8 +3,8 @@ import { commApi } from "./";
 
 class VerificationApi {
 
-    constructor(contactDao) {
-        this.contactDao = contactDao;
+    constructor(profileDao) {
+        this.profileDao = profileDao;
     }
 
     static async sendSmsOtp(smsNumber) {
@@ -19,26 +19,26 @@ class VerificationApi {
         return otp;
     }
 
-    static updateEmail(contactRecord, newEmailAddress) {
-        console.log(" updateEmail, contactRecord  : ", contactRecord);
+    static updateEmail(profile, newEmailAddress) {
+        console.log(" updateEmail, profile  : ", profile);
         console.log(" updateEmail, newEmailAddress    : ", newEmailAddress);
 
-        if (newEmailAddress && newEmailAddress != contactRecord.emailAddress) {
-            contactRecord.emailVerified = 0;
-            contactRecord.emailAddress = newEmailAddress;
+        if (newEmailAddress && newEmailAddress != profile.emailAddress) {
+            profile.emailVerified = 0;
+            profile.emailAddress = newEmailAddress;
             console.log(" new email: ", newEmailAddress);
             return true;
         }
         return false;
     }
 
-    static updateSms(contactRecord, newSmsNumber) {
-        console.log(" updateSms, contactRecord  : ", contactRecord);
+    static updateSms(profile, newSmsNumber) {
+        console.log(" updateSms, profile  : ", profile);
         console.log(" updateSms, newSmsNumber    : ", newSmsNumber);
 
-        if (newSmsNumber && newSmsNumber != contactRecord.smsNumber) {
-            contactRecord.smsVerified = 0;
-            contactRecord.smsNumber = newSmsNumber;
+        if (newSmsNumber && newSmsNumber != profile.smsNumber) {
+            profile.smsVerified = 0;
+            profile.smsNumber = newSmsNumber;
             console.log(" smsNumber    : ", newSmsNumber);
             return true;
         }
@@ -46,23 +46,23 @@ class VerificationApi {
     }
 
     async verifySmsOtp(appId, eosAccount, smsOtp) {
-        const contactRecord = await this.contactDao.getByEOSAccount(appId, eosAccount);
+        const profile = await this.profileDao.getByEOSAccount(appId, eosAccount);
 
-        if (smsOtp !== contactRecord.smsOtp.toString()) {
+        if (smsOtp != profile.smsOtp.toString()) {
             throw new Error(`Invalid SMS Verify Code: ${smsOtp}`);
         }
-        contactRecord.smsVerified = Date.now();
-        await this.contactDao.save(contactRecord);
+        profile.smsVerified = Date.now();
+        await this.profileDao.save(profile);
     }
 
     async verifyEmailOtp(appId, eosAccount, emailOtp) {
-        const contactRecord = await this.contactDao.getByEOSAccount(appId, eosAccount);
+        const profile = await this.profileDao.getByEOSAccount(appId, eosAccount);
 
-        if (emailOtp !== contactRecord.emailOtp.toString()) {
+        if (emailOtp != profile.emailOtp.toString()) {
             throw new Error(`Invalid Email Verify Code: ${emailOtp}`);
         }
-        contactRecord.emailVerified = Date.now();
-        await this.contactDao.save(contactRecord);
+        profile.emailVerified = Date.now();
+        await this.profileDao.save(profile);
     }
 
 }

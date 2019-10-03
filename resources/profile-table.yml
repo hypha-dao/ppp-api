@@ -1,18 +1,18 @@
 Resources:
-  ContactsTable:
+  ProfileTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: ${self:custom.contactsTableName}
+      TableName: ${self:custom.profileTableName}
       AttributeDefinitions:
-        - AttributeName: appEosAccount
-          AttributeType: S
         - AttributeName: eosAccount
           AttributeType: S
         - AttributeName: appId
           AttributeType: S
       KeySchema:
-        - AttributeName: appEosAccount
+        - AttributeName: eosAccount
           KeyType: HASH
+        - AttributeName: appId
+          KeyType: RANGE
       GlobalSecondaryIndexes:
         - IndexName: GSI_appId_eosAccount
           KeySchema:

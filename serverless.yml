@@ -1,5 +1,5 @@
 # NOTE: update this with your service name
-service: ds-contact-api
+service: ppp-api
 
 # Use the serverless-webpack plugin to transpile ES6
 plugins:
@@ -13,12 +13,12 @@ custom:
   # commands. Or fallsback to what we have set in the provider section.
   stage: ${opt:stage, self:provider.stage}
   # Set the table name here so we can use it while testing locally
-  contactsTableName: ${self:custom.stage}-contacts
-  messagesTableName: ${self:custom.stage}-messages
-  chatsTableName: ${self:custom.stage}-chats
-  appsTableName: ${self:custom.stage}-apps
-  userPoolName: ${self:custom.stage}-comm-profile-service
-  userPoolClientName: ${self:custom.stage}-comm-profile-app
+  profileTableName: ${self:custom.stage}-profile
+  messageTableName: ${self:custom.stage}-message
+  chatTableName: ${self:custom.stage}-chat
+  appTableName: ${self:custom.stage}-app
+  userPoolName: ${self:custom.stage}-ppp-api
+  userPoolClientName: ${self:custom.stage}-ppp-api
   # Set our DynamoDB throughput for prod and all other non-prod stages.
   tableThroughputs:
     prod: 5
@@ -38,9 +38,7 @@ provider:
   stage: dev
   region: us-east-1
   apiKeys:
-    - ${self:custom.stage}-ds-contact
-    - ${self:custom.stage}-trada
-    - ${self:custom.stage}-gyftie
+    - ${self:custom.stage}-ppp-trada
   usagePlan:
     quota:
       limit: 1000
@@ -50,10 +48,10 @@ provider:
       rateLimit: 100
 
   environment:
-    contactsTableName: ${self:custom.contactsTableName}
-    messagesTableName: ${self:custom.messagesTableName}
-    chatsTableName: ${self:custom.chatsTableName}
-    appsTableName: ${self:custom.appsTableName}
+    profileTableName: ${self:custom.profileTableName}
+    messageTableName: ${self:custom.messageTableName}
+    chatTableName: ${self:custom.chatTableName}
+    appTableName: ${self:custom.appTableName}
     twilioAccountSid: ${self:custom.environment.twilioAccountSid}
     twilioAuthToken: ${self:custom.environment.twilioAuthToken}
     msgPrefix: ${self:custom.environment.msgPrefix}
@@ -79,25 +77,25 @@ provider:
         - dynamodb:TransactWrite
         - dynamodb:TransactGet
       Resource:
-        - "Fn::GetAtt": [ ContactsTable, Arn ]
-        - "Fn::GetAtt": [ MessagesTable, Arn ]
-        - "Fn::GetAtt": [ ChatsTable, Arn ]
-        - "Fn::GetAtt": [ AppsTable, Arn ]
+        - "Fn::GetAtt": [ ProfileTable, Arn ]
+        - "Fn::GetAtt": [ MessageTable, Arn ]
+        - "Fn::GetAtt": [ ChatTable, Arn ]
+        - "Fn::GetAtt": [ AppTable, Arn ]
     - Effect: Allow
       Action:
         - dynamodb:Query
       Resource: 
         - { "Fn::Join": [ "/", [ 
-            { "Fn::GetAtt": ["ContactsTable", "Arn" ] }, "index", "*" 
+            { "Fn::GetAtt": ["ProfileTable", "Arn" ] }, "index", "*" 
           ]]}
         - { "Fn::Join": [ "/", [ 
-            { "Fn::GetAtt": ["MessagesTable", "Arn" ] }, "index", "*" 
+            { "Fn::GetAtt": ["MessageTable", "Arn" ] }, "index", "*" 
           ]]}
         - { "Fn::Join": [ "/", [ 
-            { "Fn::GetAtt": ["ChatsTable", "Arn" ] }, "index", "*" 
+            { "Fn::GetAtt": ["ChatTable", "Arn" ] }, "index", "*" 
           ]]}
         - { "Fn::Join": [ "/", [ 
-            { "Fn::GetAtt": ["AppsTable", "Arn" ] }, "index", "*" 
+            { "Fn::GetAtt": ["AppTable", "Arn" ] }, "index", "*" 
           ]]}
     - Effect: Allow
       Action:
@@ -121,8 +119,8 @@ functions:
           authorizer: aws_iam
           cors: true
 
-  sendmsg:
-    handler: sendmsg.main
+  send-msg:
+    handler: send-msg.main
     events:
       - http:
           path: send-msg
@@ -130,8 +128,8 @@ functions:
           authorizer: aws_iam
           cors: true
 
-  sendmsgprv:
-    handler: sendmsg.main
+  send-msg-prv:
+    handler: send-msg.main
     events:
       - http:
           path: send-msg-prv
@@ -139,17 +137,17 @@ functions:
           private: true
           cors: true
     
-  getappdata:
-    handler: getappdata.main
+  get-profiles:
+    handler: get-profiles.main
     events:
       - http:
-          path: get-app-data
+          path: get-profiles
           method: post
           authorizer: aws_iam
           cors: true
 
-  getmessages:
-    handler: getmessages.main
+  get-messages:
+    handler: get-messages.main
     events:
       - http:
           path: get-messages
@@ -157,8 +155,8 @@ functions:
           authorizer: aws_iam
           cors: true  
 
-  verifysms:
-    handler: verifyotp.sms
+  verify-sms:
+    handler: verify-otp.sms
     events:
       - http:
           path: verify-sms
@@ -166,8 +164,8 @@ functions:
           authorizer: aws_iam
           cors: true  
 
-  verifyemail:
-    handler: verifyotp.email
+  verify-email:
+    handler: verify-otp.email
     events:
       - http:
           path: verify-email
@@ -175,27 +173,27 @@ functions:
           authorizer: aws_iam
           cors: true
           
-  getcontact:
-    handler: getcontact.main
+  get-profile:
+    handler: get-profile.main
     events:
       - http:
-          path: get-contact
+          path: get-profile
           method: post
           authorizer: aws_iam
           cors: true
-  getchats:
-    handler: getchats.main
+  get-chats:
+    handler: get-chats.main
     events:
       - http:
           path: get-chats
           method: post
           authorizer: aws_iam
           cors: true
-  search-contacts:
-    handler: search-contacts.main
+  search-profiles:
+    handler: search-profiles.main
     events:
       - http:
-          path: search-contacts
+          path: search-profiles
           method: post
           authorizer: aws_iam
           cors: true
@@ -232,9 +230,9 @@ resources:
   # API Gateway Errors
   - ${file(resources/api-gateway-errors.yml)}
   # DynamoDB
-  - ${file(resources/contacts-table.yml)}
-  - ${file(resources/messages-table.yml)}
-  - ${file(resources/apps-table.yml)}
-  - ${file(resources/chats-table.yml)}
+  - ${file(resources/profile-table.yml)}
+  - ${file(resources/message-table.yml)}
+  - ${file(resources/app-table.yml)}
+  - ${file(resources/chat-table.yml)}
   # S3 Bucket
   - ${file(resources/s3-bucket.yml)}

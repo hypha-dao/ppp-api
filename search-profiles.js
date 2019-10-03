@@ -1,31 +1,30 @@
 import { ResponseUtil } from './util';
-import { ChatDao } from "./dao";
+import { ProfileDao } from "./dao";
 import { AuthApi } from "./service";
 
 const authApi = new AuthApi();
-const chatDao = new ChatDao();
+const profileDao = new ProfileDao();
 
 export async function main(event, context) {
     try {
+
+        const body = JSON.parse(event.body);
         const {
-            appId,
-            appKey,
             limit,
-            lastEvaluatedKey
-        } = JSON.parse(event.body);
+            lastEvaluatedKey,
+            search,
+        } = body;
 
+        const { appId } = await authApi.getApp(event, body);
 
-        await authApi.authenticate(appId, appKey);
-        const eosAccount = await authApi.getUserName(event);
-        const chats = await chatDao.findByEOSAccount({
-            appId,
-            eosAccount,
+        let profiles = await profileDao.search({
+            search,
             limit,
             lastEvaluatedKey
         });
         return ResponseUtil.success({
             status: true,
-            chats,
+            profiles,
         });
     } catch (e) {
         console.log(" ERROR  : ", e)

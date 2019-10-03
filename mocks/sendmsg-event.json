@@ -1,5 +1,5 @@
 {
-    "body": "{\"appId\": \"trada-appid-secret\",\"appKey\": \"5JRcUzbp4DtHw9h5q2xNBSujcvk3jQNttTP1pGmpZz7Yi7S9dUz\",\"eosAccount\": \"sebastianm22\",\"senderAccount\": \"sebastianm21\",\"message\": \"Otro mensaje7\"}",
+    "body": "{\"eosAccount\": \"sebastianm22\",\"senderAccount\": \"sebastianm21\",\"message\": \"Otro mensaje7\"}",
     "requestContext": {
         "identity": {}
     }

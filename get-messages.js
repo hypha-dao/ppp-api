@@ -8,15 +8,14 @@ const messageDao = new MessageDao();
 export async function main(event, context) {
 
     try {
+        const body = JSON.parse(event.body);
         const {
-            appId,
-            appKey,
             eosAccount2,
             limit,
             lastEvaluatedKey
-        } = JSON.parse(event.body);
+        } = body;
 
-        await authApi.authenticate(appId, appKey);
+        const { appId } = await authApi.getApp(event, body);
         if (!eosAccount2) {
             return ResponseUtil.failure("eosAccount2 parameter is required");
         }

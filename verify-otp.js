@@ -1,17 +1,18 @@
 import { ResponseUtil } from './util';
 import { VerificationApi } from './service';
-import { ContactDao } from './dao';
+import { ProfileDao } from './dao';
 import { AuthApi } from "./service";
 
 const authApi = new AuthApi();
-const contactDao = new ContactDao();
-const verificationApi = new VerificationApi(contactDao);
+const profileDao = new ProfileDao();
+const verificationApi = new VerificationApi(profileDao);
 
 export async function sms(event, context) {
-  const { appId, appKey, smsOtp } = JSON.parse(event.body);
+  const body = JSON.parse(event.body);
+  const { smsOtp } = body;
 
   try {
-    await authApi.authenticate(appId, appKey);
+    const { appId } = await authApi.getApp(event, body);
     if (!smsOtp) {
       return ResponseUtil.failure({ message: "smsOtp parameter is required" });
     }
@@ -28,10 +29,11 @@ export async function sms(event, context) {
 
 
 export async function email(event, context) {
-  const { appId, appKey, emailOtp } = JSON.parse(event.body);
+  const body = JSON.parse(event.body);
+  const { emailOtp } = body;
 
   try {
-    await authApi.authenticate(appId, appKey);
+    const { appId } = await authApi.getApp(event, body);
     if (!emailOtp) {
       return ResponseUtil.failure({ message: "emailOtp parameters is required" });
     }

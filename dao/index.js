@@ -1,11 +1,11 @@
 import AppDao from './AppDao';
-import ContactDao from './ContactDao';
+import ProfileDao from './ProfileDao';
 import ChatDao from './ChatDao';
 import MessageDao from './MessageDao'
 
 export {
     AppDao,
-    ContactDao,
+    ProfileDao,
     ChatDao,
     MessageDao,
 };
