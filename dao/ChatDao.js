@@ -53,7 +53,7 @@ class ChatDao extends BaseDao {
 
         receiver.appEosAccount = this.appAttribute(appId, eosAccount);
         sender.appEosAccount = this.appAttribute(appId, senderAccount);
-        return this._toPutItems([
+        return this._toTransactPutItems([
             receiver,
             sender,
         ]);

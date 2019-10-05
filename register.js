@@ -25,7 +25,7 @@ export async function main(event, context) {
         const eosAccount = await authApi.getUserName(event);
 
         let profile = await profileDao.findByEOSAccount(appId, eosAccount, ProfileFetchTypes.BASE_AND_APP, ProfileAccessTypes.ADMIN);
-        profile = new Profile(appId, eosAccount, profile);
+        profile = new Profile(app, eosAccount, profile);
         await profile.update(body);
         console.log(" Profile Record before saveContact  : ", profile.profile);
 

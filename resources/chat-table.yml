@@ -40,6 +40,17 @@ Resources:
           ProvisionedThroughput:
             ReadCapacityUnits: ${self:custom.tableThroughput}
             WriteCapacityUnits: ${self:custom.tableThroughput}
+        - IndexName: GSI_counterPartyAccount_sentAt
+          KeySchema:
+            - AttributeName: counterPartyAccount
+              KeyType: HASH
+            - AttributeName: sentAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: ${self:custom.tableThroughput}
+            WriteCapacityUnits: ${self:custom.tableThroughput}
       # Set the capacity based on the stage
       ProvisionedThroughput:
         ReadCapacityUnits: ${self:custom.tableThroughput}

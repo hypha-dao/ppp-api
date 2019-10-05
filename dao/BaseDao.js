@@ -83,7 +83,7 @@ class BaseDao {
         return this.transact('transactWrite', items);
     }
 
-    _toPutItems(items) {
+    _toTransactPutItems(items) {
         return items.map((item) => {
             return {
                 Put: {
@@ -94,8 +94,21 @@ class BaseDao {
         });
     }
 
+    _toBatchPutItems(items) {
+        items = items.map((item) => {
+            return {
+                PutRequest: {
+                    Item: item,
+                },
+            };
+        });
+        return {
+            [this.tableName]: items,
+        };
+    }
+
     async transactPut(items) {
-        return this.transactWrite(this._toPutItems(items));
+        return this.transactWrite(this._toTransactPutItems(items));
     }
 
     async transactGet(items) {
@@ -171,24 +184,69 @@ class BaseDao {
         return this._batchGet({ [this.tableName]: queryOpts });
     }
 
+    async _batchGet(query, retries = 5) {
+        try {
+            query = { RequestItems: query };
+            console.log('BatchGet query: ', JSON.stringify(query, null, 2));
+            let response = await this.db.batchGet(query).promise();
+            let { UnprocessedKeys, Responses: { [this.tableName]: results } } = response;
+            if (!Util.isEmptyObj(UnprocessedKeys)) {
+                const ukResults = await this._batchGet(UnprocessedKeys);
+                results = [...results, ...ukResults];
+            }
+            return results;
+        } catch (error) {
+            console.log('Error in _batchGet:', error);
+            if (this._shouldRetry(error, retries)) {
+                return await this._batchGet(query, retries - 1);
+            }
+            throw error;
+        }
+
+    }
+
+    async batchWrite(items) {
+        queryOpts.Keys = this._toHashRange(keys);
+        return this._batchWrite(this._toBatchPutItems(items));
+    }
+
+    async _batchWrite(query, retries = 5) {
+        try {
+            query = { RequestItems: query };
+            console.log('BatchWrite query: ', JSON.stringify(query, null, 2));
+            let response = await this.db.batchWrite(query).promise();
+            let { UnprocessedKeys } = response;
+            if (!Util.isEmptyObj(UnprocessedKeys)) {
+                await this._batchWrite(UnprocessedKeys);
+            }
+        } catch (error) {
+            console.log('Error in _batchWrite:', error);
+            if (this._shouldRetry(error, retries)) {
+                await this._batchWrite(query, retries - 1);
+            }
+            throw error;
+        }
+
+    }
+
+    _shouldRetry(error, retries) {
+        const { code } = error;
+        return retries > 0 &&
+            (
+                code === 'InternalServerError' ||
+                code === 'ItemCollectionSizeLimitExceededException' ||
+                code === 'ProvisionedThroughputExceededException' ||
+                code === 'RequestLimitExceeded'
+            );
+    }
+
     async transact(op, items) {
         this._iterateTransactItems(items, (item) => this._preProcessQuery(item));
         console.log('Transact items:', JSON.stringify(items, null, 2));
         return this.db[op]({ TransactItems: items }).promise();
     }
 
-    async _batchGet(query) {
-        query = { RequestItems: query };
-        console.log('BatchGet query: ', JSON.stringify(query, null, 2));
-        let response = await this.db.batchGet(query).promise();
-        let { UnprocessedKeys, Responses: { [this.tableName]: results } } = response;
-        if (!Util.isEmptyObj(UnprocessedKeys)) {
-            const ukResults = await this._batchGet(UnprocessedKeys);
-            results = [...results, ...ukResults];
-        }
-        return results;
 
-    }
 
     async exec(op, query) {
         this._preProcessQuery(query);

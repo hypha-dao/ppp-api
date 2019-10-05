@@ -35,12 +35,12 @@ class Util {
     }
 
     /**
-     * Creates path in object if it does not exist
+     * Gets path in object if it does not exist return value
      * 
      * @param {object} obj 
      * @param {string} path string path separated by '.' char
      */
-    static getPath(obj, path, value = null) {
+    static getPath(obj, path, value) {
         const steps = path.split('.');
         let currentObj = obj;
         let i = 0;

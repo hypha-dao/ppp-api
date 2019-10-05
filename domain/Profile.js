@@ -1,9 +1,10 @@
 import merge from 'merge';
+import BaseDomain from './BaseDomain';
 import { VerificationApi } from "../service";
 import { AppIds, ProfileAccessTypes } from "../const";
 import { Util } from "../util";
 
-class Profile {
+class Profile extends BaseDomain {
 
     static _getCommInfo(commVerified, comm, maskFn) {
         if (comm == null) {
@@ -28,6 +29,7 @@ class Profile {
 
         const {
             appId,
+            app,
             eosAccount,
             publicData,
             privateData,
@@ -36,6 +38,7 @@ class Profile {
         let processed = {
             eosAccount,
             appId,
+            app,
             publicData
         };
         if (appId === AppIds.BASE_PROFILE_APP) {
@@ -62,8 +65,9 @@ class Profile {
         return processed;
     }
 
-    constructor(appId, eosAccount, profile) {
-        this.appId = appId;
+    constructor(app, eosAccount, profile) {
+        super();
+        this.app = app;
         this.eosAccount = eosAccount;
         this.emailChanged = false;
         this.smsChanged = false;
@@ -144,21 +148,21 @@ class Profile {
         this.smsChanged && (profile.smsOtp = await VerificationApi.sendSmsOtp(smsNumber));
         this.mergeData(profile, publicData, privateData);
         if (appData) {
+            const { appId } = this.app;
             if (!profile.appData) {
-                profile.appData = this._getInitState(this.appId, this.eosAccount);
-                console.log(` Profile for app: ${this.appId} not found. Creating new: `, profile.appData);
+                profile.appData = this._getInitState(appId, this.eosAccount);
+                console.log(` Profile for app: ${appId} not found. Creating new: `, profile.appData);
             }
             this.mergeData(profile.appData, appData.publicData, appData.privateData);
+            profile.appData.app = Profile.getEntityDetails('app', this.app);
             console.log('Profile: ', this.profile);
         }
     }
 
     mergeData(profile, publicData, privateData) {
-        if (publicData) {
-            profile.publicData = merge.recursive(true, profile.publicData, publicData);
-        }
+        profile.publicData = merge.recursive(profile.publicData, publicData);
         if (privateData) {
-            profile.privateData = merge.recursive(true, profile.privateData, privateData);
+            profile.privateData = merge.recursive(profile.privateData, privateData);
         }
         profile.updatedAt = Date.now();
     }
@@ -172,6 +176,14 @@ class Profile {
 
     }
 }
+
+Profile.ENTITY_FIELDS = {
+    app: [
+        {
+            field: 'appName'
+        },
+    ],
+};
 
 
 export default Profile;

@@ -1,3 +1,3 @@
 {
-    "body": "{\"appId\": \"trada-appid-secret\",\"appKey\": \"5JRcUzbp4DtHw9h5q2xNBSujcvk3jQNttTP1pGmpZz7Yi7S9dUz\",\"eosAccount\": \"sebastian\",\"commPref\": \"SMS\",\"emailAddress\": \"sebastian.montero@gmail.com\",\"smsNumber\": \"+525583686647\",\"appData\": {\"country\": \"Mexico\",\"name\": \"Test\"}}"
+    "body": "{\"eosAccount\": \"test\",\"emailAddress\": \"sebastian.montero@gmail.com\",\"smsNumber\": \"+525583686637\",\"publicData\":{\"profileImage\": \"avatar.jpg22\", \"s3Identity\": \"34232322\", \"firstName\": \"Sebastian22\", \"lastName\": \"montero22\"},\"privateData\":{\"ccn\": \"5423435458222\"},\"appData\": {\"publicData\":{\"country\": \"Mexico\",\"name\": \"Test\"},\"privateData\":{\"ssn1\": \"5425458222\"}}}"
 }

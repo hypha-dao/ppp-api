@@ -1,5 +1,7 @@
 import uuid from "uuid";
+import { Chat } from "../domain";
 import { commApi } from "../service";
+import { PublicFields } from '../const';
 
 class Message {
 
@@ -31,28 +33,16 @@ class Message {
             subject: this.subject,
             message: this.message,
         };
-        const senderAccount = this.sender.eosAccount;
-        const eosAccount = this.receiver.eosAccount;
 
         const msgRecord = {
             ...base,
             messageKey: uuid.v1(),
-            senderAccount,
-            eosAccount,
+            senderAccount: this.sender.eosAccount,
+            eosAccount: this.receiver.eosAccount,
         };
         const chatRecords = {
-            receiver: {
-                ...base,
-                eosAccount,
-                counterPartyAccount: senderAccount,
-                isSender: false,
-            },
-            sender: {
-                ...base,
-                eosAccount: senderAccount,
-                counterPartyAccount: eosAccount,
-                isSender: true,
-            }
+            receiver: new Chat(base, this.sender, this.receiver, false).chat,
+            sender: new Chat(base, this.sender, this.receiver, true).chat,
         }
         console.log('Message Record: ', msgRecord);
         console.log('Chat Records: ', chatRecords);
