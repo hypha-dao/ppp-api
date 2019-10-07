@@ -1,5 +1,4 @@
 import BaseDao from "./BaseDao";
-import { ProfileDao } from '.';
 
 class ChatDao extends BaseDao {
     constructor() {
@@ -11,7 +10,6 @@ class ChatDao extends BaseDao {
             },
             false
         );
-        this.profileDao = new ProfileDao();
     }
 
     async findByEOSAccount(
