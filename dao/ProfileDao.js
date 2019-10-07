@@ -101,6 +101,21 @@ class ProfileDao extends BaseDao {
 
         return await this.query(readParams, limit, lastEvaluatedKey);
     }
+
+    async updateAppDetails(appId, appDetails) {
+        const readParams = {
+            IndexName: 'GSI_appId_eosAccount',
+            KeyConditionExpression: 'appId = :appId',
+            ExpressionAttributeValues: {
+                ':appId': appId,
+            },
+        };
+
+        await this.updateItems(readParams, (profile) => {
+            profile.app = appDetails;
+            return profile;
+        });
+    }
 }
 
 export default ProfileDao;

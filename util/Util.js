@@ -34,24 +34,34 @@ class Util {
         return obj;
     }
 
+    static getPropertyValue(obj, property, typeMode = false) {
+        if (obj) {
+            obj = obj[property];
+        }
+        if (typeMode && obj) {
+            obj = obj[Object.keys(obj)[0]];
+        }
+        return obj;
+    }
+
     /**
      * Gets path in object if it does not exist return value
      * 
      * @param {object} obj 
      * @param {string} path string path separated by '.' char
      */
-    static getPath(obj, path, value) {
+    static getPath(obj, path, value, typeMode = false) {
         const steps = path.split('.');
         let currentObj = obj;
         let i = 0;
         while (currentObj && i < steps.length - 1) {
-            currentObj = currentObj[steps[i]];
+            currentObj = this.getPropertyValue(currentObj, steps[i], typeMode);
             i++;
         }
         if (!currentObj) {
             return value;
         }
-        currentObj = currentObj[steps[steps.length - 1]];
+        currentObj = this.getPropertyValue(currentObj, steps[steps.length - 1], typeMode);
         return typeof currentObj === 'undefined' ? value : currentObj;
     }
 

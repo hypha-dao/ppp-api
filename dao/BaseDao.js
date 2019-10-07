@@ -4,6 +4,8 @@ import { Util } from '../util';
 
 AWS.config.update({ region: 'us-east-1' });
 
+const MAX_RETRIES = 5;
+
 class BaseDao {
     constructor(tableName, idProps, optimisticLocking = false) {
         this.db = new AWS.DynamoDB.DocumentClient();
@@ -25,23 +27,29 @@ class BaseDao {
         return `${appId}/${attribute}`;
     }
 
-    async query(query, limit, lastEvaluatedKey) {
+    async query(query, limit, lastEvaluatedKey, retries = MAX_RETRIES) {
+        try {
+            limit && (query.Limit = limit);
+            lastEvaluatedKey && (query.ExclusiveStartKey = lastEvaluatedKey);
 
-        limit && (query.Limit = limit);
-        lastEvaluatedKey && (query.ExclusiveStartKey = lastEvaluatedKey);
+            const {
+                Items: items,
+                Count: count,
+                LastEvaluatedKey: newLastEvaluatedKey,
+            } = await this.exec('query', query);
 
-        const {
-            Items: items,
-            Count: count,
-            LastEvaluatedKey: newLastEvaluatedKey,
-        } = await this.exec('query', query);
-
-        let pRS = {
-            items,
-            count,
-        };
-        newLastEvaluatedKey && (pRS.lastEvaluatedKey = newLastEvaluatedKey);
-        return pRS;
+            let pRS = {
+                items,
+                count,
+            };
+            newLastEvaluatedKey && (pRS.lastEvaluatedKey = newLastEvaluatedKey);
+            return pRS;
+        } catch (error) {
+            if (this._shouldRetry(error, retries)) {
+                return await this.query(query, limit, lastEvaluatedKey, retries - 1);
+            }
+            throw error;
+        }
     }
 
     async queryOne(query, limit, lastEvaluatedKey) {
@@ -184,48 +192,57 @@ class BaseDao {
         return this._batchGet({ [this.tableName]: queryOpts });
     }
 
-    async _batchGet(query, retries = 5) {
-        try {
-            query = { RequestItems: query };
-            console.log('BatchGet query: ', JSON.stringify(query, null, 2));
-            let response = await this.db.batchGet(query).promise();
-            let { UnprocessedKeys, Responses: { [this.tableName]: results } } = response;
-            if (!Util.isEmptyObj(UnprocessedKeys)) {
-                const ukResults = await this._batchGet(UnprocessedKeys);
-                results = [...results, ...ukResults];
+    async _batchGet(query, retries = MAX_RETRIES) {
+        let fullResults = [];
+        do {
+            try {
+                console.log('BatchGet query: ', JSON.stringify(query, null, 2));
+                let response = await this.db.batchGet({ RequestItems: query }).promise();
+                let { UnprocessedKeys, Responses: { [this.tableName]: results } } = response;
+                query = Util.isEmptyObj(UnprocessedKeys) ? null : UnprocessedKeys;
+                fullResults = [...fullResults, ...results];
+            } catch (error) {
+                console.log('Error in _batchGet:', error);
+                if (!this._shouldRetry(error, retries)) {
+                    throw error;
+                }
+                retries--;
             }
-            return results;
-        } catch (error) {
-            console.log('Error in _batchGet:', error);
-            if (this._shouldRetry(error, retries)) {
-                return await this._batchGet(query, retries - 1);
-            }
-            throw error;
-        }
+        } while (query);
+
+        return fullResults;
 
     }
 
     async batchWrite(items) {
-        queryOpts.Keys = this._toHashRange(keys);
         return this._batchWrite(this._toBatchPutItems(items));
     }
 
-    async _batchWrite(query, retries = 5) {
-        try {
-            query = { RequestItems: query };
-            console.log('BatchWrite query: ', JSON.stringify(query, null, 2));
-            let response = await this.db.batchWrite(query).promise();
-            let { UnprocessedKeys } = response;
-            if (!Util.isEmptyObj(UnprocessedKeys)) {
-                await this._batchWrite(UnprocessedKeys);
+    async _batchWrite(query, retries = MAX_RETRIES) {
+        do {
+            try {
+                console.log('BatchWrite query: ', JSON.stringify(query, null, 2));
+                let response = await this.db.batchWrite({ RequestItems: query }).promise();
+                let { UnprocessedKeys } = response;
+                query = Util.isEmptyObj(UnprocessedKeys) ? null : UnprocessedKeys;
+            } catch (error) {
+                console.log('Error in _batchWrite:', error);
+                if (!this._shouldRetry(error, retries)) {
+                    throw error;
+                }
+                retries--;
             }
-        } catch (error) {
-            console.log('Error in _batchWrite:', error);
-            if (this._shouldRetry(error, retries)) {
-                await this._batchWrite(query, retries - 1);
-            }
-            throw error;
-        }
+        } while (query);
+    }
+
+    async updateItems(fetchQuery, itemUpdateFn) {
+        let lastEvaluatedKey = null;
+        let items = null;
+        do {
+            ({ items, lastEvaluatedKey } = await this.query(fetchQuery, null, lastEvaluatedKey));
+            items = items.map(itemUpdateFn);
+            await this.batchWrite(items);
+        } while (lastEvaluatedKey);
 
     }
 

@@ -76,6 +76,7 @@ provider:
         - dynamodb:BatchWriteItem
         - dynamodb:TransactWrite
         - dynamodb:TransactGet
+        - dynamodb:ListStreams
       Resource:
         - "Fn::GetAtt": [ ProfileTable, Arn ]
         - "Fn::GetAtt": [ MessageTable, Arn ]
@@ -221,6 +222,28 @@ functions:
       - cognitoUserPool:
           pool: CommProfileServicePool1
           trigger: DefineAuthChallenge
+  handle-app-updates:
+    handler: handle-app-updates.main
+    events:
+      - stream:
+          type: dynamodb
+          batchSize: 1
+          startingPosition: LATEST
+          arn:
+            Fn::GetAtt:
+              - AppTable
+              - StreamArn
+  handle-profile-updates:
+    handler: handle-profile-updates.main
+    events:
+      - stream:
+          type: dynamodb
+          batchSize: 1
+          startingPosition: LATEST
+          arn:
+            Fn::GetAtt:
+              - ProfileTable
+              - StreamArn
           
 resources:
   # Congnito User Pool

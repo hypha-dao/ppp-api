@@ -58,6 +58,21 @@ class ChatDao extends BaseDao {
             sender,
         ]);
     }
+
+    async updateCounterPartyDetails(counterPartyAccount, counterPartyDetails) {
+        const readParams = {
+            IndexName: 'GSI_counterPartyAccount_sentAt',
+            KeyConditionExpression: 'counterPartyAccount = :counterPartyAccount',
+            ExpressionAttributeValues: {
+                ':counterPartyAccount': counterPartyAccount,
+            },
+        };
+
+        await this.updateItems(readParams, (chat) => {
+            chat.counterParty = counterPartyDetails;
+            return chat;
+        });
+    }
 }
 
 export default ChatDao;
