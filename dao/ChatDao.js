@@ -20,7 +20,7 @@ class ChatDao extends BaseDao {
             eosAccount,
             limit,
             lastEvaluatedKey
-        }, hydrateUser = true) {
+        }) {
 
         const appEosAccount = this.appAttribute(appId, eosAccount);
         const readParams = {
@@ -32,12 +32,7 @@ class ChatDao extends BaseDao {
             ScanIndexForward: false,
         };
 
-        const results = await this.query(readParams, limit, lastEvaluatedKey);
-
-        if (hydrateUser) {
-            results.items = await this.profileDao.hydrateWithUser(appId, results.items, 'counterPartyAccount');
-        }
-        return results;
+        return this.query(readParams, limit, lastEvaluatedKey);
     }
 
     getChatItems(chatRecords) {
