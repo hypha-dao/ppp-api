@@ -1,8 +1,9 @@
 import BaseDao from "./BaseDao";
+import { Util } from "../util";
 
 class AppDao extends BaseDao {
     constructor() {
-        super(process.env.appTableName, 'domain', false);
+        super(process.env.appTableName, 'appId', false);
     }
 
     async getById(appId) {
@@ -11,6 +12,11 @@ class AppDao extends BaseDao {
             throw Error(`app with appId: ${appId} does not exist`);
         }
         return app;
+    }
+
+    async findByIds(appIds) {
+        appIds = Util.removeDuplicates(appIds);
+        return this.batchGetMap(appIds, 'appId');
     }
 
 
@@ -23,6 +29,16 @@ class AppDao extends BaseDao {
             },
             ExpressionAttributeNames: {
                 '#d': 'domain',
+            },
+        });
+    }
+
+    async findByOwnerAccount(ownerAccount) {
+        return this.query({
+            IndexName: 'GSI_ownerAccount',
+            KeyConditionExpression: 'ownerAccount = :ownerAccount',
+            ExpressionAttributeValues: {
+                ':ownerAccount': ownerAccount,
             },
         });
     }

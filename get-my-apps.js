@@ -1,10 +1,9 @@
 import { ResponseUtil } from './util';
-import { ProfileDao } from "./dao";
+import { AppDao } from "./dao";
 import { AuthApi } from "./service";
-import { ProfileFetchTypes, ProfileAccessTypes } from "./const";
 
 const authApi = new AuthApi();
-const profileDao = new ProfileDao();
+const appDao = new AppDao();
 
 export async function main(event, context) {
     try {
@@ -12,15 +11,13 @@ export async function main(event, context) {
         console.log('event: ', event);
         console.log('context: ', context);
         const body = JSON.parse(event.body);
-        let { fetchType } = body;
-        fetchType = ProfileFetchTypes.get(fetchType, ProfileFetchTypes.BASE_AND_APP);
         const { appId } = await authApi.getApp(event, body);
         const eosAccount = await authApi.getUserName(event);
-        const profile = await profileDao.findByEOSAccount(appId, eosAccount, fetchType, ProfileAccessTypes.OWNER);
-        console.log(" Profile Record: ", profile);
+        const apps = await appDao.findByOwnerAccount(eosAccount);
+        console.log(" Apps: ", apps);
         return ResponseUtil.success({
             status: true,
-            profile,
+            apps,
         });
     } catch (e) {
         console.log(" ERROR  : ", e)

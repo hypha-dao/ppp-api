@@ -63,6 +63,7 @@ provider:
     authRetries: ${self:custom.environment.authRetries}
     startAuthTimeout: ${self:custom.environment.startAuthTimeout}
     minAuthTimeout: ${self:custom.environment.minAuthTimeout}
+    chainId: ${self:custom.environment.chainId}
 
   iamRoleStatements:
     - Effect: Allow
@@ -187,6 +188,22 @@ functions:
     events:
       - http:
           path: get-chats
+          method: post
+          authorizer: aws_iam
+          cors: true
+  get-apps:
+    handler: get-apps.main
+    events:
+      - http:
+          path: get-apps
+          method: post
+          authorizer: aws_iam
+          cors: true
+  get-my-apps:
+    handler: get-my-apps.main
+    events:
+      - http:
+          path: get-my-apps
           method: post
           authorizer: aws_iam
           cors: true

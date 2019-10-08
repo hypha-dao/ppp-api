@@ -186,6 +186,14 @@ class BaseDao {
         return pKeys;
     }
 
+    async batchGetMap(keys, keyProp, queryOpts = {}) {
+        const map = {};
+        const results = await this.batchGet(keys, queryOpts);
+        for (const result of results) {
+            map[result[keyProp]] = result;
+        }
+        return map;
+    }
 
     async batchGet(keys, queryOpts = {}) {
         queryOpts.Keys = this._toHashRange(keys);

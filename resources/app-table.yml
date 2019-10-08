@@ -7,6 +7,8 @@ Resources:
         - AttributeName: appId
           AttributeType: S
         - AttributeName: domain
+          AttributeType: S      
+        - AttributeName: ownerAccount
           AttributeType: S         
       KeySchema:
         - AttributeName: appId
@@ -15,6 +17,15 @@ Resources:
         - IndexName: GSI_domain
           KeySchema:
             - AttributeName: domain
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: ${self:custom.tableThroughput}
+            WriteCapacityUnits: ${self:custom.tableThroughput}
+        - IndexName: GSI_ownerAccount
+          KeySchema:
+            - AttributeName: ownerAccount
               KeyType: HASH
           Projection:
             ProjectionType: ALL
