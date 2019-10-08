@@ -282,6 +282,7 @@ class BaseDao {
     notExistsCondition(obj, attr = null) {
         attr = attr || this.idProps.hashProp;
         this.condition(obj, `attribute_not_exists(${attr})`);
+        return obj;
     }
 
     versionCondition(query) {
@@ -295,10 +296,12 @@ class BaseDao {
             this.notExistsCondition(query);
             item.version = 1;
         }
+        return query;
     }
 
     condition(query, condition) {
         query.ConditionExpression = condition;
+        return query;
     }
 
     _iterateTransactItems(items, fn) {

@@ -51,6 +51,15 @@ class AppDao extends BaseDao {
         return app;
     }
 
+    async save(app) {
+        const queryOpts = this.notExistsCondition({
+            ExpressionAttributeNames: {
+                '#d': 'domain',
+            }
+        }, '#d');
+        await this.put(app, queryOpts);
+    }
+
 }
 
 export default AppDao;

@@ -1,7 +1,6 @@
 import uuid from "uuid";
 import { Chat } from "../domain";
 import { commApi } from "../service";
-import { PublicFields } from '../const';
 
 class Message {
 

@@ -191,6 +191,14 @@ functions:
           method: post
           authorizer: aws_iam
           cors: true
+  register-app:
+    handler: register-app.main
+    events:
+      - http:
+          path: register-app
+          method: post
+          authorizer: aws_iam
+          cors: true
   get-apps:
     handler: get-apps.main
     events:

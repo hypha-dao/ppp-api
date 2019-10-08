@@ -180,7 +180,7 @@ class Profile extends BaseDomain {
 Profile.ENTITY_FIELDS = {
     app: [
         {
-            field: 'appName'
+            field: 'name'
         },
     ],
 };
