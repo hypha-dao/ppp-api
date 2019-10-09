@@ -10,7 +10,7 @@ class AuthApi {
     }
 
     async getApp(event, body) {
-        return this.appDao.getByDomain('localhost');
+        return this.appDao.getByDomain('localhost1');
     }
 
     /* async getApp(event, body) {

@@ -47,7 +47,7 @@ export async function main(event, context) {
         const messageKey = await messageDao.save(msg.records);
         return ResponseUtil.success({ status: true, message: `Message sent successfully.`, messageKey: messageKey });
     } catch (e) {
-        console.log(JSON.stringify(e, null, 2));
-        return ResponseUtil.failure(e.message);
+        console.error(JSON.stringify(e, null, 2));
+        return ResponseUtil.failure(e);
     }
 }

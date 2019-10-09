@@ -1,6 +1,11 @@
 import BaseDao from "./BaseDao";
 import { Util } from "../util";
 
+
+const ExpressionAttributeNames = {
+    '#d': 'domain',
+};
+
 class AppDao extends BaseDao {
     constructor() {
         super(process.env.appTableName, 'appId', false);
@@ -27,9 +32,7 @@ class AppDao extends BaseDao {
             ExpressionAttributeValues: {
                 ':domain': domain,
             },
-            ExpressionAttributeNames: {
-                '#d': 'domain',
-            },
+            ExpressionAttributeNames,
         });
     }
 
@@ -51,13 +54,54 @@ class AppDao extends BaseDao {
         return app;
     }
 
-    async save(app) {
-        const queryOpts = this.notExistsCondition({
-            ExpressionAttributeNames: {
-                '#d': 'domain',
+    async save(appD) {
+        try {
+            const {
+                newState,
+                newState: {
+                    appId,
+                    domain,
+                },
+                oldState
+            } = appD;
+            const items = this._toTransactPutItems(newState);
+
+            const appDomainQuery = {
+                TableName: process.env.uniqueAppDomainAppTableName,
+                Item: {
+                    domain,
+                    appId,
+                },
+            };
+            if (appD.isNewDomain()) {
+                this.notExistsCondition(appDomainQuery, '#d');
+                appDomainQuery.ExpressionAttributeNames = ExpressionAttributeNames;
+                if (!appD.isNewApp()) {
+                    const deleteQuery = {
+                        TableName: process.env.uniqueAppDomainAppTableName,
+                        Key: {
+                            domain: oldState.domain,
+                        },
+                    };
+                    this.valueCondition(deleteQuery, 'appId', appId);
+                    items.push({
+                        Delete: deleteQuery,
+                    });
+                }
+            } else {
+                this.valueCondition(appDomainQuery, 'appId', appId);
             }
-        }, '#d');
-        await this.put(app, queryOpts);
+            items.push({
+                Put: appDomainQuery,
+            });
+            await this.transactWrite(items);
+        } catch (error) {
+            console.error('Error saving app: ', error);
+            if (error.code === 'TransactionCanceledException') {
+                throw "Domain asociated to the app is already in use";
+            }
+            throw error;
+        }
     }
 
 }

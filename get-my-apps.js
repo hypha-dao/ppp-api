@@ -20,7 +20,7 @@ export async function main(event, context) {
             apps,
         });
     } catch (e) {
-        console.log(" ERROR  : ", e)
-        return ResponseUtil.failure(e.message);
+        console.error(e);
+        return ResponseUtil.failure(e);
     }
 }

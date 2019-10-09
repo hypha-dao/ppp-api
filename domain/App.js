@@ -1,5 +1,6 @@
 import axios from 'axios';
 import uuid from "uuid";
+import assert from 'assert';
 
 class App {
 
@@ -18,7 +19,7 @@ class App {
         this.ax = axios.create({
             baseURL: baseUrl
         });
-        this.app = null;
+        this.newState = null;
     }
 
     async _request(file, errorMsg) {
@@ -26,7 +27,7 @@ class App {
             const { data } = await this.ax.get(file);
             return data;
         } catch (error) {
-            console.log(errorMsg, error);
+            console.error(errorMsg, error);
             throw errorMsg;
         }
     }
@@ -77,6 +78,7 @@ class App {
             if (this.requesterAccount !== ownerAccount && this.domain !== domain) {
                 throw `It's not possible to update the owner account and domain at the same time`;
             }
+            this.oldState = details;
         } else {
             details = {
                 appId: uuid.v1(),
@@ -86,17 +88,28 @@ class App {
         details = {
             ...details,
             domain: this.domain,
-            ownerAccount: this.ownerAccount,
+            ownerAccount: this.requesterAccount,
             ...metadata,
         };
-        this.app = details;
+        this.newState = details;
+    }
+    assertState() {
+        assert(this.newState, 'loadDetails method should be called first!');
+    }
+
+    isNewDomain() {
+        this.assertState();
+        return !this.oldState || (this.oldState.domain != this.newState.domain);
+    }
+
+    isNewApp() {
+        this.assertState();
+        return !this.oldState;
     }
 
     async save() {
-        if (!this.app) {
-            await this.loadDetails();
-        }
-        await this.appDao.save(this.app);
+        this.assertState();
+        await this.appDao.save(this);
     }
 
 }

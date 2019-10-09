@@ -19,6 +19,7 @@ export async function main(event, context) {
 
         return ResponseUtil.success({ status: true, apps });
     } catch (e) {
-        return ResponseUtil.failure(e.message);
+        console.error(e);
+        return ResponseUtil.failure(e);
     }
 }

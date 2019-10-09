@@ -23,6 +23,7 @@ export async function sms(event, context) {
       message: `SMS Verify Code has been successfully validated: ${eosAccount}`
     });
   } catch (e) {
+    console.error(e);
     return ResponseUtil.failure({ message: e.message });
   }
 }
@@ -44,6 +45,7 @@ export async function email(event, context) {
       message: `Email Verify Code has been successfully validated: ${eosAccount}`
     });
   } catch (e) {
-    return ResponseUtil.failure({ message: e.message });
+    console.error(e);
+    return ResponseUtil.failure(e);
   }
 }

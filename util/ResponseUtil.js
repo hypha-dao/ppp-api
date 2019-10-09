@@ -5,9 +5,9 @@ class ResponseUtil {
         return this.buildResponse(200, body);
     }
 
-    static failure(message) {
+    static failure(error) {
         return this.buildResponse(500, {
-            message,
+            message: error.message || error,
         });
     }
 

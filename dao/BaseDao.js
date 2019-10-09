@@ -92,6 +92,7 @@ class BaseDao {
     }
 
     _toTransactPutItems(items) {
+        items = Array.isArray(items) ? items : [items];
         return items.map((item) => {
             return {
                 Put: {
@@ -210,7 +211,7 @@ class BaseDao {
                 query = Util.isEmptyObj(UnprocessedKeys) ? null : UnprocessedKeys;
                 fullResults = [...fullResults, ...results];
             } catch (error) {
-                console.log('Error in _batchGet:', error);
+                console.error('Error in _batchGet:', error);
                 if (!this._shouldRetry(error, retries)) {
                     throw error;
                 }
@@ -234,7 +235,7 @@ class BaseDao {
                 let { UnprocessedKeys } = response;
                 query = Util.isEmptyObj(UnprocessedKeys) ? null : UnprocessedKeys;
             } catch (error) {
-                console.log('Error in _batchWrite:', error);
+                console.error('Error in _batchWrite:', error);
                 if (!this._shouldRetry(error, retries)) {
                     throw error;
                 }
@@ -285,12 +286,17 @@ class BaseDao {
         return obj;
     }
 
+    valueCondition(query, attrName, value) {
+        this.condition(query, `${attrName} = :${attrName}`);
+        query.ExpressionAttributeValues = query.ExpressionAttributeValues || {};
+        query.ExpressionAttributeValues[`:${attrName}`] = value;
+        return query;
+    }
+
     versionCondition(query) {
         const { Item: item } = query;
         if (item.version) {
-            this.condition(query, 'version = :version');
-            query.ExpressionAttributeValues = query.ExpressionAttributeValues || {};
-            query.ExpressionAttributeValues[':version'] = item.version;
+            this.valueCondition(query, 'version', item.version);
             item.version += 1;
         } else {
             this.notExistsCondition(query);

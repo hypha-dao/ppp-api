@@ -28,7 +28,7 @@ const validateTransaction = async (eosAcccount, code, retries, timeout, decremen
             response = data.code === code;
         }
     } catch (error) {
-        console.log("An error occurred while validating transaction", error);
+        console.error("An error occurred while validating transaction", error);
     }
     if (!response && retries > 0) {
         await Util.sleep(timeout);

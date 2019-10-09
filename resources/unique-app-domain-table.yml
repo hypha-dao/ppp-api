@@ -1,0 +1,15 @@
+Resources:
+  UniqueAppDomainAppTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:custom.uniqueAppDomainAppTableName}
+      AttributeDefinitions:
+        - AttributeName: domain
+          AttributeType: S
+      KeySchema:
+        - AttributeName: domain
+          KeyType: HASH
+      # Set the capacity based on the stage
+      ProvisionedThroughput:
+        ReadCapacityUnits: ${self:custom.tableThroughput}
+        WriteCapacityUnits: ${self:custom.tableThroughput}
