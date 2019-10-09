@@ -9,11 +9,11 @@ class AuthApi {
         this.appDao = new AppDao();
     }
 
-    async getApp(event, body) {
-        return this.appDao.getByDomain('localhost1');
-    }
-
     /* async getApp(event, body) {
+        return this.appDao.getByDomain('localhost1');
+    } */
+
+    async getApp(event, body) {
 
         let app = null;
         if (this.isCognitoAuth(event)) {
@@ -26,7 +26,7 @@ class AuthApi {
             app = await this.appDao.getById(appId);
         }
         return app;
-    } */
+    }
 
     async authenticate(appId, appKey) {
         if (!appKey || !appId) {
@@ -46,7 +46,7 @@ class AuthApi {
         return !!event.requestContext.identity.cognitoAuthenticationProvider;
     }
 
-    /* async getUserName(event) {
+    async getUserName(event) {
         const {
             cognitoAuthenticationProvider,
         } = event.requestContext.identity;
@@ -60,11 +60,11 @@ class AuthApi {
         }).promise();
         console.log("user:", user);
         return user.Username;
-    } */
-
-    async getUserName(event) {
-        return "sebastianm21";
     }
+
+    /* async getUserName(event) {
+        return "sebastianm21";
+    } */
 }
 
 export default AuthApi;
