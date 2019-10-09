@@ -13,7 +13,7 @@ export async function main(event, context) {
         const body = JSON.parse(event.body);
         const { appId } = await authApi.getApp(event, body);
         const eosAccount = await authApi.getUserName(event);
-        const apps = await appDao.findByOwnerAccount(eosAccount);
+        const { items: apps } = await appDao.findByOwnerAccount(eosAccount);
         console.log(" Apps: ", apps);
         return ResponseUtil.success({
             status: true,
