@@ -1,6 +1,7 @@
+import { ProfileFetchTypes } from "@smontero/ppp-common";
 import BaseDao from "./BaseDao";
 import { Util } from '../util';
-import { AppIds, ProfileAccessTypes, ProfileFetchTypes } from '../const';
+import { AppIds, ProfileAccessTypes } from '../const';
 import { Profile } from '../domain';
 
 class ProfileDao extends BaseDao {

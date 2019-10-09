@@ -1,5 +1,5 @@
 import BaseDomain from './BaseDomain';
-import { PublicFields } from '../const';
+import { PublicFields } from '@smontero/ppp-common';
 
 
 class Chat extends BaseDomain {
