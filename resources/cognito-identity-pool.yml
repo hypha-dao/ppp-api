@@ -4,7 +4,7 @@ Resources:
     Type: AWS::Cognito::IdentityPool
     Properties:
       # Generate a name based on the stage
-      IdentityPoolName: ${self:custom.stage}IdentityPool
+      IdentityPoolName: ${self:custom.identityPoolName}
       # Don't allow unathenticated users
       AllowUnauthenticatedIdentities: true
       # Link to our User Pool
@@ -12,7 +12,7 @@ Resources:
         - ClientId:
             Ref: CognitoUserPoolClient
           ProviderName:
-            Fn::GetAtt: [ "CognitoUserPoolCommProfileServicePool1", "ProviderName" ]
+            Fn::GetAtt: [ "CognitoUserPoolPPPServicePool", "ProviderName" ]
             
   # IAM roles
   CognitoIdentityPoolRoles:
@@ -142,7 +142,7 @@ Resources:
                         - Ref: AWS::AccountId
                         - ':'
                         - Ref: ApiGatewayRestApi
-                        - '/${self:custom.stage}/POST/get-app-data'
+                        - '/${self:custom.stage}/POST/get-profiles'
                   - Fn::Join:
                       - ''
                       -
@@ -152,7 +152,7 @@ Resources:
                         - Ref: AWS::AccountId
                         - ':'
                         - Ref: ApiGatewayRestApi
-                        - '/${self:custom.stage}/POST/search-contacts'
+                        - '/${self:custom.stage}/POST/search-profiles'
                   
               - Effect: 'Allow'
                 Action:

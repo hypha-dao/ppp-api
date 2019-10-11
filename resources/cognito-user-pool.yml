@@ -1,5 +1,5 @@
 Resources:
-  CognitoUserPoolCommProfileServicePool1:
+  CognitoUserPoolPPPServicePool:
     Type: AWS::Cognito::UserPool
     Properties:
       # Generate a name based on the stage
@@ -18,7 +18,7 @@ Resources:
       # Generate an app client name based on the stage
       ClientName: ${self:custom.userPoolClientName}
       UserPoolId:
-        Ref: CognitoUserPoolCommProfileServicePool1
+        Ref: CognitoUserPoolPPPServicePool
       ExplicitAuthFlows:
         - CUSTOM_AUTH_FLOW_ONLY
       GenerateSecret: false
@@ -27,7 +27,7 @@ Resources:
 Outputs:
   UserPoolId:
     Value:
-      Ref: CognitoUserPoolCommProfileServicePool1
+      Ref: CognitoUserPoolPPPServicePool
 
   UserPoolClientId:
     Value:

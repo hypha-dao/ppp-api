@@ -9,24 +9,24 @@ class AuthApi {
         this.appDao = new AppDao();
     }
 
-    /* async getApp(event, body) {
-        return this.appDao.getByDomain('localhost1');
-    } */
-
     async getApp(event, body) {
-
-        let app = null;
-        if (this.isCognitoAuth(event)) {
-            const { headers: { origin } } = event;
-            const url = new URL(origin);
-            app = await this.appDao.getByDomain(url.hostname);
-        } else {
-            ({ appId, appKey } = body);
-            await this.authenticate(appId, appKey);
-            app = await this.appDao.getById(appId);
-        }
-        return app;
+        return this.appDao.getByDomain('localhost1');
     }
+
+    /*  async getApp(event, body) {
+ 
+         let app = null;
+         if (this.isCognitoAuth(event)) {
+             const { headers: { origin } } = event;
+             const url = new URL(origin);
+             app = await this.appDao.getByDomain(url.hostname);
+         } else {
+             ({ appId, appKey } = body);
+             await this.authenticate(appId, appKey);
+             app = await this.appDao.getById(appId);
+         }
+         return app;
+     } */
 
     async authenticate(appId, appKey) {
         if (!appKey || !appId) {
@@ -63,7 +63,7 @@ class AuthApi {
     }
 
     /* async getUserName(event) {
-        return "sebastianm21";
+        return "tradatrada13";
     } */
 }
 

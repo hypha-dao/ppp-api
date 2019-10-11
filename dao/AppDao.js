@@ -67,7 +67,7 @@ class AppDao extends BaseDao {
             const items = this._toTransactPutItems(newState);
 
             const appDomainQuery = {
-                TableName: process.env.uniqueAppDomainAppTableName,
+                TableName: process.env.uniqueAppDomainTableName,
                 Item: {
                     domain,
                     appId,
@@ -78,7 +78,7 @@ class AppDao extends BaseDao {
                 appDomainQuery.ExpressionAttributeNames = ExpressionAttributeNames;
                 if (!appD.isNewApp()) {
                     const deleteQuery = {
-                        TableName: process.env.uniqueAppDomainAppTableName,
+                        TableName: process.env.uniqueAppDomainTableName,
                         Key: {
                             domain: oldState.domain,
                         },

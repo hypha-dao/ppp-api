@@ -1,5 +1,5 @@
 # NOTE: update this with your service name
-service: ppp-api
+service: ppp-service
 
 # Use the serverless-webpack plugin to transpile ES6
 plugins:
@@ -13,13 +13,14 @@ custom:
   # commands. Or fallsback to what we have set in the provider section.
   stage: ${opt:stage, self:provider.stage}
   # Set the table name here so we can use it while testing locally
-  profileTableName: ${self:custom.stage}-profile
-  messageTableName: ${self:custom.stage}-message
-  chatTableName: ${self:custom.stage}-chat
-  appTableName: ${self:custom.stage}-app
-  uniqueAppDomainAppTableName: ${self:custom.stage}-unique-app-domain
-  userPoolName: ${self:custom.stage}-ppp-api
-  userPoolClientName: ${self:custom.stage}-ppp-api
+  profileTableName: ${self:custom.stage}-ppp-profile
+  messageTableName: ${self:custom.stage}-ppp-message
+  chatTableName: ${self:custom.stage}-ppp-chat
+  appTableName: ${self:custom.stage}-ppp-app
+  uniqueAppDomainTableName: ${self:custom.stage}-ppp-unique-app-domain
+  userPoolName: ${self:custom.stage}-ppp-service
+  userPoolClientName: ${self:custom.stage}-ppp-service
+  identityPoolName: ${self:custom.stage}-ppp-service
   # Set our DynamoDB throughput for prod and all other non-prod stages.
   tableThroughputs:
     prod: 5
@@ -39,7 +40,7 @@ provider:
   stage: dev
   region: us-east-1
   apiKeys:
-    - ${self:custom.stage}-ppp-trada
+    - ${self:custom.stage}-ppp-service-trada
   usagePlan:
     quota:
       limit: 1000
@@ -53,12 +54,13 @@ provider:
     messageTableName: ${self:custom.messageTableName}
     chatTableName: ${self:custom.chatTableName}
     appTableName: ${self:custom.appTableName}
-    uniqueAppDomainAppTableName: ${self:custom.uniqueAppDomainAppTableName}
+    uniqueAppDomainTableName: ${self:custom.uniqueAppDomainTableName}
     twilioAccountSid: ${self:custom.environment.twilioAccountSid}
     twilioAuthToken: ${self:custom.environment.twilioAuthToken}
     msgPrefix: ${self:custom.environment.msgPrefix}
     sendGridKey: ${self:custom.environment.sendGridKey}
     userPoolName: ${self:custom.userPoolName}
+    identityPoolName: ${self:custom.identityPoolName}
     userPoolClientName: ${self:custom.userPoolClientName}
     historyEndpoint: ${self:custom.environment.historyEndpoint}
     authUtilContract: ${self:custom.environment.authUtilContract}
@@ -85,6 +87,7 @@ provider:
         - "Fn::GetAtt": [ MessageTable, Arn ]
         - "Fn::GetAtt": [ ChatTable, Arn ]
         - "Fn::GetAtt": [ AppTable, Arn ]
+        - "Fn::GetAtt": [ UniqueAppDomainTable, Arn ]
     - Effect: Allow
       Action:
         - dynamodb:Query
@@ -100,6 +103,9 @@ provider:
           ]]}
         - { "Fn::Join": [ "/", [ 
             { "Fn::GetAtt": ["AppTable", "Arn" ] }, "index", "*" 
+          ]]}
+        - { "Fn::Join": [ "/", [ 
+            { "Fn::GetAtt": ["UniqueAppDomainTable", "Arn" ] }, "index", "*" 
           ]]}
     - Effect: Allow
       Action:
@@ -229,25 +235,25 @@ functions:
     handler: pre-sign-up.main
     events:
       - cognitoUserPool:
-          pool: CommProfileServicePool1
+          pool: PPPServicePool
           trigger: PreSignUp
   create-auth-challenge:
     handler: create-auth-challenge.main
     events:
       - cognitoUserPool:
-          pool: CommProfileServicePool1
+          pool: PPPServicePool
           trigger: CreateAuthChallenge
   verify-auth-challenge:
     handler: verify-auth-challenge.main
     events:
       - cognitoUserPool:
-          pool: CommProfileServicePool1
+          pool: PPPServicePool
           trigger: VerifyAuthChallengeResponse
   define-auth-challenge:
     handler: define-auth-challenge.main
     events:
       - cognitoUserPool:
-          pool: CommProfileServicePool1
+          pool: PPPServicePool
           trigger: DefineAuthChallenge
   handle-app-updates:
     handler: handle-app-updates.main

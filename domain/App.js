@@ -62,8 +62,18 @@ class App {
         return {
             name,
             shortname,
-            icon
+            icon: this._getIconUrl(icon),
         };
+    }
+
+    _getIconUrl(icon) {
+        try {
+            const iconUrl = new URL(icon, this.baseUrl.href);
+            return iconUrl.href;
+        } catch (error) {
+            console.error(error);
+            throw 'Invalid app icon url';
+        }
     }
 
     async loadDetails() {

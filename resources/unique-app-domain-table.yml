@@ -1,8 +1,8 @@
 Resources:
-  UniqueAppDomainAppTable:
+  UniqueAppDomainTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: ${self:custom.uniqueAppDomainAppTableName}
+      TableName: ${self:custom.uniqueAppDomainTableName}
       AttributeDefinitions:
         - AttributeName: domain
           AttributeType: S
