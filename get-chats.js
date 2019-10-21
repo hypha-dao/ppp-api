@@ -10,15 +10,17 @@ export async function main(event, context) {
         const body = JSON.parse(event.body);
         const {
             limit,
-            lastEvaluatedKey
+            lastEvaluatedKey,
+            search,
         } = body;
 
 
         const { appId } = await authApi.getApp(event, body);
         const eosAccount = await authApi.getUserName(event);
-        const chats = await chatDao.findByEOSAccount({
+        const chats = await chatDao.search({
             appId,
             eosAccount,
+            search,
             limit,
             lastEvaluatedKey
         });

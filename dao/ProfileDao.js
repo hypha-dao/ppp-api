@@ -100,7 +100,7 @@ class ProfileDao extends BaseDao {
             ProjectionExpression: "eosAccount, publicData",
         };
 
-        return await this.query(readParams, limit, lastEvaluatedKey);
+        return this.query(readParams, limit, lastEvaluatedKey);
     }
 
     async updateAppDetails(appId, appDetails) {

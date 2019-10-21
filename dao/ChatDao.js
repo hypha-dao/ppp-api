@@ -33,6 +33,35 @@ class ChatDao extends BaseDao {
         return this.query(readParams, limit, lastEvaluatedKey);
     }
 
+    async search({
+        appId,
+        eosAccount,
+        search,
+        limit,
+        lastEvaluatedKey
+    }) {
+        search = (search || '').trim().toLowerCase();
+
+        if (!search) {
+            return this.findByEOSAccount({
+                appId,
+                eosAccount,
+                limit,
+                lastEvaluatedKey,
+            });
+        }
+        const appEosAccount = this.appAttribute(appId, eosAccount);
+        const readParams = {
+            KeyConditionExpression: 'appEosAccount = :appEosAccount and begins_with(counterPartyAccount, :search)',
+            ExpressionAttributeValues: {
+                ':appEosAccount': appEosAccount,
+                ':search': search,
+            },
+        };
+
+        return this.query(readParams, limit, lastEvaluatedKey);
+    }
+
     getChatItems(chatRecords) {
         const {
             receiver,
