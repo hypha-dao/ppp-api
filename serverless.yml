@@ -62,8 +62,10 @@ provider:
     userPoolName: ${self:custom.userPoolName}
     identityPoolName: ${self:custom.identityPoolName}
     userPoolClientName: ${self:custom.userPoolClientName}
-    historyEndpoint: ${self:custom.environment.historyEndpoint}
-    authUtilContract: ${self:custom.environment.authUtilContract}
+    eosHistoryEndpoint: ${self:custom.environment.eosHistoryEndpoint}
+    eosHttpEndpoint: ${self:custom.environment.eosHttpEndpoint}
+    authContract: ${self:custom.environment.authContract}
+    authVerifier: ${self:custom.environment.authVerifier}
     authRetries: ${self:custom.environment.authRetries}
     startAuthTimeout: ${self:custom.environment.startAuthTimeout}
     minAuthTimeout: ${self:custom.environment.minAuthTimeout}
