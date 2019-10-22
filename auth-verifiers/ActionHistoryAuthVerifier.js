@@ -1,6 +1,6 @@
 import BaseAuthVerifier from './BaseAuthVerifier';
 import axios from 'axios';
-import { Util } from './util';
+import { Util } from '../util';
 
 
 class ActionHistoryAuthVerifier extends BaseAuthVerifier {

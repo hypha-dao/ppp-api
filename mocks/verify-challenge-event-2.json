@@ -1,0 +1,10 @@
+{
+    "userName": "sebastianm22",
+    "request": {
+        "privateChallengeParameters": {
+            "loginCode": "2222"
+        },
+        "challengeAnswer": "2222"
+    },
+    "response": {}
+}

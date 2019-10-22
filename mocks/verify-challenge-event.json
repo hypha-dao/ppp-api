@@ -2,9 +2,9 @@
     "userName": "sebastianm21",
     "request": {
         "privateChallengeParameters": {
-            "loginCode": "12312"
+            "loginCode": "123122"
         },
-        "challengeAnswer": "12312"
+        "challengeAnswer": "123122"
     },
     "response": {}
 }

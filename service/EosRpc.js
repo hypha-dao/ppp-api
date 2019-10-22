@@ -1,4 +1,5 @@
 import { JsonRpc } from 'eosjs';
+import fetch from 'node-fetch';
 
 class EosRpc {
     constructor() {
@@ -6,7 +7,7 @@ class EosRpc {
             eosHttpEndpoint,
         } = process.env;
 
-        this.rpc = new JsonRpc(eosHttpEndpoint);
+        this.rpc = new JsonRpc(eosHttpEndpoint, { fetch });
     }
 
     async getAccount(account) {

@@ -24,7 +24,7 @@ export const main = async event => {
     if (!verifier) {
         verifier = AuthVerifierFactory.get(authVerifier);
     }
-    //response.answerCorrect = await verfier.verify(userName, loginCode, authRetries, startAuthTimeout, decrement);
+    //response.answerCorrect = await verifier.verify(userName, loginCode, authRetries, startAuthTimeout, decrement);
     response.answerCorrect = true;
     return event;
 };
