@@ -18,10 +18,11 @@ export async function main(event, context) {
         }, appDao);
         await app.loadDetails();
         await app.save();
+        console.log('App: ', app.newState);
         return ResponseUtil.success({
             status: true,
             message: `App record saved successfully`,
-            app: app.app,
+            app: app.newState,
         });
     } catch (e) {
         console.error(e);
