@@ -1,11 +1,9 @@
 import { ResponseUtil } from './util';
-import { VerificationApi } from './service';
 import { ProfileDao } from './dao';
 import { AuthApi } from "./service";
 
 const authApi = new AuthApi();
 const profileDao = new ProfileDao();
-const verificationApi = new VerificationApi(profileDao);
 
 export async function sms(event, context) {
   const body = JSON.parse(event.body);
@@ -17,7 +15,9 @@ export async function sms(event, context) {
       return ResponseUtil.failure({ message: "smsOtp parameter is required" });
     }
     const eosAccount = await authApi.getUserName(event);
-    await verificationApi.verifySmsOtp(appId, eosAccount, smsOtp)
+    const profile = await profileDao.getProfile(appId, eosAccount);
+    profile.verifySmsOtp(smsOtp);
+    await profileDao.save(profile.profile);
 
     return ResponseUtil.success({
       message: `SMS Verify Code has been successfully validated: ${eosAccount}`
@@ -39,7 +39,9 @@ export async function email(event, context) {
       return ResponseUtil.failure({ message: "emailOtp parameters is required" });
     }
     const eosAccount = await authApi.getUserName(event);
-    await verificationApi.verifyEmailOtp(appId, eosAccount, emailOtp)
+    const profile = await profileDao.getProfile(appId, eosAccount);
+    profile.verifyEmailOtp(emailOtp);
+    await profileDao.save(profile.profile);
 
     return ResponseUtil.success({
       message: `Email Verify Code has been successfully validated: ${eosAccount}`

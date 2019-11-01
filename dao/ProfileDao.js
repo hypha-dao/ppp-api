@@ -79,6 +79,20 @@ class ProfileDao extends BaseDao {
         return profile;
     }
 
+    async getProfile(appId, eosAccount) {
+        const profile = await this.getByEOSAccount(appId, eosAccount);
+        return new Profile(appId, eosAccount, profile);
+    }
+
+    async getVerifiedProfile(appId, eosAccount) {
+        const profile = await this.getProfile(appId, eosAccount);
+        console.log('Is verified: ', profile.isVerified());
+        if (!profile.isVerified()) {
+            throw `${eosAccount} account is not verfied`;
+        }
+        return profile;
+    }
+
     async search({
         search,
         limit,

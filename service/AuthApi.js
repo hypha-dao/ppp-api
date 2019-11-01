@@ -10,7 +10,7 @@ class AuthApi {
     }
 
     async getApp(event, body) {
-        return this.appDao.getByDomain('localhost1');
+        return this.appDao.getByDomain('app-dev.telos.net');
     }
 
     /*  async getApp(event, body) {
@@ -63,7 +63,7 @@ class AuthApi {
     }
 
     /* async getUserName(event) {
-        return "jmgayosso551";
+        return "app.tf";
     } */
 }
 

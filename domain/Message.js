@@ -16,14 +16,16 @@ class Message {
         this.message = message;
         this.sender = sender;
         this.receiver = receiver;
-        this.fullMessage = `Message from ${sender.eosAccount} sent through ${app.appName} App:\n ${message}`;
+        this.fullMessage = `Message from ${sender.eosAccount} sent through ${app.name} App:\n ${message}`;
     }
 
     async send() {
         const {
             commPref,
             emailAddress,
+            emailVerified,
             smsNumber,
+            smsVerified,
         } = this.receiver;
 
         const base = {
@@ -46,11 +48,11 @@ class Message {
         console.log('Message Record: ', msgRecord);
         console.log('Chat Records: ', chatRecords);
 
-        if (commPref == 'EMAIL' || (!commPref && emailAddress)) {
+        if (emailVerified && (!commPref || commPref == 'EMAIL' || !smsVerified)) {
             const r = await commApi.sendEmail(emailAddress, this.subject, this.fullMessage);
             msgRecord.emailReceipt = r[0].headers['x-message-id'];
             msgRecord.emailAddress = emailAddress;
-        } else if (commPref == 'SMS' || (!commPref && smsNumber)) {
+        } else if (smsVerified) {
             const msg = await commApi.sendSMS(smsNumber, this.fullMessage);
             msgRecord.smsReceipt = msg.sid;
             msgRecord.smsNumber = smsNumber;

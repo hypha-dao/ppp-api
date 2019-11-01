@@ -1,5 +1,5 @@
 {
-    "body": "{\"eosAccount\": \"sebastianm22\",\"senderAccount\": \"sebastianm21\",\"message\": \"Otro mensaje7\"}",
+    "body": "{\"eosAccount\": \"sebastianmb1\",\"senderAccount\": \"test\",\"message\": \"Otro mensaje7\"}",
     "requestContext": {
         "identity": {}
     }

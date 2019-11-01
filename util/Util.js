@@ -1,3 +1,5 @@
+import isPlainObject from 'is-plain-object';
+
 class Util {
     static isEmptyObj(obj) {
         for (const key in obj) {
@@ -106,6 +108,20 @@ class Util {
 
     static async sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    static deleteNullsAndEmptyStrings(obj) {
+        if (!isPlainObject(obj)) {
+            return;
+        }
+        for (const key in obj) {
+            const val = obj[key];
+            if (val == null || val === '') {
+                delete obj[key];
+            } else {
+                this.deleteNullsAndEmptyStrings(val);
+            }
+        }
     }
 }
 

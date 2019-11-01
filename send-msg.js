@@ -20,7 +20,7 @@ export async function main(event, context) {
         } = body;
 
         if (!eosAccount || !message) {
-            return ResponseUtil.failure("eosAccount and message are required");
+            throw "eosAccount and message are required";
         }
         let senderAccount = null;
         const app = await authApi.getApp(event, body);
@@ -30,12 +30,13 @@ export async function main(event, context) {
         } else {
             ({ senderAccount } = body);
             if (!senderAccount) {
-                return ResponseUtil.failure("senderAccount is required");
+                throw "senderAccount is required";
             }
         }
 
-        const receiver = await profileDao.getByEOSAccount(appId, eosAccount);
-        const sender = await profileDao.getByEOSAccount(appId, senderAccount);
+        const { profile: receiver } = await profileDao.getVerifiedProfile(appId, eosAccount);
+        const { profile: sender } = await profileDao.getVerifiedProfile(appId, senderAccount);
+
         const msg = new Message({
             app,
             subject,

@@ -46,10 +46,11 @@ class App {
         if (!manifests) {
             throw 'No chain manifests found';
         }
-        const { manifest } = this._findChainManifest(manifests);
+        let manifest = this._findChainManifest(manifests);
         if (!manifest) {
-            return `No manifest found for chainId: ${this.chainId}`;
+            throw `No manifest found for chainId: ${this.chainId}`;
         }
+        manifest = manifest.manifest;
         console.log('Chain manifest found: ', JSON.stringify(manifest, null, 2));
         return manifest.account;
     }

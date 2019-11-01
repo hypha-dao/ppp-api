@@ -1,4 +1,5 @@
 import merge from 'merge';
+import { PublicFields } from "@smontero/ppp-common";
 import BaseDomain from './BaseDomain';
 import { VerificationApi } from "../service";
 import { AppIds, ProfileAccessTypes } from "../const";
@@ -72,6 +73,7 @@ class Profile extends BaseDomain {
         this.emailChanged = false;
         this.smsChanged = false;
         this.profile = this._init(eosAccount, profile);
+        this._setIsVerified();
     }
 
     _init(eosAccount, profile) {
@@ -92,9 +94,19 @@ class Profile extends BaseDomain {
         };
     }
 
-    updateEmail(profile, newEmailAddress) {
-        console.log(" updateEmail, profile  : ", profile);
-        console.log(" updateEmail, newEmailAddress    : ", newEmailAddress);
+    isVerified() {
+        const { profile } = this;
+        return Math.max(profile.emailVerified || 0, profile.smsVerified || 0);
+    }
+
+    _setIsVerified() {
+        this.profile.publicData = this.profile.publicData || {};
+        this.profile.publicData[PublicFields.IS_VERIFIED] = this.isVerified();
+    }
+
+    _updateEmail(profile, newEmailAddress) {
+        console.log(" _updateEmail, profile  : ", profile);
+        console.log(" _updateEmail, newEmailAddress    : ", newEmailAddress);
 
         if (newEmailAddress && newEmailAddress != profile.emailAddress) {
             profile.emailVerified = 0;
@@ -104,9 +116,9 @@ class Profile extends BaseDomain {
         }
     }
 
-    updateSms(profile, newSmsNumber) {
-        console.log(" updateSms, profile  : ", profile);
-        console.log(" updateSms, newSmsNumber    : ", newSmsNumber);
+    _updateSms(profile, newSmsNumber) {
+        console.log(" _updateSms, profile  : ", profile);
+        console.log(" _updateSms, newSmsNumber    : ", newSmsNumber);
 
         if (newSmsNumber && newSmsNumber != profile.smsNumber) {
             profile.smsVerified = 0;
@@ -114,6 +126,24 @@ class Profile extends BaseDomain {
             console.log(" smsNumber    : ", newSmsNumber);
             this.smsChanged = true;
         }
+    }
+
+    verifySmsOtp(smsOtp) {
+        const { profile } = this;
+        if (smsOtp != profile.smsOtp.toString()) {
+            throw new Error(`Invalid SMS Verify Code: ${smsOtp}`);
+        }
+        profile.smsVerified = Date.now();
+        this._setIsVerified();
+    }
+
+    verifyEmailOtp(emailOtp) {
+        const { profile } = this;
+        if (emailOtp != profile.emailOtp.toString()) {
+            throw new Error(`Invalid Email Verify Code: ${emailOtp}`);
+        }
+        profile.emailVerified = Date.now();
+        this._setIsVerified();
     }
 
     async update(newProfile) {
@@ -127,8 +157,8 @@ class Profile extends BaseDomain {
         } = newProfile;
         const profile = this.profile;
 
-        this.updateEmail(profile, emailAddress);
-        this.updateSms(profile, smsNumber);
+        this._updateEmail(profile, emailAddress);
+        this._updateSms(profile, smsNumber);
 
         if (commPref) profile.commPref = commPref;
 
@@ -153,10 +183,12 @@ class Profile extends BaseDomain {
                 profile.appData = this._getInitState(appId, this.eosAccount);
                 console.log(` Profile for app: ${appId} not found. Creating new: `, profile.appData);
             }
-            this.mergeData(profile.appData, appData.publicData, appData.privateData);
+            this.mergeData(profile.appData, appData.publicData, appData.privateData, true);
             profile.appData.app = Profile.getEntityDetails('app', this.app);
             console.log('Profile: ', this.profile);
         }
+        Util.deleteNullsAndEmptyStrings(profile);
+        this._setIsVerified();
     }
 
     mergeData(profile, publicData, privateData) {
