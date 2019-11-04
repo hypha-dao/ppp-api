@@ -16,7 +16,7 @@ class Message {
         this.message = message;
         this.sender = sender;
         this.receiver = receiver;
-        this.fullMessage = `Message from ${sender.eosAccount} sent through ${app.name} App:\n ${message}`;
+        this.fullMessage = `Message from ${sender.eosAccount} sent through ${app.name} App to ${receiver.eosAccount}:\n ${message}`;
     }
 
     async send() {
