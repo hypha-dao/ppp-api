@@ -10,7 +10,7 @@ class AuthApi {
     }
 
     async getApp(event, body) {
-        return this.appDao.getByDomain('app-dev.telos.net');
+        return this.appDao.getByDomain('app.telos.net');
     }
 
     /*  async getApp(event, body) {
