@@ -11,9 +11,9 @@ class AppDao extends BaseDao {
         super(process.env.appTableName, 'appId', false);
     }
 
-    async getById(appId) {
+    async getById(appId, mustExist = true) {
         const app = await this.get(appId);
-        if (!app) {
+        if (!app && mustExist) {
             throw Error(`app with appId: ${appId} does not exist`);
         }
         return app;
@@ -46,9 +46,9 @@ class AppDao extends BaseDao {
         });
     }
 
-    async getByDomain(domain) {
+    async getByDomain(domain, mustExist = true) {
         const app = await this.findByDomain(domain);
-        if (!app) {
+        if (!app && mustExist) {
             throw Error(`app with domain: ${domain} does not exist`);
         }
         return app;

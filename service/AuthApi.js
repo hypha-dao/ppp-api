@@ -9,21 +9,21 @@ class AuthApi {
         this.appDao = new AppDao();
     }
 
-    async getApp(event, body) {
-        return this.appDao.getByDomain('app.telos.net');
+    async getApp(event, body, mustExist = true) {
+        return this.appDao.getByDomain('app-dev.telos.net', mustExist);
     }
 
-    /*  async getApp(event, body) {
+    /*  async getApp(event, body, mustExist=true) {
  
          let app = null;
          if (this.isCognitoAuth(event)) {
              const { headers: { origin } } = event;
              const url = new URL(origin);
-             app = await this.appDao.getByDomain(url.hostname);
+             app = await this.appDao.getByDomain(url.hostname, mustExist);
          } else {
              ({ appId, appKey } = body);
              await this.authenticate(appId, appKey);
-             app = await this.appDao.getById(appId);
+             app = await this.appDao.getById(appId, mustExist);
          }
          return app;
      } */

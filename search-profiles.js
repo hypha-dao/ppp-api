@@ -1,8 +1,6 @@
 import { ResponseUtil } from './util';
 import { ProfileDao } from "./dao";
-import { AuthApi } from "./service";
 
-const authApi = new AuthApi();
 const profileDao = new ProfileDao();
 
 export async function main(event, context) {
@@ -14,8 +12,6 @@ export async function main(event, context) {
             lastEvaluatedKey,
             search,
         } = body;
-
-        const { appId } = await authApi.getApp(event, body);
 
         let profiles = await profileDao.search({
             search,
