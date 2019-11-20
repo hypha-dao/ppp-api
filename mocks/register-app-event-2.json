@@ -1,3 +1,3 @@
 {
-    "body": "{\"baseUrl\": \"http://localhost:3000\",\"type\": \"WEB APP\"}"
+    "body": "{\"originAppId\": \"ce041970-0bb6-11ea-9daa-ada77c4bce38\", \"baseUrl\": \"http://localhost:3000\",\"type\": \"WEB APP\"}"
 }

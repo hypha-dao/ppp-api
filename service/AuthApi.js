@@ -9,11 +9,11 @@ class AuthApi {
         this.appDao = new AppDao();
     }
 
-    async getApp(event, body, mustExist = true) {
-        return this.appDao.getByDomain('app-dev.telos.net', mustExist);
-    }
-
     /* async getApp(event, body, mustExist = true) {
+        return this.appDao.getByDomain('app-dev.telos.net', mustExist);
+    } */
+
+    async getApp(event, body, mustExist = true) {
 
         let app = null;
         let { originAppId } = body;
@@ -33,7 +33,7 @@ class AuthApi {
             app = await this.appDao.getByDomain(url.hostname, mustExist);
         }
         return app;
-    } */
+    }
 
     async authenticate(appId, appKey) {
         if (!appKey || !appId) {
@@ -70,7 +70,7 @@ class AuthApi {
     }
 
     /* async getUserName(event) {
-        return "sebastianmb1";
+        return "testtesttest";
     } */
 }
 
