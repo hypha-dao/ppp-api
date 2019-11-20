@@ -1,4 +1,5 @@
 import BaseDao from "./BaseDao";
+import { AppTypes } from '@smontero/ppp-common';
 import { Util } from "../util";
 
 
@@ -57,6 +58,7 @@ class AppDao extends BaseDao {
     async save(appD) {
         try {
             const {
+                type,
                 newState,
                 newState: {
                     appId,
@@ -65,35 +67,36 @@ class AppDao extends BaseDao {
                 oldState
             } = appD;
             const items = this._toTransactPutItems(newState);
-
-            const appDomainQuery = {
-                TableName: process.env.uniqueAppDomainTableName,
-                Item: {
-                    domain,
-                    appId,
-                },
-            };
-            if (appD.isNewDomain()) {
-                this.notExistsCondition(appDomainQuery, '#d');
-                appDomainQuery.ExpressionAttributeNames = ExpressionAttributeNames;
-                if (!appD.isNewApp()) {
-                    const deleteQuery = {
-                        TableName: process.env.uniqueAppDomainTableName,
-                        Key: {
-                            domain: oldState.domain,
-                        },
-                    };
-                    this.valueCondition(deleteQuery, 'appId', appId);
-                    items.push({
-                        Delete: deleteQuery,
-                    });
+            if (type === AppTypes.WEB_APP) {
+                const appDomainQuery = {
+                    TableName: process.env.uniqueAppDomainTableName,
+                    Item: {
+                        domain,
+                        appId,
+                    },
+                };
+                if (appD.isNewDomain()) {
+                    this.notExistsCondition(appDomainQuery, '#d');
+                    appDomainQuery.ExpressionAttributeNames = ExpressionAttributeNames;
+                    if (!appD.isNewApp()) {
+                        const deleteQuery = {
+                            TableName: process.env.uniqueAppDomainTableName,
+                            Key: {
+                                domain: oldState.domain,
+                            },
+                        };
+                        this.valueCondition(deleteQuery, 'appId', appId);
+                        items.push({
+                            Delete: deleteQuery,
+                        });
+                    }
+                } else {
+                    this.valueCondition(appDomainQuery, 'appId', appId);
                 }
-            } else {
-                this.valueCondition(appDomainQuery, 'appId', appId);
+                items.push({
+                    Put: appDomainQuery,
+                });
             }
-            items.push({
-                Put: appDomainQuery,
-            });
             await this.transactWrite(items);
         } catch (error) {
             console.error('Error saving app: ', error);

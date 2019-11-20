@@ -1,4 +1,3 @@
-import axios from 'axios';
 import uuid from "uuid";
 import assert from 'assert';
 
@@ -6,104 +5,44 @@ class App {
 
     constructor({
         appId,
-        baseUrl,
         requesterAccount,
+        type
     }, appDao) {
-        console.log(`appId: ${appId}, baseUrl: ${baseUrl}, requesterAccount: ${requesterAccount}`);
+        console.log(`appId: ${appId}, requesterAccount: ${requesterAccount}, type: ${type}`);
         this.appId = appId;
-        this.baseUrl = new URL(baseUrl);
-        this.domain = this.baseUrl.hostname;
         this.requesterAccount = requesterAccount;
-        this.chainId = process.env.chainId;
+        this.type = type;
         this.appDao = appDao;
-        this.ax = axios.create({
-            baseURL: baseUrl
-        });
-        this.newState = null;
     }
 
-    async _request(file, errorMsg) {
-        try {
-            const { data } = await this.ax.get(file);
-            return data;
-        } catch (error) {
-            console.error(errorMsg, error);
-            throw errorMsg;
-        }
-    }
-
-    _findChainManifest(manifests) {
-        for (const manifest of manifests) {
-            if (manifest.chainId === this.chainId) {
-                return manifest;
-            }
-        }
-        return null;
-    }
-
-    async _getOwnerAccount() {
-        const { manifests } = await this._request('chain-manifests.json', 'Error loading chain manifests');
-        if (!manifests) {
-            throw 'No chain manifests found';
-        }
-        let manifest = this._findChainManifest(manifests);
-        if (!manifest) {
-            throw `No manifest found for chainId: ${this.chainId}`;
-        }
-        manifest = manifest.manifest;
-        console.log('Chain manifest found: ', JSON.stringify(manifest, null, 2));
-        return manifest.account;
-    }
-
-    async _getMetadata() {
-        const { name, shortname, icon } = await this._request('app-metadata.json', 'Error loading app metadata');
-        if (!name || !shortname || !icon) {
-            throw 'Invalid app metadata, name, shortname or icon fields missing';
-        }
-        return {
-            name,
-            shortname,
-            icon: this._getIconUrl(icon),
-        };
-    }
-
-    _getIconUrl(icon) {
-        try {
-            const iconUrl = new URL(icon, this.baseUrl.href);
-            return iconUrl.href;
-        } catch (error) {
-            console.error(error);
-            throw 'Invalid app icon url';
-        }
-    }
-
-    async loadDetails() {
-        const ownerAccount = await this._getOwnerAccount();
-        if (ownerAccount !== this.requesterAccount) {
-            throw `Domain owner account: ${ownerAccount} does not match requester account: ${this.requesterAccount}`;
-        }
+    async _loadStates(newDetails) {
+        console.log('New Details: ', newDetails);
         let details = null;
         if (this.appId) {
             details = await this.appDao.getById(this.appId);
-            const { ownerAccount, domain } = details;
-            if (this.requesterAccount !== ownerAccount && this.domain !== domain) {
-                throw `It's not possible to update the owner account and domain at the same time`;
-            }
             this.oldState = details;
         } else {
             details = {
                 appId: uuid.v1(),
             };
         }
-        const metadata = await this._getMetadata();
-        details = {
+        this.newState = {
             ...details,
-            domain: this.domain,
             ownerAccount: this.requesterAccount,
-            ...metadata,
+            type: this.type,
+            ...newDetails,
         };
-        this.newState = details;
     }
+
+    assertState() {
+        assert(this.newState, '_loadStates method should be called first!');
+    }
+
+    isNewApp() {
+        this.assertState();
+        return !this.oldState;
+    }
+
     assertState() {
         assert(this.newState, 'loadDetails method should be called first!');
     }
