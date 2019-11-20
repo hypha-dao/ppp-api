@@ -70,7 +70,7 @@ class AuthApi {
     }
 
     /* async getUserName(event) {
-        return "testtesttest";
+        return "app.tf";
     } */
 }
 

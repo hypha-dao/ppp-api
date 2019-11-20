@@ -107,6 +107,29 @@ class AppDao extends BaseDao {
         }
     }
 
+    async delete(appId, domain) {
+        const items = [
+            {
+                Delete: {
+                    Key: {
+                        appId,
+                    },
+                }
+            }
+        ];
+        if (domain) {
+            items.push({
+                Delete: {
+                    TableName: process.env.uniqueAppDomainTableName,
+                    Key: {
+                        domain,
+                    },
+                }
+            });
+        }
+        await this.transactWrite(items);
+    }
+
 }
 
 export default AppDao;
