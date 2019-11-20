@@ -13,20 +13,27 @@ class AuthApi {
         return this.appDao.getByDomain('app-dev.telos.net', mustExist);
     }
 
-    /*  async getApp(event, body, mustExist=true) {
- 
-         let app = null;
-         if (this.isCognitoAuth(event)) {
-             const { headers: { origin } } = event;
-             const url = new URL(origin);
-             app = await this.appDao.getByDomain(url.hostname, mustExist);
-         } else {
-             ({ appId, appKey } = body);
-             await this.authenticate(appId, appKey);
-             app = await this.appDao.getById(appId, mustExist);
-         }
-         return app;
-     } */
+    /* async getApp(event, body, mustExist = true) {
+
+        let app = null;
+        let { originAppId } = body;
+        const { headers } = event;
+        const origin = headers ? headers.origin : null;
+        if (!origin && !originAppId) {
+            if (mustExist) {
+                throw 'originAppId parameter is required for standalone apps';
+            } else {
+                return null;
+            }
+        }
+        if (originAppId) {
+            app = await this.appDao.getById(originAppId, mustExist);
+        } else {
+            const url = new URL(origin);
+            app = await this.appDao.getByDomain(url.hostname, mustExist);
+        }
+        return app;
+    } */
 
     async authenticate(appId, appKey) {
         if (!appKey || !appId) {
@@ -46,7 +53,7 @@ class AuthApi {
         return !!event.requestContext.identity.cognitoAuthenticationProvider;
     }
 
-    /* async getUserName(event) {
+    async getUserName(event) {
         const {
             cognitoAuthenticationProvider,
         } = event.requestContext.identity;
@@ -60,11 +67,11 @@ class AuthApi {
         }).promise();
         console.log("user:", user);
         return user.Username;
-    } */
-
-    async getUserName(event) {
-        return "sebastianmb1";
     }
+
+    /* async getUserName(event) {
+        return "sebastianmb1";
+    } */
 }
 
 export default AuthApi;
