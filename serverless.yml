@@ -76,6 +76,7 @@ provider:
       Action:
         - dynamodb:DescribeTable
         - dynamodb:Query
+        - dynamodb:DeleteItem
         - dynamodb:GetItem
         - dynamodb:PutItem
         - dynamodb:UpdateItem
