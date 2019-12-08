@@ -1,8 +1,8 @@
 import merge from 'merge';
-import { PublicFields } from "@smontero/ppp-common";
+import { AppIds, PublicFields } from "@smontero/ppp-common";
 import BaseDomain from './BaseDomain';
 import { VerificationApi } from "../service";
-import { AppIds, ProfileAccessTypes } from "../const";
+import { ProfileAccessTypes } from "../const";
 import { Util } from "../util";
 
 class Profile extends BaseDomain {

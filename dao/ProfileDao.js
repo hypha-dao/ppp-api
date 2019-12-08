@@ -1,7 +1,7 @@
-import { ProfileFetchTypes } from "@smontero/ppp-common";
+import { AppIds, ProfileFetchTypes } from "@smontero/ppp-common";
 import BaseDao from "./BaseDao";
 import { Util } from '../util';
-import { AppIds, ProfileAccessTypes } from '../const';
+import { ProfileAccessTypes } from '../const';
 import { Profile } from '../domain';
 
 class ProfileDao extends BaseDao {
@@ -25,12 +25,22 @@ class ProfileDao extends BaseDao {
         await this.transactPut(items);
     }
 
-    async findByEOSAccounts(appId, eosAccounts, fetchType, accessType) {
-        console.log(`Finding profiles for eosAccounts: ${eosAccounts}, appId: ${appId}, fetchType: ${fetchType}, accessType: ${accessType}`);
+    async _findByEOSAccountsRaw(appId, eosAccounts, fetchType) {
+        eosAccounts = Util.removeDuplicates(eosAccounts);
         const keys = this._getKeysByFetchType(appId, eosAccounts, fetchType);
         console.log(`Keys used for finding eosAccounts: `, keys);
         const results = await this.batchGet(keys);
         console.log(`Results: `, results);
+        return results;
+    }
+
+    async findByEOSAccounts(appId, eosAccounts, fetchType, accessType) {
+        console.log(`Finding profiles for eosAccounts: ${eosAccounts}, appId: ${appId}, fetchType: ${fetchType}, accessType: ${accessType}`);
+        const results = await this._findByEOSAccountsRaw(appId, eosAccounts, fetchType);
+        return this._processResults(results, accessType);
+    }
+
+    _processResults(results, accessType) {
         const map = {};
         for (const result of results) {
             const { eosAccount, appId } = result;
@@ -42,6 +52,8 @@ class ProfileDao extends BaseDao {
         }
         return map;
     }
+
+
 
     async hydrateWithUser(appId, objs, accountProp = 'eosAccount', hydratedProp) {
         return Util.hydrate(
@@ -94,6 +106,8 @@ class ProfileDao extends BaseDao {
     }
 
     async search({
+        appId,
+        fetchType,
         search,
         limit,
         lastEvaluatedKey
@@ -101,7 +115,7 @@ class ProfileDao extends BaseDao {
         search = (search || '').trim().toLowerCase();
         let KeyConditionExpression = 'appId = :appId';
         let ExpressionAttributeValues = {
-            ':appId': AppIds.BASE_PROFILE_APP,
+            ':appId': appId,
         };
         if (search) {
             KeyConditionExpression += ' and begins_with(eosAccount, :search)';
@@ -113,8 +127,23 @@ class ProfileDao extends BaseDao {
             ExpressionAttributeValues,
             ProjectionExpression: "eosAccount, publicData",
         };
+        const results = await this.query(readParams, limit, lastEvaluatedKey);
 
-        return this.query(readParams, limit, lastEvaluatedKey);
+        console.log('ProfileDao.search, initial results: ', results);
+        if (appId === AppIds.BASE_PROFILE_APP) {
+            return results;
+        }
+        let { items } = results;
+        if (fetchType !== ProfileFetchTypes.APP_ONLY) {
+            const eosAccounts = [];
+            for (const item of items) {
+                eosAccounts.push(item.eosAccount);
+            }
+            const baseItems = await this._findByEOSAccountsRaw(appId, eosAccounts, ProfileFetchTypes.BASE_ONLY);
+            items = baseItems.concat(items);
+        }
+        results.items = Object.values(this._processResults(items, ProfileAccessTypes.PUBLIC));
+        return results;
     }
 
     async updateAppDetails(appId, appDetails) {

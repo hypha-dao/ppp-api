@@ -1,8 +1,8 @@
-import { ProfileFetchTypes } from "@smontero/ppp-common";
+import { AppIds, ProfileFetchTypes } from "@smontero/ppp-common";
 import { ResponseUtil } from './util';
 import { ProfileDao } from "./dao";
 import { AuthApi } from "./service";
-import { AppIds, ProfileAccessTypes } from "./const";
+import { ProfileAccessTypes } from "./const";
 
 const authApi = new AuthApi();
 const profileDao = new ProfileDao();

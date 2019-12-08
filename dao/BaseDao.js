@@ -159,6 +159,9 @@ class BaseDao {
                 assert(range, 'Key must include values for hash and range props');
                 hash = Array.isArray(hash) ? hash : [hash];
                 range = Array.isArray(range) ? range : [range];
+                if (!hash.length || !range.length) {
+                    return pKeys;
+                }
                 let singleProp;
                 let multiProp;
                 let singleValue;
@@ -197,7 +200,11 @@ class BaseDao {
     }
 
     async batchGet(keys, queryOpts = {}) {
-        queryOpts.Keys = this._toHashRange(keys);
+        const qKeys = this._toHashRange(keys);
+        if (!qKeys.length) {
+            return [];
+        }
+        queryOpts.Keys = qKeys;
         return this._batchGet({ [this.tableName]: queryOpts });
     }
 

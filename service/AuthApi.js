@@ -53,7 +53,7 @@ class AuthApi {
         return !!event.requestContext.identity.cognitoAuthenticationProvider;
     }
 
-    async getUserName(event) {
+    /* async getUserName(event) {
         const {
             cognitoAuthenticationProvider,
         } = event.requestContext.identity;
@@ -67,11 +67,11 @@ class AuthApi {
         }).promise();
         console.log("user:", user);
         return user.Username;
-    }
-
-    /* async getUserName(event) {
-        return "app.tf";
     } */
+
+    async getUserName(event) {
+        return "test31";
+    }
 }
 
 export default AuthApi;
