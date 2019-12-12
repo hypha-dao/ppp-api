@@ -10,7 +10,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/smontero1/ppp-api"
+    "url": "https://gitlab.com/telos-kitchen/ppp-api"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
