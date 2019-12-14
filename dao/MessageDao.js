@@ -32,6 +32,7 @@ class MessageDao extends BaseDao {
             ExpressionAttributeValues: {
                 ':appParticipants': appParticipants,
             },
+            ProjectionExpression: 'subject, senderAccount, messageKey, eosAccount, message, sentAt',
             ScanIndexForward: false,
         };
 

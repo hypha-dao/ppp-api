@@ -53,6 +53,7 @@ class ChatDao extends BaseDao {
         const appEosAccount = this.appAttribute(appId, eosAccount);
         const readParams = {
             KeyConditionExpression: 'appEosAccount = :appEosAccount and begins_with(counterPartyAccount, :search)',
+            ProjectionExpression: 'subject, isSender, counterParty, eosAccount, counterPartyAccount, message, sentAt',
             ExpressionAttributeValues: {
                 ':appEosAccount': appEosAccount,
                 ':search': search,

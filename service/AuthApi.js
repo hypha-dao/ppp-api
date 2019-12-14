@@ -70,7 +70,7 @@ class AuthApi {
     }
 
     /* async getUserName(event) {
-        return "test31";
+        return "sebastianm11";
     } */
 }
 

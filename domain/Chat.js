@@ -54,20 +54,16 @@ class Chat extends BaseDomain {
 Chat.ENTITY_FIELDS = {
     profile: [
         {
-            field: `publicData.${PublicFields.FIRST_NAME}`,
-            name: PublicFields.FIRST_NAME,
-        },
-        {
-            field: `publicData.${PublicFields.LAST_NAME}`,
-            name: PublicFields.LAST_NAME,
+            field: `publicData.${PublicFields.NAME}`,
+            name: PublicFields.NAME,
         },
         {
             field: `publicData.${PublicFields.S3_IDENTITY}`,
             name: PublicFields.S3_IDENTITY,
         },
         {
-            field: `publicData.${PublicFields.PROFILE_IMAGE}`,
-            name: PublicFields.PROFILE_IMAGE
+            field: `publicData.${PublicFields.AVATAR_IMAGE}`,
+            name: PublicFields.AVATAR_IMAGE
         },
     ],
 };

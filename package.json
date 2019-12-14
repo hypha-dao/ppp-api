@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@sendgrid/mail": "^6.4.0",
-    "@smontero/ppp-common": "0.0.11",
+    "@smontero/ppp-common": "0.0.16",
     "aws-sdk": "^2.546.0",
     "axios": "^0.19.0",
     "babel-runtime": "^6.26.0",
