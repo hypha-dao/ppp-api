@@ -19,6 +19,7 @@ class Profile extends BaseDomain {
                 needsToVerify: !commVerified,
                 verifiedAt: commVerified ? commVerified : null,
                 mask: maskFn(comm),
+                value: comm,
             };
         }
     }
