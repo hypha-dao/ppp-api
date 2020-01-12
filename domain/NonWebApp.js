@@ -1,7 +1,7 @@
 import App from './App';
 import { AppTypes } from '@smontero/ppp-common';
 
-class StandaloneApp extends App {
+class NonWebApp extends App {
 
     constructor({
         appId,
@@ -9,26 +9,30 @@ class StandaloneApp extends App {
         shortname,
         icon,
         requesterAccount,
+        isPrivate,
+        oauthRedirectUrls,
     }, appDao) {
         super({
             appId,
             requesterAccount,
-            type: AppTypes.STANDALONE_APP,
+            type: AppTypes.NON_WEB_APP,
+            isPrivate,
+            oauthRedirectUrls,
         }, appDao)
         console.log(`name: ${name}, shortname: ${shortname}, icon: ${icon}`);
         this.name = name;
         this.shortname = shortname;
         this.icon = icon;
-        this._validate();
     }
 
-    _validate() {
+    _validateInputs() {
+        super._validateInputs();
         if (!this.name || !this.shortname || !this.icon) {
             throw 'name, shortname and icon parameters are required';
         }
     }
 
-    async loadDetails() {
+    async _loadDetails() {
         await this._loadStates({
             name: this.name,
             shortname: this.shortname,
@@ -41,4 +45,4 @@ class StandaloneApp extends App {
 
 }
 
-export default StandaloneApp;
+export default NonWebApp;

@@ -23,7 +23,7 @@ export async function main(event, context) {
             ...body,
             requesterAccount: eosAccount,
         }, appDao);
-        await app.loadDetails();
+        await app.init();
         await app.save();
         console.log('App: ', app.newState);
         return ResponseUtil.success({

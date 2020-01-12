@@ -2,7 +2,7 @@ import AppFactory from './AppFactory';
 import Chat from './Chat';
 import Message from './Message';
 import Profile from './Profile';
-import StandaloneApp from './StandaloneApp';
+import NonWebApp from './NonWebApp';
 import WebApp from './WebApp';
 
 export {
@@ -10,6 +10,6 @@ export {
     Chat,
     Message,
     Profile,
-    StandaloneApp,
+    NonWebApp,
     WebApp,
 };

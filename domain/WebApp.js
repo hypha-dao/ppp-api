@@ -8,23 +8,18 @@ class WebApp extends App {
         appId,
         baseUrl,
         requesterAccount,
+        isPrivate,
+        oauthRedirectUrls,
     }, appDao) {
         super({
             appId,
             requesterAccount,
             type: AppTypes.WEB_APP,
+            isPrivate,
+            oauthRedirectUrls,
         }, appDao)
         console.log(`baseUrl: ${baseUrl}`);
-        if (!baseUrl) {
-            throw 'baseUrl is a required parameter';
-        }
-        this.baseUrl = new URL(baseUrl);
-        this.domain = this.baseUrl.hostname;
-        this.chainId = process.env.chainId;
-        this.ax = axios.create({
-            baseURL: baseUrl
-        });
-        this.newState = null;
+        this.baseUrlStr = baseUrl;
     }
 
     async _request(file, errorMsg) {
@@ -82,7 +77,24 @@ class WebApp extends App {
         }
     }
 
-    async loadDetails() {
+    _validateInputs() {
+        super._validateInputs();
+        if (!this.baseUrlStr) {
+            throw 'baseUrl is a required parameter';
+        }
+    }
+
+    _finishSetup() {
+        this.baseUrl = new URL(this.baseUrlStr);
+        this.domain = this.baseUrl.hostname;
+        this.chainId = process.env.chainId;
+        this.ax = axios.create({
+            baseURL: this.baseUrlStr
+        });
+    }
+
+
+    async _loadDetails() {
         const ownerAccount = await this._getOwnerAccount();
         if (ownerAccount !== this.requesterAccount) {
             throw `Domain owner account: ${ownerAccount} does not match requester account: ${this.requesterAccount}`;

@@ -1,4 +1,6 @@
 import isPlainObject from 'is-plain-object';
+import uuid from "uuid";
+import crypto from 'crypto'
 
 class Util {
     static isEmptyObj(obj) {
@@ -10,6 +12,14 @@ class Util {
 
     static isString(value) {
         return typeof value === 'string' || value instanceof String;
+    }
+
+    static uuid() {
+        return uuid.v1();
+    }
+
+    static randomString(bits = 256) {
+        return crypto.randomBytes(bits / 8).toString('hex');
     }
 
     /**
