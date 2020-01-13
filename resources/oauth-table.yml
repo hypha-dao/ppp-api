@@ -1,0 +1,46 @@
+Resources:
+  OauthTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:custom.oauthTableName}
+      AttributeDefinitions:
+        - AttributeName: accessToken
+          AttributeType: S
+        - AttributeName: appId
+          AttributeType: S
+        - AttributeName: authorizationCode
+          AttributeType: S
+        - AttributeName: eosAccount
+          AttributeType: S
+      KeySchema:
+        - AttributeName: authorizationCode
+          KeyType: HASH
+        - AttributeName: appId
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: GSI_accessToken_appId
+          KeySchema:
+            - AttributeName: accessToken
+              KeyType: HASH
+            - AttributeName: appId
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: ${self:custom.tableThroughput}
+            WriteCapacityUnits: ${self:custom.tableThroughput}
+        - IndexName: GSI_eosAccount_appId
+          KeySchema:
+            - AttributeName: eosAccount
+              KeyType: HASH
+            - AttributeName: appId
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: ${self:custom.tableThroughput}
+            WriteCapacityUnits: ${self:custom.tableThroughput}
+      # Set the capacity based on the stage
+      ProvisionedThroughput:
+        ReadCapacityUnits: ${self:custom.tableThroughput}
+        WriteCapacityUnits: ${self:custom.tableThroughput}
