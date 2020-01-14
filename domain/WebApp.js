@@ -102,6 +102,7 @@ class WebApp extends App {
         const metadata = await this._getMetadata();
         await this._loadStates({
             domain: this.domain,
+            url: this.baseUrlStr,
             ...metadata,
         });
 
