@@ -28,6 +28,14 @@ class BaseDao {
     }
 
     async query(query, limit, lastEvaluatedKey, retries = MAX_RETRIES) {
+        return this._queryOrScan('query', query, limit, lastEvaluatedKey, retries);
+    }
+
+    async scan(query, limit, lastEvaluatedKey, retries = MAX_RETRIES) {
+        return this._queryOrScan('scan', query || {}, limit, lastEvaluatedKey, retries);
+    }
+
+    async _queryOrScan(op, query, limit, lastEvaluatedKey, retries = MAX_RETRIES) {
         try {
             limit && (query.Limit = limit);
             lastEvaluatedKey && (query.ExclusiveStartKey = lastEvaluatedKey);
@@ -36,7 +44,7 @@ class BaseDao {
                 Items: items,
                 Count: count,
                 LastEvaluatedKey: newLastEvaluatedKey,
-            } = await this.exec('query', query);
+            } = await this.exec(op, query);
 
             let pRS = {
                 items,
@@ -59,7 +67,7 @@ class BaseDao {
 
     async put(item, queryOpts = {}, optimisticLocking = null) {
         queryOpts.Item = item;
-        if (this._isOptimisticaLocking(optimisticLocking)) {
+        if (this._isOptimisticLocking(optimisticLocking)) {
             this.versionCondition(queryOpts);
         }
         console.log('Query Opts: ', JSON.stringify(queryOpts, null, 2));
@@ -84,7 +92,7 @@ class BaseDao {
     }
 
     async transactWrite(items, optimisticLocking = null) {
-        if (this._isOptimisticaLocking(optimisticLocking)) {
+        if (this._isOptimisticLocking(optimisticLocking)) {
             this._iterateTransactItems(items, (item) => this.versionCondition(item));
         }
         console.log('Items: ', JSON.stringify(items, null, 2));
@@ -331,7 +339,7 @@ class BaseDao {
         }
     }
 
-    _isOptimisticaLocking(optimisticLocking) {
+    _isOptimisticLocking(optimisticLocking) {
         return optimisticLocking == null ? this.optimisticLocking : optimisticLocking;
     }
 }

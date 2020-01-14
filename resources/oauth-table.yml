@@ -12,18 +12,16 @@ Resources:
           AttributeType: S
         - AttributeName: eosAccount
           AttributeType: S
+        - AttributeName: refreshToken
+          AttributeType: S
       KeySchema:
         - AttributeName: authorizationCode
           KeyType: HASH
-        - AttributeName: appId
-          KeyType: RANGE
       GlobalSecondaryIndexes:
-        - IndexName: GSI_accessToken_appId
+        - IndexName: GSI_accessToken
           KeySchema:
             - AttributeName: accessToken
               KeyType: HASH
-            - AttributeName: appId
-              KeyType: RANGE
           Projection:
             ProjectionType: ALL
           ProvisionedThroughput:
@@ -35,6 +33,15 @@ Resources:
               KeyType: HASH
             - AttributeName: appId
               KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: ${self:custom.tableThroughput}
+            WriteCapacityUnits: ${self:custom.tableThroughput}
+        - IndexName: GSI_refreshToken
+          KeySchema:
+            - AttributeName: refreshToken
+              KeyType: HASH
           Projection:
             ProjectionType: ALL
           ProvisionedThroughput:

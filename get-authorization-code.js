@@ -12,6 +12,8 @@ export async function main(event, context) {
     try {
         console.log('event: ', event);
         console.log('context: ', context);
+
+        const requestParams = event.query;
         const body = JSON.parse(event.body);
         let { eosAccounts, fetchType } = body;
 
