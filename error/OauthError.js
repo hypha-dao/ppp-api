@@ -8,7 +8,11 @@ class OauthError extends DomainError {
     }
 
     toString() {
-        return `${super.toString()}\nError: ${this.error}}\nError Desc: ${this.message} \n Cause: ${this.cause.stack || this.cause}`;
+        let str = `\nError: ${this.error}}\nError Desc: ${this.message}`;
+        if (this.cause) {
+            str += `\n Cause: ${this.cause.stack || this.cause}`;
+        }
+        return str;
     }
 
     payload() {

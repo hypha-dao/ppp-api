@@ -74,12 +74,16 @@ provider:
     startAuthTimeout: ${self:custom.environment.startAuthTimeout}
     minAuthTimeout: ${self:custom.environment.minAuthTimeout}
     chainId: ${self:custom.environment.chainId}
+    authCodeMinutesTTL: ${self:custom.environment.authCodeMinutesTTL}
+    accessTokenMinutesTTL: ${self:custom.environment.accessTokenMinutesTTL}
+    refreshTokenMinutesTTL: ${self:custom.environment.refreshTokenMinutesTTL}
 
   iamRoleStatements:
     - Effect: Allow
       Action:
         - dynamodb:DescribeTable
         - dynamodb:Query
+        - dynamodb:Scan
         - dynamodb:DeleteItem
         - dynamodb:GetItem
         - dynamodb:PutItem
@@ -254,12 +258,19 @@ functions:
           method: post
           authorizer: aws_iam
           cors: true
-  oauth-auth:
+  oauth-auth-context:
+    handler: get-authorization-request-context.main
+    events:
+      - http:
+          path: oauth-auth-context
+          method: get
+          cors: true
+  oauth-auth-code:
     handler: get-authorization-code.main
     events:
       - http:
-          path: oauth-auth
-          method: get
+          path: oauth-auth-code
+          method: post
           authorizer: aws_iam
           cors: true
   oauth-token:
@@ -268,7 +279,6 @@ functions:
       - http:
           path: oauth-token
           method: post
-          authorizer: aws_iam
           cors: true
   pre-sign-up:
     handler: pre-sign-up.main

@@ -5,23 +5,22 @@ class OauthDao extends BaseDao {
     constructor() {
         super(process.env.oauthTableName,
             {
-                hashProp: 'authorizationCode',
-                rangeProp: 'appId',
+                hashProp: 'authorizationCode'
             },
-            true);
+            false);
     }
 
     async save(oauth) {
         await this.put(oauth);
     }
 
-    async findByAuthCodeAndAppId(authCode) {
+    async findByAuthCode(authCode) {
         return this.get(authCode);
     }
 
     async getByAuthCode(authCode) {
-        const oauth = await this.findByAuthCodeAndAppId(authCode);
-        if (oauth) {
+        const oauth = await this.findByAuthCode(authCode);
+        if (!oauth) {
             throw new OauthError(OauthError.types.INVALID_GRANT, 'Authorization code not found');
         }
         return oauth;
@@ -39,7 +38,7 @@ class OauthDao extends BaseDao {
 
     async getByAccessToken(accessToken) {
         const oauth = await this.findByAccessToken(accessToken);
-        if (oauth) {
+        if (!oauth) {
             throw new OauthError(OauthError.types.INVALID_TOKEN, 'Access token not found');
         }
         return oauth;
@@ -57,7 +56,7 @@ class OauthDao extends BaseDao {
 
     async getByRefreshToken(refreshToken) {
         const oauth = await this.findByRefreshToken(refreshToken);
-        if (oauth) {
+        if (!oauth) {
             throw new OauthError(OauthError.types.INVALID_TOKEN, 'Refresh token not found');
         }
         return oauth;

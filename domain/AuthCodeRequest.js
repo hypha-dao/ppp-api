@@ -1,33 +1,77 @@
 import OauthRequest from './OauthRequest';
 import { OauthError } from '../error';
+import { Util } from '../util';
 
 const DEFAULT_SCOPE = 'profile_read';
 
 class AuthCodeRequest extends OauthRequest {
 
-  constructor(appDao, oauthDoa, validScopes) {
-    super(appDao, oauthDoa);
+  constructor(appDao, oauthDao, validScopes) {
+    super(appDao, oauthDao);
     this.validScopes = validScopes;
   }
 
-  processRequest({
+  async processInitialRequest({
     response_type,
     client_id,
     redirect_uri,
     scope,
-  },
-    eosAccount) {
-
-    scope = scope || DEFAULT_SCOPE;
-    const scopes = scope.split();
-    this._validateInputs({
+  }) {
+    await this._validateRequest({
       response_type,
       client_id,
       redirect_uri,
-      scopes,
+      scope,
+    });
+    return {
+      app: this.app,
+      scopes: this.scopes,
+    };
+  }
+
+  async processCodeRequest({
+    response_type,
+    client_id,
+    redirect_uri,
+    scope,
+  }, eosAccount) {
+    await this._validateRequest({
+      response_type,
+      client_id,
+      redirect_uri,
+      scope,
     });
 
-    this._loadApp();
+    const oauth = {
+      appId: client_id,
+      eosAccount: eosAccount,
+      scopes: this.scopeKeys,
+      redirectUri: this.redirectUri,
+      hasRedirectUriParam: !!redirect_uri,
+      authorizationCodeExpiration: this.getExpirationTime(process.env.authCodeMinutesTTL),
+      authorizationCode: Util.uuid(),
+    };
+    await this.oauthDao.save(oauth);
+    return oauth;
+  }
+
+  async _validateRequest({
+    response_type,
+    client_id,
+    redirect_uri,
+    scope,
+  }) {
+
+    scope = scope || DEFAULT_SCOPE;
+
+    this._validateInputs({
+      response_type,
+      client_id,
+    });
+
+    this.scopeKeys = scope.split();
+    this.scopes = this._findScopes(this.scopeKeys);
+    await this._loadApp(client_id);
 
     if (redirect_uri) {
       if (!this._isRegisteredUrl(redirect_uri)) {
@@ -39,40 +83,37 @@ class AuthCodeRequest extends OauthRequest {
       }
       redirect_uri = this._redirectUrls()[0];
     }
-
-
+    this.redirectUri = redirect_uri;
   }
 
   _validateInputs({
     response_type,
     client_id,
-    scopes,
   }) {
     if (response_type !== 'code') {
-      throw new OauthRequest(OauthRequest.types.INVALID_REQUEST, `Invalid response type: ${response_type}`);
+      throw new OauthError(OauthError.types.INVALID_REQUEST, `Invalid response type: ${response_type}`);
     }
     if (!client_id) {
-      throw new OauthRequest(OauthRequest.types.INVALID_REQUEST, 'Client id is a required parameter');
-    }
-    const invalidScope = this._findInvalidScope(scopes);
-    if (invalidScope) {
-      throw new OauthRequest(OauthRequest.types.INVALID_SCOPE, `Unknown requested scope: ${invalidScope}`);
+      throw new OauthError(OauthError.types.INVALID_REQUEST, 'Client id is a required parameter');
     }
   }
 
-  _findInvalidScope(scopes) {
-    for (const scope of scopes) {
-      if (this.validScopes.indexOf(scope) == -1) {
-        return scope;
+  _findScopes(scopeKeys) {
+    const scopes = [];
+    for (const scopeKey of scopeKeys) {
+      const scope = this.validScopes[scopeKey];
+      if (!scope) {
+        throw new OauthError(OauthError.types.INVALID_SCOPE, `Unknown requested scope: ${scopeKey}`);
       }
+      scopes.push(scope);
     }
-    return null;
+    return scopes;
   }
 
   _isRegisteredUrl(url) {
-    return this._hasRegisteredUrls() && this._redirectUrls().indexOf(url);
+    return this._hasRegisteredUrls() && this._redirectUrls().indexOf(url) > -1;
   }
 
 }
 
-export default OauthRequest;
+export default AuthCodeRequest;

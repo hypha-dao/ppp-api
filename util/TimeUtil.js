@@ -1,12 +1,12 @@
 class TimeUtil {
 
-  static addMinutes(date, minutes) {
+  static addMinutes(minutes, date = Date.now()) {
     const newDate = new Date(date);
     newDate.setMinutes(newDate.getMinutes() + minutes);
     return newDate;
   }
 
-  static addDays(date, days) {
+  static addDays(days, date = Date.now()) {
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() + days);
     return newDate;

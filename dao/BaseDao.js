@@ -35,6 +35,11 @@ class BaseDao {
         return this._queryOrScan('scan', query || {}, limit, lastEvaluatedKey, retries);
     }
 
+    async scanMap(keyProp) {
+        const { items } = await this.scan();
+        return Util.arrayToMap(items, keyProp);
+    }
+
     async _queryOrScan(op, query, limit, lastEvaluatedKey, retries = MAX_RETRIES) {
         try {
             limit && (query.Limit = limit);
@@ -199,12 +204,8 @@ class BaseDao {
     }
 
     async batchGetMap(keys, keyProp, queryOpts = {}) {
-        const map = {};
         const results = await this.batchGet(keys, queryOpts);
-        for (const result of results) {
-            map[result[keyProp]] = result;
-        }
-        return map;
+        return Util.arrayToMap(results, keyProp);
     }
 
     async batchGet(keys, queryOpts = {}) {

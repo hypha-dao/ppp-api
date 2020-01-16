@@ -14,15 +14,15 @@ class ScopeDao extends BaseDao {
         const scopes = [
             {
                 scope: 'profile_read',
-                desc: 'Allows apps to view your profile',
+                name: 'View Profile',
+                desc: 'App will be able to view your profile',
             }
         ];
         await this.transactPut(scopes);
     }
 
-    async getAll() {
-        const { items } = await this.scan();
-        return items;
+    async getAllAsMap() {
+        return this.scanMap('scope');
     }
 
     async getByIds(scopes) {

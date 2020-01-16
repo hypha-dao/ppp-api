@@ -133,6 +133,14 @@ class Util {
             }
         }
     }
+
+    static arrayToMap(objs, keyProp) {
+        const map = {};
+        for (const obj of objs) {
+            map[obj[keyProp]] = obj;
+        }
+        return map;
+    }
 }
 
 export default Util;
