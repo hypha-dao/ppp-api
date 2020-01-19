@@ -137,7 +137,11 @@ class Util {
     static arrayToMap(objs, keyProp) {
         const map = {};
         for (const obj of objs) {
-            map[obj[keyProp]] = obj;
+            let keys = obj[keyProp];
+            keys = Array.isArray(keys) ? keys : [keys];
+            for (const key of keys) {
+                map[key] = obj;
+            }
         }
         return map;
     }

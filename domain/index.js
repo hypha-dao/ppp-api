@@ -1,6 +1,7 @@
 import AppFactory from './AppFactory';
 import AccessTokenRequest from './AccessTokenRequest';
 import AccessTokenRequestFactory from './AccessTokenRequestFactory';
+import ApiAccessRequest from './ApiAccessRequest';
 import AuthCodeRequest from './AuthCodeRequest';
 import Chat from './Chat';
 import Message from './Message';
@@ -13,6 +14,7 @@ export {
     AppFactory,
     AccessTokenRequest,
     AccessTokenRequestFactory,
+    ApiAccessRequest,
     AuthCodeRequest,
     Chat,
     Message,

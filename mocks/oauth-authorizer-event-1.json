@@ -1,0 +1,96 @@
+{
+  "type": "REQUEST",
+  "methodArn": "arn:aws:execute-api:us-east-1:912666345030:qberjy1f98/dev/POST/get-profile-oauth",
+  "resource": "/get-profile-oauth",
+  "path": "/get-profile-oauth",
+  "httpMethod": "POST",
+  "headers": {
+    "Accept": "*/*",
+    "Accept-Encoding": "gzip, deflate",
+    "Authorization": "Basic QmVhcmVyOjk3MjJjMTUwLTM4ODMtMTFlYS05NzViLWRmMDE2Nzk2N2FkNA==",
+    "Cache-Control": "no-cache",
+    "CloudFront-Forwarded-Proto": "https",
+    "CloudFront-Is-Desktop-Viewer": "true",
+    "CloudFront-Is-Mobile-Viewer": "false",
+    "CloudFront-Is-SmartTV-Viewer": "false",
+    "CloudFront-Is-Tablet-Viewer": "false",
+    "CloudFront-Viewer-Country": "MX",
+    "Content-Length": "271",
+    "Content-Type": "application/json",
+    "Host": "qberjy1f98.execute-api.us-east-1.amazonaws.com",
+    "Postman-Token": "fec72cfa-1008-477f-9c43-9df833ca34fc",
+    "User-Agent": "PostmanRuntime/7.20.1",
+    "Via": "1.1 5438564ce303b3a7e49a150c6d8abdf6.cloudfront.net (CloudFront)",
+    "X-Amz-Cf-Id": "UbhnFw_J2EZqLlSmtxZloksJXAUGLnp77BiGHVXDWHJzPJMP9JUWTg==",
+    "X-Amzn-Trace-Id": "Root=1-5e22925b-d3466b60705ee945a46f7068",
+    "X-Forwarded-For": "189.189.37.37, 130.176.65.134",
+    "X-Forwarded-Port": "443",
+    "X-Forwarded-Proto": "https"
+  },
+  "multiValueHeaders": {
+    "Accept": [
+      "*/*"
+    ],
+    "Accept-Encoding": [
+      "gzip, deflate"
+    ],
+    "Authorization": [
+      "Basic QmVhcmVyOmFzZGFzZGFzZGFzZGFzZGFzZGE="
+    ],
+    "Cache-Control": [
+      "no-cache"
+    ],
+    "CloudFront-Forwarded-Proto": [
+      "https"
+    ],
+    "CloudFront-Is-Desktop-Viewer": [
+      "true"
+    ],
+    "CloudFront-Is-Mobile-Viewer": [
+      "false"
+    ],
+    "CloudFront-Is-SmartTV-Viewer": [
+      "false"
+    ],
+    "CloudFront-Is-Tablet-Viewer": [
+      "false"
+    ],
+    "CloudFront-Viewer-Country": [
+      "MX"
+    ],
+    "Content-Length": [
+      "271"
+    ],
+    "Content-Type": [
+      "application/json"
+    ],
+    "Host": [
+      "qberjy1f98.execute-api.us-east-1.amazonaws.com"
+    ],
+    "Postman-Token": [
+      "fec72cfa-1008-477f-9c43-9df833ca34fc"
+    ],
+    "User-Agent": [
+      "PostmanRuntime/7.20.1"
+    ],
+    "Via": [
+      "1.1 5438564ce303b3a7e49a150c6d8abdf6.cloudfront.net (CloudFront)"
+    ],
+    "X-Amz-Cf-Id": [
+      "UbhnFw_J2EZqLlSmtxZloksJXAUGLnp77BiGHVXDWHJzPJMP9JUWTg=="
+    ],
+    "X-Amzn-Trace-Id": [
+      "Root=1-5e22925b-d3466b60705ee945a46f7068"
+    ],
+    "X-Forwarded-For": [
+      "189.189.37.37, 130.176.65.134"
+    ],
+    "X-Forwarded-Port": [
+      "443"
+    ],
+    "X-Forwarded-Proto": [
+      "https"
+    ]
+  },
+  "queryStringParameters": {}
+}

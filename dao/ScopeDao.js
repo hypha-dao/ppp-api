@@ -16,13 +16,18 @@ class ScopeDao extends BaseDao {
                 scope: 'profile_read',
                 name: 'View Profile',
                 desc: 'App will be able to view your profile',
+                resources: ['get-profile-oauth']
             }
         ];
         await this.transactPut(scopes);
     }
 
-    async getAllAsMap() {
+    async getAllMappedByScope() {
         return this.scanMap('scope');
+    }
+
+    async getAllMappedByResources() {
+        return this.scanMap('resources');
     }
 
     async getByIds(scopes) {

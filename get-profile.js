@@ -1,10 +1,9 @@
 import { ProfileFetchTypes } from "@smontero/ppp-common";
 import { ResponseUtil } from './util';
 import { ProfileDao } from "./dao";
-import { AuthApi } from "./service";
+import { AuthApiFactory } from "./service";
 import { ProfileAccessTypes } from "./const";
 
-const authApi = new AuthApi();
 const profileDao = new ProfileDao();
 
 export async function main(event, context) {
@@ -12,6 +11,7 @@ export async function main(event, context) {
 
         console.log('event: ', event);
         console.log('context: ', context);
+        const authApi = AuthApiFactory.getInstance(event);
         const body = JSON.parse(event.body);
         let { fetchType } = body;
         fetchType = ProfileFetchTypes.get(fetchType, ProfileFetchTypes.BASE_AND_APP);

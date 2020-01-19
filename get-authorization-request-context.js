@@ -15,7 +15,7 @@ export async function main(event, context) {
 
         const requestParams = event.queryStringParameters;
         if (!validScopes) {
-            validScopes = await scopeDao.getAllAsMap();
+            validScopes = await scopeDao.getAllMappedByScope();
         }
         console.log('Valid Scopes: ', validScopes);
         const authCodeRequest = new AuthCodeRequest(appDao, oauthDao, validScopes);

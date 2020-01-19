@@ -139,6 +139,8 @@ provider:
     
 
 functions:
+  oauth-authorizer:
+      handler: oauth-authorizer.main
   register:
     handler: register.main
     events:
@@ -209,6 +211,16 @@ functions:
           path: get-profile
           method: post
           authorizer: aws_iam
+          cors: true
+  get-profile-oauth:
+    handler: get-profile.main
+    events:
+      - http:
+          path: get-profile-oauth
+          method: post
+          authorizer:
+            name: oauth-authorizer
+            type: request
           cors: true
   get-chats:
     handler: get-chats.main

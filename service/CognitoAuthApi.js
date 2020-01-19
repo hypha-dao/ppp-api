@@ -1,12 +1,11 @@
 import AWS from 'aws-sdk';
-import { AppDao } from '../dao';
+import BaseAuthApi from './BaseAuthApi';
 
-class AuthApi {
+class CognitoAuthApi extends BaseAuthApi {
 
     constructor() {
+        super();
         this.cognitoClient = new AWS.CognitoIdentityServiceProvider({ region: 'us-east-1' });
-        this.secretsmanager = new AWS.SecretsManager({ region: 'us-east-1' });
-        this.appDao = new AppDao();
     }
 
     /* async getApp(event, body, mustExist = true) {
@@ -27,30 +26,12 @@ class AuthApi {
             }
         }
         if (originAppId) {
-            app = await this.appDao.getById(originAppId, mustExist);
+            app = await this._getAppById(originAppId, mustExist);
         } else {
             const url = new URL(origin);
             app = await this.appDao.getByDomain(url.hostname, mustExist);
         }
         return app;
-    }
-
-    async authenticate(appId, appKey) {
-        if (!appKey || !appId) {
-            throw new Error('Access denied. appId and appKey are both required.');
-        }
-        const secret = await this.secretsmanager.getSecretValue({
-            SecretId: appId,
-        }).promise();
-        var secretStringObj = JSON.parse(secret.SecretString);
-
-        if (secretStringObj[appId] !== appKey) {
-            throw new Error('Access denied. Invalid appId or appKey.');
-        }
-    }
-
-    isCognitoAuth(event) {
-        return !!event.requestContext.identity.cognitoAuthenticationProvider;
     }
 
     async getUserName(event) {
@@ -74,5 +55,5 @@ class AuthApi {
     } */
 }
 
-export default AuthApi;
+export default CognitoAuthApi;
 

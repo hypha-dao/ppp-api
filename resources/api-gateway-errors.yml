@@ -17,3 +17,13 @@ Resources:
       ResponseType: DEFAULT_5XX
       RestApiId:
         Ref: 'ApiGatewayRestApi'
+  GatewayResponseUnauthorized:
+    Type: 'AWS::ApiGateway::GatewayResponse'
+    Properties:
+      ResponseParameters:
+         gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+         gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+         gatewayresponse.header.WWW-Authenticate: "'Bearer, error=$context.authorizer.error'"
+      ResponseType: Unauthorized
+      RestApiId:
+        Ref: 'ApiGatewayRestApi'
