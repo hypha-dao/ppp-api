@@ -1,8 +1,7 @@
 import { ResponseUtil } from './util';
 import { ProfileDao } from './dao';
-import { AuthApi } from "./service";
+import { AuthApiFactory } from "./service";
 
-const authApi = new AuthApi();
 const profileDao = new ProfileDao();
 
 export async function sms(event, context) {
@@ -10,6 +9,7 @@ export async function sms(event, context) {
   const { smsOtp } = body;
 
   try {
+    const authApi = AuthApiFactory.getInstance(event);
     const { appId } = await authApi.getApp(event, body);
     if (!smsOtp) {
       return ResponseUtil.failure({ message: "smsOtp parameter is required" });
@@ -34,6 +34,7 @@ export async function email(event, context) {
   const { emailOtp } = body;
 
   try {
+    const authApi = AuthApiFactory.getInstance(event);
     const { appId } = await authApi.getApp(event, body);
     if (!emailOtp) {
       return ResponseUtil.failure({ message: "emailOtp parameters is required" });

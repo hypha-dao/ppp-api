@@ -1,8 +1,7 @@
 import { ResponseUtil } from './util';
 import { AppDao } from "./dao";
-import { AuthApi } from "./service";
+import { AuthApiFactory } from "./service";
 
-const authApi = new AuthApi();
 const appDao = new AppDao();
 
 export async function main(event, context) {
@@ -11,6 +10,7 @@ export async function main(event, context) {
         console.log('event: ', event);
         console.log('context: ', context);
         const body = JSON.parse(event.body);
+        const authApi = AuthApiFactory.getInstance(event);
         const { appId } = await authApi.getApp(event, body);
         const eosAccount = await authApi.getUserName(event);
         const { items: apps } = await appDao.findByOwnerAccount(eosAccount);

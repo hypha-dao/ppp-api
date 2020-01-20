@@ -1,8 +1,7 @@
 import { ResponseUtil } from './util';
 import { AppDao } from "./dao";
-import { AuthApi } from "./service";
+import { AuthApiFactory } from "./service";
 
-const authApi = new AuthApi();
 const appDao = new AppDao();
 
 export async function main(event, context) {
@@ -10,6 +9,7 @@ export async function main(event, context) {
     try {
         const body = JSON.parse(event.body);
         let { appIds } = body;
+        const authApi = AuthApiFactory.getInstance(event);
         const { appId } = await authApi.getApp(event, body);
         if (!appIds) {
             return ResponseUtil.failure("appIds parameter is required");

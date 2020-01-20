@@ -23,7 +23,7 @@ Resources:
       ResponseParameters:
          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
-         gatewayresponse.header.WWW-Authenticate: "'Bearer, error=$context.authorizer.error'"
-      ResponseType: Unauthorized
+         gatewayresponse.header.WWW-Authenticate: "context.authorizer.error"
+      ResponseType: UNAUTHORIZED
       RestApiId:
         Ref: 'ApiGatewayRestApi'

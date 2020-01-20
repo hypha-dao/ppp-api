@@ -1,9 +1,8 @@
 import { ResponseUtil } from './util';
 import { ProfileDao, MessageDao } from "./dao";
-import { AuthApi } from "./service";
+import { AuthApiFactory, PrivateAuthApi } from "./service";
 import { Message } from "./domain";
 
-const authApi = new AuthApi();
 const profileDao = new ProfileDao();
 const messageDao = new MessageDao();
 
@@ -23,15 +22,16 @@ export async function main(event, context) {
             throw "eosAccount and message are required";
         }
         let senderAccount = null;
+        const authApi = AuthApiFactory.getInstance(event);
         const app = await authApi.getApp(event, body);
         const { appId } = app;
-        if (authApi.isCognitoAuth(event)) {
-            senderAccount = await authApi.getUserName(event);
-        } else {
+        if (PrivateAuthApi.isThisAuth(event)) {
             ({ senderAccount } = body);
             if (!senderAccount) {
                 throw "senderAccount is required";
             }
+        } else {
+            senderAccount = await authApi.getUserName(event);
         }
 
         const { profile: receiver } = await profileDao.getVerifiedProfile(appId, eosAccount);

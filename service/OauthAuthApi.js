@@ -2,6 +2,10 @@ import BaseAuthApi from './BaseAuthApi';
 
 class OauthAuthApi extends BaseAuthApi {
 
+    static isThisAuth(event) {
+        return !!event.requestContext.authorizer;
+    }
+
     async getApp(event, body, mustExist = true) {
         const {
             appId

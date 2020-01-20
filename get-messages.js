@@ -1,8 +1,7 @@
 import { ResponseUtil } from './util';
 import { MessageDao } from "./dao";
-import { AuthApi } from "./service";
+import { AuthApiFactory } from "./service";
 
-const authApi = new AuthApi();
 const messageDao = new MessageDao();
 
 export async function main(event, context) {
@@ -14,7 +13,7 @@ export async function main(event, context) {
             limit,
             lastEvaluatedKey
         } = body;
-
+        const authApi = AuthApiFactory.getInstance(event);
         const { appId } = await authApi.getApp(event, body);
         if (!eosAccount2) {
             return ResponseUtil.failure("eosAccount2 parameter is required");

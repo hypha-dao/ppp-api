@@ -2,6 +2,7 @@ import commApi from './CommApi';
 import VerificationApi from './VerificationApi';
 import CognitoAuthApi from './CognitoAuthApi';
 import OauthAuthApi from './OauthAuthApi';
+import PrivateAuthApi from './PrivateAuthApi';
 import AuthApiFactory from './AuthApiFactory';
 
 export {
@@ -9,5 +10,6 @@ export {
     VerificationApi,
     CognitoAuthApi,
     OauthAuthApi,
+    PrivateAuthApi,
     AuthApiFactory,
 };

@@ -2,10 +2,9 @@ import { ProfileFetchTypes } from "@smontero/ppp-common";
 import { ResponseUtil } from './util';
 import { ProfileDao } from "./dao";
 import { Profile } from "./domain";
-import { AuthApi } from "./service";
+import { AuthApiFactory } from "./service";
 import { ProfileAccessTypes } from "./const";
 
-const authApi = new AuthApi();
 const profileDao = new ProfileDao();
 
 export async function main(event, context) {
@@ -18,6 +17,7 @@ export async function main(event, context) {
     } = body;
 
     try {
+        const authApi = AuthApiFactory.getInstance(event);
         const app = await authApi.getApp(event, body);
         const { appId } = app;
         if (!(smsNumber || emailAddress || commPref || appData)) {

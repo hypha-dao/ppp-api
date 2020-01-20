@@ -3,6 +3,10 @@ import BaseAuthApi from './BaseAuthApi';
 
 class CognitoAuthApi extends BaseAuthApi {
 
+    static isThisAuth(event) {
+        return !!event.requestContext.identity.cognitoAuthenticationProvider;
+    }
+
     constructor() {
         super();
         this.cognitoClient = new AWS.CognitoIdentityServiceProvider({ region: 'us-east-1' });

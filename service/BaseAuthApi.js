@@ -3,6 +3,10 @@ import { AppDao } from '../dao';
 
 class BaseAuthApi {
 
+    static isThisAuth(event) {
+        throw 'Must be implemented by subclass';
+    }
+
     constructor() {
         this.secretsmanager = new AWS.SecretsManager({ region: 'us-east-1' });
         this.appDao = new AppDao();
@@ -28,10 +32,6 @@ class BaseAuthApi {
         if (secretStringObj[appId] !== appKey) {
             throw new Error('Access denied. Invalid appId or appKey.');
         }
-    }
-
-    static isCognitoAuth(event) {
-        return !!event.requestContext.identity.cognitoAuthenticationProvider;
     }
 
     async getUserName(event) {

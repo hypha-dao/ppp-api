@@ -1,8 +1,7 @@
 import { ResponseUtil } from './util';
 import { ChatDao } from "./dao";
-import { AuthApi } from "./service";
+import { AuthApiFactory } from "./service";
 
-const authApi = new AuthApi();
 const chatDao = new ChatDao();
 
 export async function main(event, context) {
@@ -14,7 +13,7 @@ export async function main(event, context) {
             search,
         } = body;
 
-
+        const authApi = AuthApiFactory.getInstance(event);
         const { appId } = await authApi.getApp(event, body);
         const eosAccount = await authApi.getUserName(event);
         const chats = await chatDao.search({

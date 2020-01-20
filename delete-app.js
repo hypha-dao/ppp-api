@@ -1,8 +1,7 @@
 import { ResponseUtil } from './util';
 import { AppDao } from "./dao";
-import { AuthApi } from "./service";
+import { AuthApiFactory } from "./service";
 
-const authApi = new AuthApi();
 const appDao = new AppDao();
 
 export async function main(event, context) {
@@ -15,6 +14,7 @@ export async function main(event, context) {
         if (!appId) {
             throw 'appId is a required parameter';
         }
+        const authApi = AuthApiFactory.getInstance(event);
         await authApi.getApp(event, body);
         const eosAccount = await authApi.getUserName(event);
         const { ownerAccount, domain } = await appDao.getById(appId);

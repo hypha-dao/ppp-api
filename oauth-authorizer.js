@@ -46,7 +46,11 @@ export async function main(event, context, callback) {
     } catch (e) {
         console.error(e);
         if (e instanceof OauthError) {
-            callback('Unauthorized', { context: e.payload() });
+            callback('Unauthorized', {
+                context: {
+                    error: 'prueba'
+                }
+            });
         }
         callback('Unauthorized');
     }
