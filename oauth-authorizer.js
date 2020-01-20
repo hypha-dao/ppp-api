@@ -10,14 +10,16 @@ let scopes = null;
 
 export async function main(event, context, callback) {
 
+    const {
+        headers,
+        methodArn,
+        body
+    } = event;
+
     try {
         console.log('event: ', event);
         console.log('context: ', context);
-        const {
-            headers,
-            methodArn,
-            body
-        } = event;
+
         const credentials = RequestUtil.parseAuthorizationHeader(headers);
         console.log('Credentials: ', credentials);
         if (!credentials) {
@@ -46,11 +48,9 @@ export async function main(event, context, callback) {
     } catch (e) {
         console.error(e);
         if (e instanceof OauthError) {
-            callback('Unauthorized', {
-                context: {
-                    error: 'prueba'
-                }
-            });
+            callback(null, PolicyUtil.deny('', methodArn, {
+                wwwAuthenticate: `Bearer, error="${e.error}"`
+            }));
         }
         callback('Unauthorized');
     }

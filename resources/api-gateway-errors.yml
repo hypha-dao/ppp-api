@@ -17,13 +17,14 @@ Resources:
       ResponseType: DEFAULT_5XX
       RestApiId:
         Ref: 'ApiGatewayRestApi'
-  GatewayResponseUnauthorized:
+  GatewayResponseAccessDenied:
     Type: 'AWS::ApiGateway::GatewayResponse'
     Properties:
       ResponseParameters:
          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
-         gatewayresponse.header.WWW-Authenticate: "context.authorizer.error"
-      ResponseType: UNAUTHORIZED
+         gatewayresponse.header.WWW-Authenticate: "context.authorizer.wwwAuthenticate"
+      ResponseType: ACCESS_DENIED
+      StatusCode: 401
       RestApiId:
         Ref: 'ApiGatewayRestApi'
