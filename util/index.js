@@ -4,6 +4,7 @@ import Util from './Util';
 import ValidationUtil from './ValidationUtil';
 import TimeUtil from './TimeUtil';
 import PolicyUtil from './PolicyUtil';
+import ParseUtil from './ParseUtil';
 
 export {
     ResponseUtil,
@@ -12,4 +13,5 @@ export {
     ValidationUtil,
     TimeUtil,
     PolicyUtil,
+    ParseUtil,
 };

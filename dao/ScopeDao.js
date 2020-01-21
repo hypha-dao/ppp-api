@@ -15,7 +15,7 @@ class ScopeDao extends BaseDao {
             {
                 scope: 'profile_read',
                 name: 'View Profile',
-                desc: 'App will be able to view your profile',
+                desc: 'View your profile',
                 resources: ['get-profile-oauth']
             }
         ];

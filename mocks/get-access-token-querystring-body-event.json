@@ -1,0 +1,3 @@
+{
+    "body": "grant_type=authorization_code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Foauth2%2Fcallback&client_id=6d2068c0-3c67-11ea-8671-2fe0f87336f6&client_secret=cdbc1f3946d8576373f26ecae25101d32738d1f3c65a8e37344446f9fba4e9a6&code=7542fdb0-3c7b-11ea-b0a4-8d587b6ddb9e"
+}
