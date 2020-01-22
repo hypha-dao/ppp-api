@@ -1,7 +1,8 @@
+import { TokenInstance } from 'twilio/lib/rest/api/v2010/account/token';
 
 class RequestUtil {
 
-    static parseAuthorizationHeader(headers) {
+    static parseBasicAuthHeader(headers) {
         const { Authorization: auth } = headers;
         if (!auth) {
             return null;
@@ -12,6 +13,14 @@ class RequestUtil {
             username: plainCreds[0],
             password: plainCreds[1],
         };
+    }
+
+    static parseBearerAuthHeader(headers) {
+        const { Authorization: auth } = headers;
+        if (!auth) {
+            return null;
+        }
+        return auth.split(' ')[1];
     }
 
     static parseMethodArn(methodArn) {

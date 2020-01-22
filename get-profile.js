@@ -12,7 +12,7 @@ export async function main(event, context) {
         console.log('event: ', event);
         console.log('context: ', context);
         const authApi = AuthApiFactory.getInstance(event);
-        const body = JSON.parse(event.body);
+        const body = JSON.parse(event.body) || {};
         let { fetchType } = body;
         fetchType = ProfileFetchTypes.get(fetchType, ProfileFetchTypes.BASE_AND_APP);
         const { appId } = await authApi.getApp(event, body);

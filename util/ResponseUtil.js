@@ -2,7 +2,7 @@
 class ResponseUtil {
 
     static success(body, dontCache = false) {
-        return this.buildResponse(200, body);
+        return this.buildResponse(200, body, dontCache);
     }
 
     static failure(error, httpCode = 500) {

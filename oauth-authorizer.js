@@ -20,12 +20,11 @@ export async function main(event, context, callback) {
         console.log('event: ', event);
         console.log('context: ', context);
 
-        const credentials = RequestUtil.parseAuthorizationHeader(headers);
-        console.log('Credentials: ', credentials);
-        if (!credentials) {
-            throw new OauthError(OauthError.types.INVALID_REQUEST, 'Authentication ');
+        const accessToken = RequestUtil.parseBearerAuthHeader(headers);
+        if (!accessToken) {
+            throw new OauthError(OauthError.types.INVALID_REQUEST, 'No Authentication Header');
         }
-        const { password: accessToken } = credentials;
+        console.log('Access Token: ', accessToken);
         const resource = RequestUtil.stripResource(event.resource);
         console.log('Resource: ', resource);
         let payload = null;

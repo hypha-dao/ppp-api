@@ -222,6 +222,13 @@ functions:
             name: oauth-authorizer
             type: request
           cors: true
+      - http:
+          path: get-profile-oauth
+          method: get
+          authorizer:
+            name: oauth-authorizer
+            type: request
+          cors: true
   get-chats:
     handler: get-chats.main
     events:
