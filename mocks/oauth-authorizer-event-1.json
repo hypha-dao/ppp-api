@@ -7,7 +7,7 @@
   "headers": {
     "Accept": "*/*",
     "Accept-Encoding": "gzip, deflate",
-    "Authorization": "Bearer fc692b90-3ca6-11ea-ab3b-eb21ce4a504d",
+    "Authorization": "Bearer dd37b030-422c-11ea-8b44-b91dcc3420d5",
     "Cache-Control": "no-cache",
     "CloudFront-Forwarded-Proto": "https",
     "CloudFront-Is-Desktop-Viewer": "true",

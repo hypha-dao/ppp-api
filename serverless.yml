@@ -159,14 +159,14 @@ functions:
           authorizer: aws_iam
           cors: true
 
-  send-msg-prv:
-    handler: send-msg.main
-    events:
-      - http:
-          path: send-msg-prv
-          method: post
-          private: true
-          cors: true
+  #send-msg-prv:
+   # handler: send-msg.main
+    #events:
+     # - http:
+      #    path: send-msg-prv
+       #   method: post
+        #  private: true
+         # cors: true
     
   get-profiles:
     handler: get-profiles.main
@@ -219,8 +219,8 @@ functions:
           path: get-profile-oauth
           method: post
           authorizer:
+            type: request 
             name: oauth-authorizer
-            type: request
           cors: true
       - http:
           path: get-profile-oauth

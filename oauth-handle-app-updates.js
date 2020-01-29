@@ -1,7 +1,7 @@
 import { OauthDao } from "./dao";
 import { Oauth } from './domain';
 
-const oauthDao = new oauthDao();
+const oauthDao = new OauthDao();
 
 export async function main(event, context, callback) {
 
