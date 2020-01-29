@@ -5,11 +5,19 @@ import { Util } from '../util';
 class BaseAccessTokenRequest extends OauthRequest {
 
   _validateApp(client_secret) {
-    if (this.app.isPrivate) {
+
+    const {
+      isPrivate,
+      secret,
+      oauthAppStatus,
+    } = this.app;
+
+    this._assertOuathAppStatus(oauthAppStatus, OauthError.types.INVALID_CLIENT);
+    if (isPrivate) {
       if (!client_secret) {
         throw new OauthError(OauthError.types.INVALID_CLIENT, 'No secret was provided');
       }
-      if (this.app.secret !== client_secret) {
+      if (secret !== client_secret) {
         throw new OauthError(OauthError.types.INVALID_CLIENT, 'Invalid secret');
       }
     }

@@ -29,5 +29,5 @@
         "domainName": "qberjy1f98.execute-api.us-east-1.amazonaws.com",
         "apiId": "qberjy1f98"
     },
-    "body": "{\"originAppId\": \"base-app\",\"isPrivate\": true, \"type\": \"NON WEB APP\", \"name\": \"Test App3\", \"shortname\": \"TestApp3\", \"icon\": \"http://app.com/icon.png\", \"oauthRedirectUrls\": [\"https://www.localhost.com\"]}"
+    "body": "{\"originAppId\": \"base-app\", \"appId\": \"bab5be70-4219-11ea-b91d-3f8ff1b639f8\", \"enable\": true}"
 }

@@ -14,6 +14,10 @@ Resources:
           AttributeType: S
         - AttributeName: refreshToken
           AttributeType: S
+        - AttributeName: oauthTokenStatus
+          AttributeType: S
+        - AttributeName: appEosAccount
+          AttributeType: S
       KeySchema:
         - AttributeName: authorizationCode
           KeyType: HASH
@@ -32,6 +36,39 @@ Resources:
             - AttributeName: eosAccount
               KeyType: HASH
             - AttributeName: appId
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: ${self:custom.tableThroughput}
+            WriteCapacityUnits: ${self:custom.tableThroughput}
+        - IndexName: GSI_eosAccount_oauthTokenStatus
+          KeySchema:
+            - AttributeName: eosAccount
+              KeyType: HASH
+            - AttributeName: oauthTokenStatus
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: ${self:custom.tableThroughput}
+            WriteCapacityUnits: ${self:custom.tableThroughput}
+        - IndexName: GSI_appEosAccount_oauthTokenStatus
+          KeySchema:
+            - AttributeName: appEosAccount
+              KeyType: HASH
+            - AttributeName: oauthTokenStatus
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: ${self:custom.tableThroughput}
+            WriteCapacityUnits: ${self:custom.tableThroughput}
+        - IndexName: GSI_appId_oauthTokenStatus
+          KeySchema:
+            - AttributeName: appId
+              KeyType: HASH
+            - AttributeName: oauthTokenStatus
               KeyType: RANGE
           Projection:
             ProjectionType: ALL

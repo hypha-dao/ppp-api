@@ -1,15 +1,20 @@
+import { OauthAppStatus } from '@smontero/ppp-common';
 import { Util, ValidationUtil } from "../util";
 import assert from 'assert';
 
 class App {
 
-    constructor({
+    constructor(appDao) {
+        this.appDao = appDao;
+    }
+
+    async register({
         appId,
         requesterAccount,
         type,
         isPrivate,
         oauthRedirectUrls,
-    }, appDao) {
+    }) {
         console.log(`appId: ${appId}, requesterAccount: ${requesterAccount}, type: ${type}`);
         this.oldState = null;
         this.newState = null;
@@ -18,15 +23,39 @@ class App {
         this.type = type;
         this.isPrivate = isPrivate;
         this.oauthRedirectUrls = oauthRedirectUrls;
-        this.appDao = appDao;
+        this._validateInputs();
+        this._finishSetup();
+        await this._loadDetails();
+        await this.save();
+    }
 
+    async updateOauthStatus(appId, requesterAccount, status) {
+        const app = await this._getApp(appId);
+        const {
+            ownerAccount,
+            oauthAppStatus,
+        } = app;
+        this._assertIsOwner(ownerAccount, requesterAccount);
+        if (oauthAppStatus === OauthAppStatus.DISABLED_BY_SERVER) {
+            throw 'Cannot update oauth status when it has been disabled by server';
+        }
+        app.oauthAppStatus = status;
+        app.oauthStatusChangedAt = Date.now();
+        await this.appDao.updateOauthStatus(app);
+
+    }
+
+    _assertIsOwner(ownerAccount, requesterAccount) {
+        if (ownerAccount !== requesterAccount) {
+            throw `Owner account: ${ownerAccount} does not match requester account: ${requesterAccount}`;
+        }
     }
 
     _validateInputs() {
         if (!this.type) {
             throw 'type is a required parameter';
         }
-        if (!this.isPrivate == null) {
+        if (this.isPrivate == null) {
             throw 'isPrivate is a required parameter';
         }
         if (this.oauthRedirectUrls) {
@@ -44,21 +73,20 @@ class App {
     _finishSetup() { }
     async _loadDetails() { }
 
-    async init() {
-        this._validateInputs();
-        this._finishSetup();
-        await this._loadDetails();
+    async _getApp(appId) {
+        return this.appDao.getById(appId);
     }
 
     async _loadStates(newDetails) {
         console.log('New Details: ', newDetails);
         let details = null;
         if (this.appId) {
-            details = await this.appDao.getById(this.appId);
+            details = await this._getApp(this.appId);
             this.oldState = details;
         } else {
             details = {
                 appId: Util.uuid(),
+                oauthAppStatus: OauthAppStatus.ENABLED,
             };
         }
 

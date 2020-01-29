@@ -1,6 +1,5 @@
 import OauthRequest from './OauthRequest';
 import { OauthError } from '../error';
-import { Util } from '../util';
 
 class ApiAccessRequest extends OauthRequest {
 
@@ -17,14 +16,24 @@ class ApiAccessRequest extends OauthRequest {
     await this._loadOauth(accessToken);
     const requiredScope = this._getScopeByResource(resource);
     this._validateOauth(requiredScope);
+
     const {
       eosAccount,
       appId,
     } = this.oauth;
+
+    await this._loadApp(appId);
+    this._assertOuathAppStatus(this.app.oauthAppStatus, OauthError.types.INVALID_TOKEN);
+
     return {
       eosAccount,
       appId,
     };
+  }
+
+  async updateLastAccessAt() {
+    this.oauth.lastAccessAt = Date.now();
+    await this.oauthDao.save(this.oauth);
   }
 
   async _loadOauth(accessToken) {
@@ -42,13 +51,11 @@ class ApiAccessRequest extends OauthRequest {
   _validateOauth(requiredScope) {
     const {
       accessTokenExpiration,
-      isValid,
+      oauthTokenStatus,
       scopes,
     } = this.oauth;
 
-    if (!isValid) {
-      throw new OauthError(OauthError.types.INVALID_TOKEN, 'Token is no longer valid');
-    }
+    this._assertOuathTokenStatus(oauthTokenStatus, OauthError.types.INVALID_TOKEN);
 
     if (this.hasExpired(accessTokenExpiration)) {
       throw new OauthError(OauthError.types.INVALID_TOKEN, 'Authorization code has expired');

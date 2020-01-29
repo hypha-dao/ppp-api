@@ -55,12 +55,10 @@ class RefreshAccessTokenRequest extends BaseAccessTokenRequest {
   _validateOauth(client_id) {
     const {
       refreshTokenExpiration,
-      isValid
+      oauthTokenStatus,
     } = this.oauth;
 
-    if (!isValid) {
-      throw new OauthError(OauthError.types.INVALID_GRANT, 'Token is no longer valid');
-    }
+    this._assertOuathTokenStatus(oauthTokenStatus, OauthError.types.INVALID_GRANT);
 
     if (this.hasExpired(refreshTokenExpiration)) {
       throw new OauthError(OauthError.types.INVALID_GRANT, 'Refresh token has expired');

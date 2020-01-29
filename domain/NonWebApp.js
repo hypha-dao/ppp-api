@@ -3,7 +3,7 @@ import { AppTypes } from '@smontero/ppp-common';
 
 class NonWebApp extends App {
 
-    constructor({
+    async register({
         appId,
         name,
         shortname,
@@ -11,18 +11,19 @@ class NonWebApp extends App {
         requesterAccount,
         isPrivate,
         oauthRedirectUrls,
-    }, appDao) {
-        super({
+    }) {
+        console.log(`name: ${name}, shortname: ${shortname}, icon: ${icon}`);
+        this.name = name;
+        this.shortname = shortname;
+        this.icon = icon;
+        await super.register({
             appId,
             requesterAccount,
             type: AppTypes.NON_WEB_APP,
             isPrivate,
             oauthRedirectUrls,
-        }, appDao)
-        console.log(`name: ${name}, shortname: ${shortname}, icon: ${icon}`);
-        this.name = name;
-        this.shortname = shortname;
-        this.icon = icon;
+        });
+
     }
 
     _validateInputs() {
@@ -38,8 +39,8 @@ class NonWebApp extends App {
             shortname: this.shortname,
             icon: this.icon,
         });
-        if (!this.isNewApp() && this.oldState.ownerAccount !== this.requesterAccount) {
-            throw `Owner account: ${ownerAccount} does not match requester account: ${this.requesterAccount}`;
+        if (!this.isNewApp()) {
+            this._assertIsOwner(this.oldState.ownerAccount, this.requesterAccount);
         }
     }
 

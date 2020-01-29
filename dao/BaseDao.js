@@ -31,6 +31,16 @@ class BaseDao {
         return this._queryOrScan('query', query, limit, lastEvaluatedKey, retries);
     }
 
+    async queryAll(query) {
+        let lastEvaluatedKey = null;
+        let allItems = [];
+        do {
+            const { items, lastEvaluatedKey } = await this.query(query, null, lastEvaluatedKey);
+            allItems = allItems.concat(items);
+        } while (lastEvaluatedKey);
+        return allItems;
+    }
+
     async scan(query, limit, lastEvaluatedKey, retries = MAX_RETRIES) {
         return this._queryOrScan('scan', query || {}, limit, lastEvaluatedKey, retries);
     }
@@ -56,6 +66,7 @@ class BaseDao {
                 count,
             };
             newLastEvaluatedKey && (pRS.lastEvaluatedKey = newLastEvaluatedKey);
+            console.log('query results:', pRS);
             return pRS;
         } catch (error) {
             if (this._shouldRetry(error, retries)) {
@@ -79,7 +90,19 @@ class BaseDao {
         return this.exec('put', queryOpts);
     }
 
+    async update(hash, range = null, queryOpts = {}) {
+        queryOpts.Key = this._getKeyProp(hash, range);
+        return this.exec('update', queryOpts);
+
+    }
+
     async get(hash, range = null, queryOpts = {}) {
+        queryOpts.Key = this._getKeyProp(hash, range);
+        const { Item } = await this.exec('get', queryOpts);
+        return Item;
+    }
+
+    _getKeyProp(hash, range = null) {
         const {
             hashProp,
             rangeProp,
@@ -90,10 +113,8 @@ class BaseDao {
         if (rangeProp) {
             key[rangeProp] = range;
         }
-        queryOpts.Key = key;
         console.log(`Key:`, key);
-        const { Item } = await this.exec('get', queryOpts);
-        return Item;
+        return key;
     }
 
     async transactWrite(items, optimisticLocking = null) {
@@ -261,12 +282,16 @@ class BaseDao {
     }
 
     async updateItems(fetchQuery, itemUpdateFn) {
+        console.log('Fetch Query: ', fetchQuery);
         let lastEvaluatedKey = null;
         let items = null;
+        let count = null;
         do {
-            ({ items, lastEvaluatedKey } = await this.query(fetchQuery, null, lastEvaluatedKey));
-            items = items.map(itemUpdateFn);
-            await this.batchWrite(items);
+            ({ items, lastEvaluatedKey, count } = await this.query(fetchQuery, null, lastEvaluatedKey));
+            if (count > 0) {
+                items = items.map(itemUpdateFn);
+                await this.batchWrite(items);
+            }
         } while (lastEvaluatedKey);
 
     }

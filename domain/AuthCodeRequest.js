@@ -1,3 +1,4 @@
+import { OauthTokenStatus } from '@smontero/ppp-common';
 import OauthRequest from './OauthRequest';
 import { OauthError } from '../error';
 import { Util } from '../util';
@@ -50,6 +51,8 @@ class AuthCodeRequest extends OauthRequest {
       hasRedirectUriParam: !!redirect_uri,
       authorizationCodeExpiration: this.getExpirationTime(process.env.authCodeMinutesTTL),
       authorizationCode: Util.uuid(),
+      createdAt: Date.now(),
+      oauthTokenStatus: OauthTokenStatus.VALID,
     };
     await this.oauthDao.save(oauth);
     return oauth;
@@ -72,6 +75,8 @@ class AuthCodeRequest extends OauthRequest {
     this.scopeKeys = scope.split();
     this.scopes = this._findScopes(this.scopeKeys);
     await this._loadApp(client_id);
+
+    this._assertOuathAppStatus(this.app.oauthAppStatus, OauthError.types.INVALID_CLIENT);
 
     if (redirect_uri) {
       if (!this._isRegisteredUrl(redirect_uri)) {

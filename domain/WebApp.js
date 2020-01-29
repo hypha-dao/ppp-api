@@ -4,22 +4,24 @@ import { AppTypes } from '@smontero/ppp-common';
 
 class WebApp extends App {
 
-    constructor({
+    async register({
         appId,
         baseUrl,
         requesterAccount,
         isPrivate,
         oauthRedirectUrls,
-    }, appDao) {
-        super({
+    }) {
+        console.log(`baseUrl: ${baseUrl}`);
+        this.baseUrlStr = baseUrl;
+
+        await super.register({
             appId,
             requesterAccount,
             type: AppTypes.WEB_APP,
             isPrivate,
             oauthRedirectUrls,
-        }, appDao)
-        console.log(`baseUrl: ${baseUrl}`);
-        this.baseUrlStr = baseUrl;
+        })
+
     }
 
     async _request(file, errorMsg) {

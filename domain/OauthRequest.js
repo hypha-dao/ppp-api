@@ -1,5 +1,6 @@
+import { OauthAppStatus, OauthTokenStatus } from '@smontero/ppp-common';
 import { OauthError } from '../error';
-import { TimeUtil, Util } from '../util';
+import { TimeUtil } from '../util';
 
 class OauthRequest {
 
@@ -12,6 +13,18 @@ class OauthRequest {
     this.app = await this.appDao.getById(appId, false);
     if (!this.app) {
       throw new OauthError(OauthError.types.UNAUTHORIZED_CLIENT, 'Client app does not exist');
+    }
+  }
+
+  _assertOuathTokenStatus(status, error) {
+    if (!OauthTokenStatus.isValid(status)) {
+      throw new OauthError(error, `Token is no longer valid:${status}`);
+    }
+  }
+
+  _assertOuathAppStatus(status, error) {
+    if (!OauthAppStatus.isEnabled(status)) {
+      throw new OauthError(error, `App has been disabled:${status}`);
     }
   }
 

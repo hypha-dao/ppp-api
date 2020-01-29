@@ -1,3 +1,33 @@
 {
-    "body": "{\"originAppId\": \"ce041970-0bb6-11ea-9daa-ada77c4bce38\", \"baseUrl\": \"http://app-dev.telos.net\", \"type\": \"WEB APP\", \"isPrivate\": true, \"oauthRedirectUrls\": [\"https://www.localhost.com\"] }"
+    "requestContext": {
+        "resourceId": "hcfuqi",
+        "resourcePath": "/get-profile",
+        "httpMethod": "POST",
+        "extendedRequestId": "GUO9nGSIoAMFxXw=",
+        "requestTime": "15/Jan/2020:00:37:17 +0000",
+        "path": "/dev/get-profile",
+        "accountId": "912666345030",
+        "protocol": "HTTP/1.1",
+        "stage": "dev",
+        "domainPrefix": "qberjy1f98",
+        "requestTimeEpoch": 1579048637407,
+        "requestId": "333deb5d-2a9e-45d2-bbb6-8c3adc6c304e",
+        "identity": {
+            "cognitoIdentityPoolId": "us-east-1:d12d4fad-28f0-4fa6-ac6c-d07329f1107c",
+            "accountId": "912666345030",
+            "cognitoIdentityId": "us-east-1:a759e5af-054b-4418-84ad-5b9fcf43447f",
+            "caller": "AROA5I7ZHHZDE5AEPNV3A:CognitoIdentityCredentials",
+            "sourceIp": "200.57.200.68",
+            "principalOrgId": "o-t6evk3jnik",
+            "accessKey": "ASIA5I7ZHHZDCSKOJX54",
+            "cognitoAuthenticationType": "authenticated",
+            "cognitoAuthenticationProvider": "cognito-idp.us-east-1.amazonaws.com/us-east-1_gd8OvMUK6,cognito-idp.us-east-1.amazonaws.com/us-east-1_gd8OvMUK6:CognitoSignIn:03cef9db-2ad7-4d83-96fd-8c603a89b162",
+            "userArn": "arn:aws:sts::912666345030:assumed-role/ppp-service-dev-CognitoAuthRole-J0CDVXS6M58G/CognitoIdentityCredentials",
+            "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36",
+            "user": "AROA5I7ZHHZDE5AEPNV3A:CognitoIdentityCredentials"
+        },
+        "domainName": "qberjy1f98.execute-api.us-east-1.amazonaws.com",
+        "apiId": "qberjy1f98"
+    },
+    "body": "{\"originAppId\": \"base-app\", \"baseUrl\": \"http://app-dev.telos.net\", \"type\": \"WEB APP\", \"isPrivate\": true, \"oauthRedirectUrls\": [\"https://www.localhost.com\"] }"
 }

@@ -42,6 +42,7 @@ export async function main(event, context, callback) {
             resource,
             payload
         });
+        await apiAccessRequest.updateLastAccessAt();
         console.log('Access allowed', accessContext);
         callback(null, PolicyUtil.allow(accessContext.eosAccount, methodArn, accessContext));
     } catch (e) {

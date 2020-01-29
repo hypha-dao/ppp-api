@@ -28,7 +28,6 @@ class AccessTokenRequest extends BaseAccessTokenRequest {
       ...this.oauth,
       ...this._generateAccessToken(),
       ...this._generateRefreshToken(),
-      isValid: true,
     };
     await this.oauthDao.save(updatedOauth);
 

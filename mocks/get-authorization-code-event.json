@@ -144,6 +144,6 @@
         "domainName": "qberjy1f98.execute-api.us-east-1.amazonaws.com",
         "apiId": "qberjy1f98"
     },
-    "body": "{\"response_type\": \"code\",\"client_id\": \"81891ec0-3667-11ea-b57c-fbbb54c77e09\",\"scope\": \"profile_read\",\"redirect_uri\": \"https://www.google.com\"}",
+    "body": "{\"response_type\": \"code\",\"client_id\": \"abc4f9d0-4219-11ea-9c67-b141ea80f76f\",\"scope\": \"profile_read\",\"redirect_uri\": \"https://www.localhost.com\"}",
     "isBase64Encoded": false
 }

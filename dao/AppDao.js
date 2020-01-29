@@ -20,9 +20,19 @@ class AppDao extends BaseDao {
         return app;
     }
 
-    async findByIds(appIds) {
+    async findByIds(appIds, queryOpts) {
         appIds = Util.removeDuplicates(appIds);
-        return this.batchGetMap(appIds, 'appId');
+        return this.batchGetMap(appIds, 'appId', queryOpts);
+    }
+
+    async findBasicByIds(appIds) {
+        return this.findByIds(appIds, {
+            ProjectionExpression: 'appId, icon, #n, shortName, #t, oauthAppStatus',
+            ExpressionAttributeNames: {
+                '#n': 'name',
+                '#t': 'type',
+            }
+        });
     }
 
 
@@ -53,6 +63,21 @@ class AppDao extends BaseDao {
             throw Error(`app with domain: ${domain} does not exist`);
         }
         return app;
+    }
+
+    async updateOauthStatus({
+        appId,
+        oauthAppStatus,
+        oauthStatusChangedAt,
+    }) {
+        const query = {
+            UpdateExpression: 'set oauthAppStatus = :oauthAppStatus, oauthStatusChangedAt = :oauthStatusChangedAt',
+            ExpressionAttributeValues: {
+                ":oauthAppStatus": oauthAppStatus,
+                ":oauthStatusChangedAt": oauthStatusChangedAt,
+            }
+        };
+        await this.update(appId, null, query);
     }
 
     async save(appD) {

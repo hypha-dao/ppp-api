@@ -269,6 +269,30 @@ functions:
           method: post
           authorizer: aws_iam
           cors: true
+  get-authorized-apps:
+    handler: get-authorized-apps.main
+    events:
+      - http:
+          path: get-authorized-apps
+          method: post
+          authorizer: aws_iam
+          cors: true
+  revoke-access:
+    handler: revoke-access.main
+    events:
+      - http:
+          path: revoke-access
+          method: post
+          authorizer: aws_iam
+          cors: true
+  update-app-oauth-status:
+    handler: update-app-oauth-status.main
+    events:
+      - http:
+          path: update-app-oauth-status
+          method: post
+          authorizer: aws_iam
+          cors: true
   search-profiles:
     handler: search-profiles.main
     events:
@@ -323,8 +347,19 @@ functions:
       - cognitoUserPool:
           pool: PPPServicePool
           trigger: DefineAuthChallenge
-  handle-app-updates:
-    handler: handle-app-updates.main
+  profile-handle-app-updates:
+    handler: profile-handle-app-updates.main
+    events:
+      - stream:
+          type: dynamodb
+          batchSize: 1
+          startingPosition: LATEST
+          arn:
+            Fn::GetAtt:
+              - AppTable
+              - StreamArn
+  oauth-handle-app-updates:
+    handler: oauth-handle-app-updates.main
     events:
       - stream:
           type: dynamodb

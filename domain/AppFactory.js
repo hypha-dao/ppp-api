@@ -2,12 +2,12 @@ import { AppTypes } from '@smontero/ppp-common'
 import { NonWebApp, WebApp } from './'
 
 class AppFactory {
-  static getInstance(type, props, appDao) {
+  static getInstance(type, appDao) {
     switch (type) {
       case AppTypes.NON_WEB_APP:
-        return new NonWebApp(props, appDao);
+        return new NonWebApp(appDao);
       case AppTypes.WEB_APP:
-        return new WebApp(props, appDao);
+        return new WebApp(appDao);
       default:
         throw `Unknown app type: ${type}`;
     }
