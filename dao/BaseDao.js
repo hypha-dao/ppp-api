@@ -54,7 +54,7 @@ class BaseDao {
         try {
             limit && (query.Limit = limit);
             lastEvaluatedKey && (query.ExclusiveStartKey = lastEvaluatedKey);
-
+            console.log('Queries: ', query);
             const {
                 Items: items,
                 Count: count,
