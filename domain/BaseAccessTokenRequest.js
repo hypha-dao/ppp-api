@@ -32,14 +32,14 @@ class BaseAccessTokenRequest extends OauthRequest {
   _generateAccessToken() {
     return {
       accessToken: Util.uuid(),
-      accessTokenExpiration: this.getExpirationTime(process.env.accessTokenMinutesTTL),
+      accessTokenExpiration: this.getExpirationTime(Number(process.env.accessTokenMinutesTTL)),
     };
   }
 
   _generateRefreshToken() {
     return {
       refreshToken: Util.uuid(),
-      refreshTokenExpiration: this.getExpirationTime(process.env.refreshTokenMinutesTTL),
+      refreshTokenExpiration: this.getExpirationTime(Number(process.env.refreshTokenMinutesTTL)),
     };
   }
 

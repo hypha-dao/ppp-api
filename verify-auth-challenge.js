@@ -19,7 +19,7 @@ export const main = async event => {
         minAuthTimeout
     } = process.env;
     console.log('event:', event);
-    const decrement = Math.floor((startAuthTimeout - minAuthTimeout) / authRetries);
+    const decrement = Math.floor((Number(startAuthTimeout) - Number(minAuthTimeout)) / Number(authRetries));
 
     if (!verifier) {
         verifier = AuthVerifierFactory.get(authVerifier);

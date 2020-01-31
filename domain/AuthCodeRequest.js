@@ -49,7 +49,7 @@ class AuthCodeRequest extends OauthRequest {
       scopes: this.scopeKeys,
       redirectUri: this.redirectUri,
       hasRedirectUriParam: !!redirect_uri,
-      authorizationCodeExpiration: this.getExpirationTime(process.env.authCodeMinutesTTL),
+      authorizationCodeExpiration: this.getExpirationTime(Number(process.env.authCodeMinutesTTL)),
       authorizationCode: Util.uuid(),
       createdAt: Date.now(),
       oauthTokenStatus: OauthTokenStatus.VALID,
