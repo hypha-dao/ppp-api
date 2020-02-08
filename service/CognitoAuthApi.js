@@ -4,7 +4,7 @@ import BaseAuthApi from './BaseAuthApi';
 class CognitoAuthApi extends BaseAuthApi {
 
     static isThisAuth(event) {
-        return !!event.requestContext.identity.cognitoAuthenticationProvider;
+        return event.requestContext.identity && event.requestContext.identity.cognitoAuthenticationProvider;
     }
 
     constructor() {

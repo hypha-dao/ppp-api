@@ -3,7 +3,7 @@ import BaseAuthApi from './BaseAuthApi';
 class PrivateAuthApi extends BaseAuthApi {
 
     static isThisAuth(event) {
-        return !!event.requestContext.identity.apiKey;
+        return event.requestContext.identity && event.requestContext.identity.apiKey;
     }
 
     async getApp(event, body, mustExist = true) {

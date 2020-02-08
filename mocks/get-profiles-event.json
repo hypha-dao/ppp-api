@@ -1,3 +1,4 @@
 {
+    "requestContext": {},
     "body": "{\"eosAccounts\":[\"sebastianb1\", \"sebastianmb2\"]}"
 }
