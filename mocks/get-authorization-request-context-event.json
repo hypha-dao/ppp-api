@@ -2,7 +2,7 @@
     "queryStringParameters": {
         "response_type": "code",
         "client_id": "81891ec0-3667-11ea-b57c-fbbb54c77e09",
-        "scope": "profile_read",
+        "scope": "profile_read verify_eos_account",
         "redirect_uri": "https://www.google.com"
     }
 }

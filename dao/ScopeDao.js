@@ -13,10 +13,18 @@ class ScopeDao extends BaseDao {
     async insertScopes() {
         const scopes = [
             {
-                scope: 'profile_read',
-                name: 'View Profile',
-                desc: 'View your profile',
-                resources: ['get-profile-oauth']
+                "scope": "verify_eos_account",
+                "name": "Verify EOS account",
+                "desc": "Verify that you own the EOS account",
+                "requiresVerifiedProfile": false,
+                "resources": ["get-profile-oauth"]
+            },
+            {
+                "scope": "profile_read",
+                "name": "View Profile",
+                "desc": "View your profile",
+                "requiresVerifiedProfile": true,
+                "resources": ["get-profile-oauth"]
             }
         ];
         await this.transactPut(scopes);

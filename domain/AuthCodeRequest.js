@@ -72,7 +72,7 @@ class AuthCodeRequest extends OauthRequest {
       client_id,
     });
 
-    this.scopeKeys = scope.split();
+    this.scopeKeys = scope.split(' ');
     this.scopes = this._findScopes(this.scopeKeys);
     await this._loadApp(client_id);
 
