@@ -1,8 +1,8 @@
 {
     "queryStringParameters": {
         "response_type": "code",
-        "client_id": "81891ec0-3667-11ea-b57c-fbbb54c77e09",
+        "client_id": "262c8f30-4d23-11ea-a024-eb5177b4e56c",
         "scope": "profile_read verify_eos_account",
-        "redirect_uri": "https://www.google.com"
+        "redirect_uri": "https://www.localhost.com"
     }
 }

@@ -2,7 +2,7 @@ import { AppIds, ProfileFetchTypes } from "@smontero/ppp-common";
 import { ResponseUtil } from './util';
 import { ProfileDao } from "./dao";
 import { AuthApiFactory } from "./service";
-import { ProfileAccessTypes } from "./const";
+import { AccessTypes } from "./const";
 
 const profileDao = new ProfileDao();
 
@@ -29,7 +29,7 @@ export async function main(event, context) {
             appId = AppIds.BASE_PROFILE_APP;
         }
 
-        const profiles = await profileDao.findByEOSAccounts(appId, eosAccounts, fetchType, ProfileAccessTypes.PUBLIC);
+        const profiles = await profileDao.findByEOSAccounts(appId, eosAccounts, fetchType, AccessTypes.PUBLIC);
         console.log(' profiles: ', profiles)
 
         return ResponseUtil.success({ status: true, profiles });

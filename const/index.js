@@ -1,9 +1,9 @@
-import ProfileAccessTypes from './ProfileAccessTypes';
+import AccessTypes from './AccessTypes';
 import AuthVerifierKeys from './AuthVerifierKeys';
 import GrantTypes from './GrantTypes';
 
 export {
-    ProfileAccessTypes,
+    AccessTypes,
     AuthVerifierKeys,
     GrantTypes,
 };

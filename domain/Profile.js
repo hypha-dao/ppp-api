@@ -2,7 +2,7 @@ import merge from 'merge';
 import { AppIds, PublicFields } from "@smontero/ppp-common";
 import BaseDomain from './BaseDomain';
 import { VerificationApi } from "../service";
-import { ProfileAccessTypes } from "../const";
+import { AccessTypes } from "../const";
 import { Util } from "../util";
 
 class Profile extends BaseDomain {
@@ -24,8 +24,8 @@ class Profile extends BaseDomain {
         }
     }
 
-    static restrictAccess(profile, accessType = ProfileAccessTypes.PUBLIC) {
-        if (accessType === ProfileAccessTypes.ADMIN) {
+    static restrictAccess(profile, accessType = AccessTypes.PUBLIC) {
+        if (accessType === AccessTypes.ADMIN) {
             return profile;
         }
 
@@ -52,7 +52,7 @@ class Profile extends BaseDomain {
                 smsNumber,
             } = profile;
 
-            if (accessType === ProfileAccessTypes.OWNER) {
+            if (accessType === AccessTypes.OWNER) {
                 processed = {
                     ...processed,
                     commPref,
@@ -61,7 +61,7 @@ class Profile extends BaseDomain {
                 };
             }
         }
-        if (accessType === ProfileAccessTypes.OWNER) {
+        if (accessType === AccessTypes.OWNER) {
             processed.privateData = privateData;
         }
         return processed;
@@ -200,7 +200,7 @@ class Profile extends BaseDomain {
         profile.updatedAt = Date.now();
     }
 
-    get(accessType = ProfileAccessTypes.PUBLIC) {
+    get(accessType = AccessTypes.PUBLIC) {
         let processed = Profile.restrictAccess(this.profile, accessType);
         if (this.profile.appData) {
             processed.appData = Profile.restrictAccess(this.profile.appData, accessType);

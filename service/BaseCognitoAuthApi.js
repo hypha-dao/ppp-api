@@ -1,15 +1,7 @@
 import BaseAuthApi from './BaseAuthApi';
 
-class UnauthenticatedAuthApi extends BaseAuthApi {
+class BaseCognitoAuthApi extends BaseAuthApi {
 
-    static isThisAuth(event) {
-        throw "This should be used when no other authentication is found";
-    }
-
-
-    /* async getApp(event, body, mustExist = true) {
-        return this.appDao.getByDomain('app-dev.telos.net', mustExist);
-    } */
 
     async getApp(event, body, mustExist = true) {
 
@@ -32,12 +24,7 @@ class UnauthenticatedAuthApi extends BaseAuthApi {
         }
         return app;
     }
-
-    async getUserName(event) {
-        throw "A username can't be obtained for unauthenticated users";
-    }
-
 }
 
-export default UnauthenticatedAuthApi;
+export default BaseCognitoAuthApi;
 

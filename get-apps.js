@@ -14,7 +14,7 @@ export async function main(event, context) {
         if (!appIds) {
             return ResponseUtil.failure("appIds parameter is required");
         }
-        const apps = await appDao.findByIds(appIds);
+        const apps = await appDao.findBasicByIds(appIds);
         console.log(' apps: ', apps)
 
         return ResponseUtil.success({ status: true, apps });

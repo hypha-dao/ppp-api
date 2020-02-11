@@ -1,7 +1,7 @@
 import { AppIds, ProfileFetchTypes } from "@smontero/ppp-common";
 import BaseDao from "./BaseDao";
 import { Util } from '../util';
-import { ProfileAccessTypes } from '../const';
+import { AccessTypes } from '../const';
 import { Profile } from '../domain';
 
 class ProfileDao extends BaseDao {
@@ -60,7 +60,7 @@ class ProfileDao extends BaseDao {
             objs,
             accountProp,
             hydratedProp || `${accountProp}Info`,
-            async (eosAccounts) => this.findByEOSAccounts(appId, eosAccounts, ProfileFetchTypes.BASE_ONLY, ProfileAccessTypes.PUBLIC),
+            async (eosAccounts) => this.findByEOSAccounts(appId, eosAccounts, ProfileFetchTypes.BASE_ONLY, AccessTypes.PUBLIC),
         );
     }
 
@@ -84,7 +84,7 @@ class ProfileDao extends BaseDao {
     }
 
     async getByEOSAccount(appId, eosAccount, mustExist = true) {
-        const profile = await this.findByEOSAccount(appId, eosAccount, ProfileFetchTypes.BASE_ONLY, ProfileAccessTypes.ADMIN);
+        const profile = await this.findByEOSAccount(appId, eosAccount, ProfileFetchTypes.BASE_ONLY, AccessTypes.ADMIN);
         if (mustExist && !profile) {
             throw new Error(`EOS Account ${eosAccount} not found for ${appId}`);
         }
@@ -142,7 +142,7 @@ class ProfileDao extends BaseDao {
             const baseItems = await this._findByEOSAccountsRaw(appId, eosAccounts, ProfileFetchTypes.BASE_ONLY);
             items = baseItems.concat(items);
         }
-        results.items = Object.values(this._processResults(items, ProfileAccessTypes.PUBLIC));
+        results.items = Object.values(this._processResults(items, AccessTypes.PUBLIC));
         return results;
     }
 

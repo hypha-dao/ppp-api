@@ -3,7 +3,7 @@ import { ResponseUtil } from './util';
 import { ProfileDao } from "./dao";
 import { Profile } from "./domain";
 import { AuthApiFactory } from "./service";
-import { ProfileAccessTypes } from "./const";
+import { AccessTypes } from "./const";
 
 const profileDao = new ProfileDao();
 
@@ -25,7 +25,7 @@ export async function main(event, context) {
         }
         const eosAccount = await authApi.getUserName(event);
 
-        let profile = await profileDao.findByEOSAccount(appId, eosAccount, ProfileFetchTypes.BASE_AND_APP, ProfileAccessTypes.ADMIN);
+        let profile = await profileDao.findByEOSAccount(appId, eosAccount, ProfileFetchTypes.BASE_AND_APP, AccessTypes.ADMIN);
         profile = new Profile(app, eosAccount, profile);
         await profile.update(body);
         console.log(" Profile Record before saveContact  : ", profile.profile);
@@ -34,7 +34,7 @@ export async function main(event, context) {
         return ResponseUtil.success({
             status: true,
             message: `Profile record saved successfully`,
-            profile: profile.get(ProfileAccessTypes.OWNER),
+            profile: profile.get(AccessTypes.OWNER),
         });
     } catch (e) {
         console.error(e);

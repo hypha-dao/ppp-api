@@ -1,4 +1,4 @@
-import { CognitoAuthApi, OauthAuthApi, PrivateAuthApi, UnauthenticatedAuthApi } from '.';
+import { CognitoAuthApi, OauthAuthApi, PrivateAuthApi, UnauthCognitoAuthApi } from '.';
 
 class AuthApiFactory {
   static getInstance(event) {
@@ -18,10 +18,10 @@ class AuthApiFactory {
       }
       return this.privateAuthApi;
     } else {
-      if (!this.unauthenticatedAuthApi) {
-        this.unauthenticatedAuthApi = new UnauthenticatedAuthApi();
+      if (!this.unauthCognitoAuthApi) {
+        this.unauthCognitoAuthApi = new UnauthCognitoAuthApi();
       }
-      return this.unauthenticatedAuthApi;
+      return this.unauthCognitoAuthApi;
     }
   }
 }

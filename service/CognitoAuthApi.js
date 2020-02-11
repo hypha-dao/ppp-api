@@ -1,7 +1,7 @@
 import AWS from 'aws-sdk';
-import BaseAuthApi from './BaseAuthApi';
+import BaseCognitoAuthApi from './BaseCognitoAuthApi';
 
-class CognitoAuthApi extends BaseAuthApi {
+class CognitoAuthApi extends BaseCognitoAuthApi {
 
     static isThisAuth(event) {
         return event.requestContext.identity && event.requestContext.identity.cognitoAuthenticationProvider;
@@ -15,28 +15,6 @@ class CognitoAuthApi extends BaseAuthApi {
     /* async getApp(event, body, mustExist = true) {
         return this.appDao.getByDomain('app-dev.telos.net', mustExist);
     } */
-
-    async getApp(event, body, mustExist = true) {
-
-        let app = null;
-        let { originAppId } = body;
-        const { headers } = event;
-        const origin = headers ? headers.origin : null;
-        if (!origin && !originAppId) {
-            if (mustExist) {
-                throw 'originAppId parameter is required for standalone apps';
-            } else {
-                return null;
-            }
-        }
-        if (originAppId) {
-            app = await this._getAppById(originAppId, mustExist);
-        } else {
-            const url = new URL(origin);
-            app = await this.appDao.getByDomain(url.hostname, mustExist);
-        }
-        return app;
-    }
 
     async getUserName(event) {
         const {

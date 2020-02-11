@@ -1,5 +1,6 @@
 import { OauthTokenStatus } from '@smontero/ppp-common';
 import OauthRequest from './OauthRequest';
+import { App } from '../domain';
 import { OauthError } from '../error';
 import { Util } from '../util';
 
@@ -25,7 +26,7 @@ class AuthCodeRequest extends OauthRequest {
       scope,
     });
     return {
-      app: this.app,
+      app: App.restrictAccess(this.app),
       scopes: this.requestedScopes,
     };
   }

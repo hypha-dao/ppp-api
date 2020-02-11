@@ -1,4 +1,5 @@
 import { OauthAppStatus } from '@smontero/ppp-common';
+import { AccessTypes } from '../const';
 import { Util, ValidationUtil } from "../util";
 import assert from 'assert';
 
@@ -138,6 +139,30 @@ class App {
     async save() {
         this.assertState();
         await this.appDao.save(this);
+    }
+
+    static restrictAccess(app, accessType = AccessTypes.PUBLIC) {
+        if (accessType === AccessTypes.ADMIN || accessType === AccessTypes.OWNER) {
+            return app;
+        }
+
+        const {
+            appId,
+            icon,
+            name,
+            shortname,
+            url,
+            type,
+        } = app;
+
+        return {
+            appId,
+            icon,
+            name,
+            shortname,
+            url,
+            type,
+        };
     }
 
 }

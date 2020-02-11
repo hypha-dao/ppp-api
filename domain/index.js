@@ -1,3 +1,4 @@
+import App from './App';
 import AppFactory from './AppFactory';
 import AccessTokenRequest from './AccessTokenRequest';
 import AccessTokenRequestFactory from './AccessTokenRequestFactory';
@@ -13,6 +14,7 @@ import RefreshAccessTokenRequest from './RefreshAccessTokenRequest';
 import WebApp from './WebApp';
 
 export {
+    App,
     AppFactory,
     AccessTokenRequest,
     AccessTokenRequestFactory,

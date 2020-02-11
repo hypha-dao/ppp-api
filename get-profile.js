@@ -2,7 +2,7 @@ import { ProfileFetchTypes } from "@smontero/ppp-common";
 import { ResponseUtil } from './util';
 import { ProfileDao } from "./dao";
 import { AuthApiFactory } from "./service";
-import { ProfileAccessTypes } from "./const";
+import { AccessTypes } from "./const";
 
 const profileDao = new ProfileDao();
 
@@ -17,7 +17,7 @@ export async function main(event, context) {
         fetchType = ProfileFetchTypes.get(fetchType, ProfileFetchTypes.BASE_AND_APP);
         const { appId } = await authApi.getApp(event, body);
         const eosAccount = await authApi.getUserName(event);
-        const profile = await profileDao.findByEOSAccount(appId, eosAccount, fetchType, ProfileAccessTypes.OWNER);
+        const profile = await profileDao.findByEOSAccount(appId, eosAccount, fetchType, AccessTypes.OWNER);
         console.log(" Profile Record: ", profile);
         return ResponseUtil.success({
             status: true,
