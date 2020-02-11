@@ -7,9 +7,9 @@ const DEFAULT_SCOPE = 'profile_read';
 
 class AuthCodeRequest extends OauthRequest {
 
-  constructor(appDao, oauthDao, validScopes) {
+  constructor(appDao, oauthDao, scopes) {
     super(appDao, oauthDao);
-    this.validScopes = validScopes;
+    this.scopes = scopes;
   }
 
   async processInitialRequest({
@@ -26,7 +26,7 @@ class AuthCodeRequest extends OauthRequest {
     });
     return {
       app: this.app,
-      scopes: this.scopes,
+      scopes: this.requestedScopes,
     };
   }
 
@@ -35,7 +35,7 @@ class AuthCodeRequest extends OauthRequest {
     client_id,
     redirect_uri,
     scope,
-  }, eosAccount) {
+  }, profile) {
     await this._validateRequest({
       response_type,
       client_id,
@@ -43,9 +43,13 @@ class AuthCodeRequest extends OauthRequest {
       scope,
     });
 
+    if (await this.scopes.requiresVerifiedProfile(this.scopeKeys) && !profile.isVerified()) {
+      throw new OauthError(OauthError.types.INVALID_SCOPE, `Requested scopes require a verified profile but the user does not have one`);
+    }
+
     const oauth = {
       appId: client_id,
-      eosAccount: eosAccount,
+      eosAccount: profile.eosAccount,
       scopes: this.scopeKeys,
       redirectUri: this.redirectUri,
       hasRedirectUriParam: !!redirect_uri,
@@ -73,7 +77,7 @@ class AuthCodeRequest extends OauthRequest {
     });
 
     this.scopeKeys = scope.split(' ');
-    this.scopes = this._findScopes(this.scopeKeys);
+    this.requestedScopes = await this.scopes.find(this.scopeKeys);
     await this._loadApp(client_id);
 
     this._assertOuathAppStatus(this.app.oauthAppStatus, OauthError.types.INVALID_CLIENT);
@@ -101,18 +105,6 @@ class AuthCodeRequest extends OauthRequest {
     if (!client_id) {
       throw new OauthError(OauthError.types.INVALID_REQUEST, 'Client id is a required parameter');
     }
-  }
-
-  _findScopes(scopeKeys) {
-    const scopes = [];
-    for (const scopeKey of scopeKeys) {
-      const scope = this.validScopes[scopeKey];
-      if (!scope) {
-        throw new OauthError(OauthError.types.INVALID_SCOPE, `Unknown requested scope: ${scopeKey}`);
-      }
-      scopes.push(scope);
-    }
-    return scopes;
   }
 
   _isRegisteredUrl(url) {

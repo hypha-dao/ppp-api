@@ -7,7 +7,7 @@ class Oauth {
     this.appDao = appDao;
   }
 
-  async getAuthorizedApps(eosAccount) {
+  async getAuthorizedApps(eosAccount, scopesDomain) {
     const oauths = await this.oauthDao.getValidByEosAccount(eosAccount);
     const authorizations = {};
 
@@ -33,7 +33,15 @@ class Oauth {
       authorizations[appId].app = apps[appId];
     }
     console.log('authorizations:', authorizations);
-    return this._keepValid(Object.values(authorizations));
+    let validAuthorizations = this._keepValid(Object.values(authorizations));
+    await this._resolveScopes(validAuthorizations, scopesDomain);
+    return validAuthorizations;
+  }
+
+  async _resolveScopes(authorizations, scopesDomain) {
+    for (const auth of authorizations) {
+      auth.scopes = await scopesDomain.find(auth.scopes);
+    }
   }
 
   _keepValid(authorizations) {
@@ -46,13 +54,18 @@ class Oauth {
     return valid;
   }
 
-  async onAppOauthStatusChange(oldApp, newApp) {
+  async onAppChange(oldApp, newApp) {
     const oldStatus = Util.getPath(oldApp, 'oauthAppStatus', null, true);
     const newStatus = Util.getPath(newApp, 'oauthAppStatus', null, true);
     if (oldStatus != newStatus && newStatus !== OauthAppStatus.ENABLED) {
       const appId = Util.getPath(newApp, 'appId', null, true);
       await this.oauthDao.revokeByAppId(appId, newStatus === OauthAppStatus.DISABLED_BY_APP ? OauthTokenStatus.REVOKED_BY_APP : OauthTokenStatus.REVOKED_BY_SERVER);
     }
+  }
+
+  async onAppDelete(oldApp) {
+    const appId = Util.getPath(oldApp, 'appId', null, true);
+    await this.oauthDao.revokeByAppId(appId, OauthTokenStatus.APP_DELETED);
   }
 }
 

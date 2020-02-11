@@ -1,12 +1,14 @@
 import { ResponseUtil } from './util';
-import { AppDao, OauthDao, ScopeDao } from "./dao";
-import { AuthCodeRequest } from './domain';
+import { AppDao, OauthDao, ScopeDao, ProfileDao } from "./dao";
+import { AuthCodeRequest, Scopes } from './domain';
 import { AuthApiFactory } from "./service";
+import { AppIds } from '@smontero/ppp-common';
 
 const appDao = new AppDao();
 const oauthDao = new OauthDao();
 const scopeDao = new ScopeDao();
-let validScopes = null;
+const profileDao = new ProfileDao();
+const scopes = new Scopes(scopeDao);
 
 export async function main(event, context) {
 
@@ -16,12 +18,9 @@ export async function main(event, context) {
         const body = JSON.parse(event.body);
         const authApi = AuthApiFactory.getInstance(event);
         const eosAccount = await authApi.getUserName(event);
-        if (!validScopes) {
-            validScopes = await scopeDao.getAllMappedByScope();
-        }
-        console.log('Valid Scopes: ', validScopes);
-        const authCodeRequest = new AuthCodeRequest(appDao, oauthDao, validScopes);
-        const oauth = await authCodeRequest.processCodeRequest(body, eosAccount);
+        const authCodeRequest = new AuthCodeRequest(appDao, oauthDao, scopes);
+        const profile = await profileDao.getProfile(AppIds.BASE_PROFILE_APP, eosAccount, false);
+        const oauth = await authCodeRequest.processCodeRequest(body, profile);
         console.log('Oauth: ', oauth);
 
         return ResponseUtil.success({ status: true, oauth });

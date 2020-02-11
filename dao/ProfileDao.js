@@ -83,16 +83,16 @@ class ProfileDao extends BaseDao {
         return profile;
     }
 
-    async getByEOSAccount(appId, eosAccount) {
+    async getByEOSAccount(appId, eosAccount, mustExist = true) {
         const profile = await this.findByEOSAccount(appId, eosAccount, ProfileFetchTypes.BASE_ONLY, ProfileAccessTypes.ADMIN);
-        if (!profile) {
+        if (mustExist && !profile) {
             throw new Error(`EOS Account ${eosAccount} not found for ${appId}`);
         }
         return profile;
     }
 
-    async getProfile(appId, eosAccount) {
-        const profile = await this.getByEOSAccount(appId, eosAccount);
+    async getProfile(appId, eosAccount, mustExist = true) {
+        const profile = await this.getByEOSAccount(appId, eosAccount, mustExist);
         return new Profile(appId, eosAccount, profile);
     }
 

@@ -7,6 +7,7 @@ import Chat from './Chat';
 import Message from './Message';
 import Oauth from './Oauth';
 import Profile from './Profile';
+import Scopes from './Scopes';
 import NonWebApp from './NonWebApp';
 import RefreshAccessTokenRequest from './RefreshAccessTokenRequest';
 import WebApp from './WebApp';
@@ -21,6 +22,7 @@ export {
     Message,
     Oauth,
     Profile,
+    Scopes,
     NonWebApp,
     RefreshAccessTokenRequest,
     WebApp,

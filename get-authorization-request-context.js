@@ -1,11 +1,11 @@
 import { ResponseUtil } from './util';
 import { AppDao, OauthDao, ScopeDao } from "./dao";
-import { AuthCodeRequest } from './domain';
+import { AuthCodeRequest, Scopes } from './domain';
 
 const appDao = new AppDao();
 const oauthDao = new OauthDao();
 const scopeDao = new ScopeDao();
-let validScopes = null;
+const scopes = new Scopes(scopeDao);
 
 export async function main(event, context) {
 
@@ -14,11 +14,7 @@ export async function main(event, context) {
         console.log('context: ', context);
 
         const requestParams = event.queryStringParameters;
-        if (!validScopes) {
-            validScopes = await scopeDao.getAllMappedByScope();
-        }
-        console.log('Valid Scopes: ', validScopes);
-        const authCodeRequest = new AuthCodeRequest(appDao, oauthDao, validScopes);
+        const authCodeRequest = new AuthCodeRequest(appDao, oauthDao, scopes);
         const authRequestContext = await authCodeRequest.processInitialRequest(requestParams);
         console.log('Auth Request Context: ', authRequestContext);
 

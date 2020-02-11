@@ -1,10 +1,12 @@
 import { ResponseUtil } from './util';
-import { AppDao, OauthDao } from "./dao";
-import { Oauth } from './domain';
+import { AppDao, OauthDao, ScopeDao } from "./dao";
+import { Oauth, Scopes } from './domain';
 import { AuthApiFactory } from "./service";
 
 const appDao = new AppDao();
 const oauthDao = new OauthDao();
+const scopeDao = new ScopeDao();
+const scopes = new Scopes(scopeDao);
 
 export async function main(event, context) {
     try {
@@ -16,7 +18,7 @@ export async function main(event, context) {
         const { appId } = await authApi.getApp(event, body);
         const eosAccount = await authApi.getUserName(event);
         const oauth = new Oauth(oauthDao, appDao);
-        const authorizations = await oauth.getAuthorizedApps(eosAccount);
+        const authorizations = await oauth.getAuthorizedApps(eosAccount, scopes);
         console.log(" Authorizations: ", authorizations);
         return ResponseUtil.success({
             status: true,
