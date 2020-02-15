@@ -1,3 +1,5 @@
+import { OauthError } from '../error';
+
 class Scopes {
 
   constructor(scopeDao) {
