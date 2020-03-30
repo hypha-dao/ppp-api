@@ -7,12 +7,14 @@ class BaseAuthApi {
         throw 'Must be implemented by subclass';
     }
 
-    constructor() {
+    constructor(event, body) {
         this.secretsmanager = new AWS.SecretsManager({ region: 'us-east-1' });
         this.appDao = new AppDao();
+        this.event = event;
+        this.body = body;
     }
 
-    async getApp(event, body, mustExist = true) {
+    async getApp(mustExist = true) {
         throw 'Must be implemented by subclass';
     }
 
@@ -34,7 +36,7 @@ class BaseAuthApi {
         }
     }
 
-    async getUserName(event) {
+    async getUserName() {
         throw 'Must be implemented by subclass';
     }
 

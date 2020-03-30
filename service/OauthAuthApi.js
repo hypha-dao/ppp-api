@@ -5,16 +5,27 @@ class OauthAuthApi extends BaseAuthApi {
     static isThisAuth(event) {
         return !!event.requestContext.authorizer;
     }
+    constructor(event, body){
+        super(event, body);
+        this.authorizer = event.requestContext.authorizer;
+    }
 
-    async getApp(event, body, mustExist = true) {
+    async getApp(mustExist = true) {
         const {
             appId
-        } = event.requestContext.authorizer;
+        } = this.authorizer;
         return this._getAppById(appId, mustExist);
     }
 
-    async getUserName(event) {
-        return event.requestContext.authorizer.eosAccount;
+    async getUserName() {
+        return this.authorizer.eosAccount;
+    }
+
+    hasScope(scope){
+        const {
+            scopes
+        } = this.authorizer;
+        return scopes && scopes.indexOf(scope) > -1;
     }
 }
 

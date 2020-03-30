@@ -13,9 +13,9 @@ export async function main(event, context) {
             search,
         } = body;
 
-        const authApi = AuthApiFactory.getInstance(event);
-        const { appId } = await authApi.getApp(event, body);
-        const eosAccount = await authApi.getUserName(event);
+        const authApi = AuthApiFactory.getInstance(event, body);
+        const { appId } = await authApi.getApp();
+        const eosAccount = await authApi.getUserName();
         const chats = await chatDao.search({
             appId,
             eosAccount,

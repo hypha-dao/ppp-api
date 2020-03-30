@@ -10,9 +10,9 @@ export async function main(event, context) {
         console.log('event: ', event);
         console.log('context: ', context);
         const body = JSON.parse(event.body);
-        const authApi = AuthApiFactory.getInstance(event);
-        const { appId } = await authApi.getApp(event, body);
-        const eosAccount = await authApi.getUserName(event);
+        const authApi = AuthApiFactory.getInstance(event, body);
+        const { appId } = await authApi.getApp();
+        const eosAccount = await authApi.getUserName();
         const { items: apps } = await appDao.findByOwnerAccount(eosAccount);
         console.log(" Apps: ", apps);
         return ResponseUtil.success({

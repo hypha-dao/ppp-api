@@ -3,11 +3,11 @@ import BaseAuthApi from './BaseAuthApi';
 class BaseCognitoAuthApi extends BaseAuthApi {
 
 
-    async getApp(event, body, mustExist = true) {
+    async getApp(mustExist = true) {
 
         let app = null;
-        let { originAppId } = body;
-        const { headers } = event;
+        let { originAppId } = this.body;
+        const { headers } = this.event;
         const origin = headers ? headers.origin : null;
         if (!origin && !originAppId) {
             if (mustExist) {

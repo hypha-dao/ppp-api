@@ -20,8 +20,8 @@ export async function main(event, context) {
         fetchType = appId === AppIds.BASE_PROFILE_APP ? ProfileFetchTypes.BASE_ONLY : ProfileFetchTypes.get(fetchType, ProfileFetchTypes.BASE_AND_APP);
 
         if (appId === AppIds.CURRENT_APP) {
-            const authApi = AuthApiFactory.getInstance(event);
-            const app = await authApi.getApp(event, body, false);
+            const authApi = AuthApiFactory.getInstance(event, body);
+            const app = await authApi.getApp(false);
             if (app) {
                 appId = app.appId;
             } else {

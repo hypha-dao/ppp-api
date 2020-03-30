@@ -28,6 +28,7 @@ class ApiAccessRequest extends OauthRequest {
     return {
       eosAccount,
       appId,
+      scopes: this.oauth.scopes,
     };
   }
 

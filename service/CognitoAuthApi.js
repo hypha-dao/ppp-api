@@ -7,8 +7,8 @@ class CognitoAuthApi extends BaseCognitoAuthApi {
         return event.requestContext.identity && event.requestContext.identity.cognitoAuthenticationProvider;
     }
 
-    constructor() {
-        super();
+    constructor(event, body) {
+        super(event, body);
         this.cognitoClient = new AWS.CognitoIdentityServiceProvider({ region: 'us-east-1' });
     }
 
@@ -16,10 +16,10 @@ class CognitoAuthApi extends BaseCognitoAuthApi {
         return this.appDao.getByDomain('app-dev.telos.net', mustExist);
     } */
 
-    async getUserName(event) {
+    async getUserName() {
         const {
             cognitoAuthenticationProvider,
-        } = event.requestContext.identity;
+        } = this.event.requestContext.identity;
         const userIdentifier = cognitoAuthenticationProvider.split('/').pop();
         const [userPoolId, userSub] = userIdentifier.split(':CognitoSignIn:');
         console.log(`Getting userName for user pool id: ${userPoolId} userSub: ${userSub}`);

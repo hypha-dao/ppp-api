@@ -17,13 +17,13 @@ export async function main(event, context) {
     } = body;
 
     try {
-        const authApi = AuthApiFactory.getInstance(event);
-        const app = await authApi.getApp(event, body);
+        const authApi = AuthApiFactory.getInstance(event, body);
+        const app = await authApi.getApp();
         const { appId } = app;
         if (!(smsNumber || emailAddress || commPref || appData)) {
             return ResponseUtil.failure("Either smsNumber or emailAddress or commPref or appData are required");
         }
-        const eosAccount = await authApi.getUserName(event);
+        const eosAccount = await authApi.getUserName();
 
         let profile = await profileDao.findByEOSAccount(appId, eosAccount, ProfileFetchTypes.BASE_AND_APP, AccessTypes.ADMIN);
         profile = new Profile(app, eosAccount, profile);

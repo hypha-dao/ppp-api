@@ -14,9 +14,9 @@ export async function main(event, context) {
         console.log('event: ', event);
         console.log('context: ', context);
         const body = JSON.parse(event.body);
-        const authApi = AuthApiFactory.getInstance(event);
-        const { appId } = await authApi.getApp(event, body);
-        const eosAccount = await authApi.getUserName(event);
+        const authApi = AuthApiFactory.getInstance(event, body);
+        const { appId } = await authApi.getApp();
+        const eosAccount = await authApi.getUserName();
         const oauth = new Oauth(oauthDao, appDao);
         const authorizations = await oauth.getAuthorizedApps(eosAccount, scopes);
         console.log(" Authorizations: ", authorizations);

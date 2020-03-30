@@ -14,9 +14,9 @@ export async function main(event, context) {
         if (!appId) {
             throw 'appId is a required parameter';
         }
-        const authApi = AuthApiFactory.getInstance(event);
-        await authApi.getApp(event, body);
-        const eosAccount = await authApi.getUserName(event);
+        const authApi = AuthApiFactory.getInstance(event, body);
+        await authApi.getApp();
+        const eosAccount = await authApi.getUserName();
         const { ownerAccount, domain } = await appDao.getById(appId);
         if (eosAccount != ownerAccount) {
             throw `User is not owner of the app: ${appId}`;

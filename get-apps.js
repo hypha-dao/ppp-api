@@ -9,8 +9,8 @@ export async function main(event, context) {
     try {
         const body = JSON.parse(event.body);
         let { appIds } = body;
-        const authApi = AuthApiFactory.getInstance(event);
-        const { appId } = await authApi.getApp(event, body);
+        const authApi = AuthApiFactory.getInstance(event, body);
+        const { appId } = await authApi.getApp();
         if (!appIds) {
             return ResponseUtil.failure("appIds parameter is required");
         }

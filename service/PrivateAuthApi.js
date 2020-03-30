@@ -6,9 +6,9 @@ class PrivateAuthApi extends BaseAuthApi {
         return event.requestContext.identity && event.requestContext.identity.apiKey;
     }
 
-    async getApp(event, body, mustExist = true) {
+    async getApp(mustExist = true) {
 
-        let { originAppId } = body;
+        let { originAppId } = this.body;
         if (!originAppId) {
             if (mustExist) {
                 throw 'originAppId parameter is required for private apps';
@@ -19,7 +19,7 @@ class PrivateAuthApi extends BaseAuthApi {
         return this._getAppById(originAppId, mustExist);
     }
 
-    async getUserName(event) {
+    async getUserName() {
         throw 'UserName can not be obtained for private authentication, it must be on the body of the request';
     }
 }

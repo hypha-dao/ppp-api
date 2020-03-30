@@ -9,12 +9,12 @@ export async function sms(event, context) {
   const { smsOtp } = body;
 
   try {
-    const authApi = AuthApiFactory.getInstance(event);
-    const { appId } = await authApi.getApp(event, body);
+    const authApi = AuthApiFactory.getInstance(event, body);
+    const { appId } = await authApi.getApp();
     if (!smsOtp) {
       return ResponseUtil.failure({ message: "smsOtp parameter is required" });
     }
-    const eosAccount = await authApi.getUserName(event);
+    const eosAccount = await authApi.getUserName();
     const profile = await profileDao.getProfile(appId, eosAccount);
     profile.verifySmsOtp(smsOtp);
     await profileDao.save(profile.profile);
@@ -34,12 +34,12 @@ export async function email(event, context) {
   const { emailOtp } = body;
 
   try {
-    const authApi = AuthApiFactory.getInstance(event);
-    const { appId } = await authApi.getApp(event, body);
+    const authApi = AuthApiFactory.getInstance(event, body);
+    const { appId } = await authApi.getApp();
     if (!emailOtp) {
       return ResponseUtil.failure({ message: "emailOtp parameters is required" });
     }
-    const eosAccount = await authApi.getUserName(event);
+    const eosAccount = await authApi.getUserName();
     const profile = await profileDao.getProfile(appId, eosAccount);
     profile.verifyEmailOtp(emailOtp);
     await profileDao.save(profile.profile);

@@ -22,8 +22,8 @@ export async function main(event, context) {
             throw "eosAccount and message are required";
         }
         let senderAccount = null;
-        const authApi = AuthApiFactory.getInstance(event);
-        const app = await authApi.getApp(event, body);
+        const authApi = AuthApiFactory.getInstance(event, body);
+        const app = await authApi.getApp();
         const { appId } = app;
         if (PrivateAuthApi.isThisAuth(event)) {
             ({ senderAccount } = body);
@@ -31,7 +31,7 @@ export async function main(event, context) {
                 throw "senderAccount is required";
             }
         } else {
-            senderAccount = await authApi.getUserName(event);
+            senderAccount = await authApi.getUserName();
         }
 
         const { profile: receiver } = await profileDao.getVerifiedProfile(appId, eosAccount);

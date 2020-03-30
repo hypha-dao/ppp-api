@@ -15,9 +15,9 @@ export async function main(event, context) {
         if (!appId) {
             return ResponseUtil.failure("appId parameter is required");
         }
-        const authApi = AuthApiFactory.getInstance(event);
-        await authApi.getApp(event, body);
-        const eosAccount = await authApi.getUserName(event);
+        const authApi = AuthApiFactory.getInstance(event, body);
+        await authApi.getApp();
+        const eosAccount = await authApi.getUserName();
         await oauthDao.revokeByAppIdAndEosAccount(appId, eosAccount, OauthTokenStatus.REVOKED_BY_USER);
         return ResponseUtil.success({
             status: true,

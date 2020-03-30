@@ -13,12 +13,12 @@ export async function main(event, context) {
             limit,
             lastEvaluatedKey
         } = body;
-        const authApi = AuthApiFactory.getInstance(event);
-        const { appId } = await authApi.getApp(event, body);
+        const authApi = AuthApiFactory.getInstance(event, body);
+        const { appId } = await authApi.getApp();
         if (!eosAccount2) {
             return ResponseUtil.failure("eosAccount2 parameter is required");
         }
-        const eosAccount1 = await authApi.getUserName(event);
+        const eosAccount1 = await authApi.getUserName();
         const messages = await messageDao.getByParticipants({
             appId,
             eosAccount1,

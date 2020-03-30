@@ -19,8 +19,8 @@ export async function main(event, context) {
         }
 
         fetchType = ProfileFetchTypes.get(fetchType, ProfileFetchTypes.BASE_AND_APP);
-        const authApi = AuthApiFactory.getInstance(event);
-        const app = await authApi.getApp(event, body, false);
+        const authApi = AuthApiFactory.getInstance(event, body);
+        const app = await authApi.getApp(false);
         let appId;
         if (app) {
             ({ appId } = app);
