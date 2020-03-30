@@ -1,8 +1,18 @@
+const { JWT } = require('jose');
 import OauthRequest from './OauthRequest';
 import { OauthError } from '../error';
 import { Util } from '../util';
 
 class BaseAccessTokenRequest extends OauthRequest {
+
+  constructor({
+    keyManager,
+    appDao,
+    oauthDao,
+  }){
+    super(appDao, oauthDao);
+    this.keyManager = keyManager;
+  }
 
   _validateApp(client_secret) {
 
@@ -32,8 +42,12 @@ class BaseAccessTokenRequest extends OauthRequest {
   _generateAccessToken() {
     return {
       accessToken: Util.uuid(),
-      accessTokenExpiration: this.getExpirationTime(Number(process.env.accessTokenMinutesTTL)),
+      accessTokenExpiration: this._getAccessTokenExpiration(),
     };
+  }
+
+  _getAccessTokenExpiration(){
+    return this.getExpirationTime(Number(process.env.accessTokenMinutesTTL));
   }
 
   _generateRefreshToken() {
@@ -43,10 +57,23 @@ class BaseAccessTokenRequest extends OauthRequest {
     };
   }
 
-  _generateAccessTokenResponse(oauth) {
+  async _generateIdToken(){
+    return JWT.sign(
+      {
+        sub: this.oauth.eosAccount,
+        iss: process.env.openIdIssuingAuthority,
+        aud: this.oauth.appId,
+        exp: Math.round(this._getAccessTokenExpiration()/1000),
+      },
+      await this.keyManager.getKey(process.env.openIdSignaturePrivateKeyParamName),
+    );
+  }
+
+  async _generateAccessTokenResponse(oauth) {
     return {
       access_token: oauth.accessToken,
       refresh_token: oauth.refreshToken,
+      id_token: await this._generateIdToken(),
       token_type: 'bearer',
       expires_in: process.env.accessTokenMinutesTTL,
     };

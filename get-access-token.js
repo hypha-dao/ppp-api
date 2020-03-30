@@ -1,9 +1,11 @@
 import { ParseUtil, ResponseUtil } from './util';
 import { AppDao, OauthDao } from "./dao";
 import { AccessTokenRequestFactory } from './domain';
+import { JWTKeyManager } from './service';
 
 const appDao = new AppDao();
 const oauthDao = new OauthDao();
+const keyManager = new JWTKeyManager();
 
 export async function main(event, context) {
 
@@ -15,7 +17,13 @@ export async function main(event, context) {
             grant_type,
         } = body;
 
-        const accessTokenRequest = AccessTokenRequestFactory.getInstance(grant_type, appDao, oauthDao);
+        const accessTokenRequest = AccessTokenRequestFactory.getInstance(
+            grant_type, 
+            { 
+                appDao,
+                oauthDao,
+                keyManager,
+            });
         const accessTokenResponse = await accessTokenRequest.processRequest(body);
         console.log('Auth Request Context: ', accessTokenResponse);
         return ResponseUtil.success(accessTokenResponse, true);

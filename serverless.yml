@@ -63,6 +63,8 @@ provider:
     twilioAuthToken: ${self:custom.environment.twilioAuthToken}
     msgPrefix: ${self:custom.environment.msgPrefix}
     sendGridKey: ${self:custom.environment.sendGridKey}
+    openIdSignaturePrivateKeyParamName: ${self:custom.environment.openIdSignaturePrivateKeyParamName}
+    openIdIssuingAuthority: ${self:custom.environment.openIdIssuingAuthority}
     userPoolName: ${self:custom.userPoolName}
     identityPoolName: ${self:custom.identityPoolName}
     userPoolClientName: ${self:custom.userPoolClientName}
@@ -135,6 +137,10 @@ provider:
     - Effect: Allow
       Action:
         - cognito-idp:ListUsers
+      Resource: "*"
+    - Effect: Allow
+      Action:
+        - ssm:GetParameter
       Resource: "*"
     
 
