@@ -19,6 +19,7 @@ class PolicyUtil {
         if (context) {
             authResponse.context = context;
         }
+        console.log('AuthResponse: ', JSON.stringify(authResponse, null, 4));
         return authResponse;
     }
 

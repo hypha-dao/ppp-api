@@ -25,7 +25,7 @@ class OauthAuthApi extends BaseAuthApi {
         const {
             scopes
         } = this.authorizer;
-        return scopes && scopes.indexOf(scope) > -1;
+        return scopes && scopes.includes(scope);
     }
 }
 

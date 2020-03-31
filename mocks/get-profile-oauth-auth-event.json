@@ -97,9 +97,7 @@
             "principalId": "app.tf",
             "integrationLatency": 1736,
             "eosAccount": "app.tf",
-            "scopes": [
-                "verify_eos_account"
-            ]
+            "scopes": "profile_read"
         },
         "resourcePath": "/get-profile-oauth",
         "httpMethod": "POST",
