@@ -47,7 +47,7 @@ class ApiAccessRequest extends OauthRequest {
     if (!scopes) {
       throw new OauthError(OauthError.types.INSUFFICIENT_SCOPE, 'Resource is out of bounds');
     }
-    return scopes.map(scope => scope.scope);
+    return scopes;
   }
 
   _validateOauth(resourceScopes) {

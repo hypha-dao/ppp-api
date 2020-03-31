@@ -134,17 +134,18 @@ class Util {
         }
     }
 
-    static arrayToMap(objs, keyProp, isKeyUnique = true) {
+    static arrayToMap(objs, keyProp, isKeyUnique = true, valueProp = null) {
         const map = {};
         for (const obj of objs) {
+            const value = valueProp ? obj[valueProp] : obj;
             let keys = obj[keyProp];
             keys = Array.isArray(keys) ? keys : [keys];
             for (const key of keys) {
                 if(!isKeyUnique){
                     map[key] = map[key] || [];
-                    map[key].push(obj);
+                    map[key].push(value);
                 } else {
-                    map[key] = obj;
+                    map[key] = value;
                 }                
             }
         }

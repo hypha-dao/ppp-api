@@ -32,7 +32,7 @@ export async function main(event, context, callback) {
             payload = JSON.parse(body);
         }
         if (!scopes) {
-            scopes = await scopeDao.getAllMappedByResources();
+            scopes = await scopeDao.getAllMappedByResources('scope');
         }
 
         const apiAccessRequest = new ApiAccessRequest(appDao, oauthDao, scopes);

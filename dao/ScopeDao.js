@@ -30,12 +30,12 @@ class ScopeDao extends BaseDao {
         await this.transactPut(scopes);
     }
 
-    async getAllMappedByScope() {
-        return this.scanMap('scope');
+    async getAllMappedByScope(valueProp = null) {
+        return this.scanMap('scope', true, valueProp);
     }
 
-    async getAllMappedByResources() {
-        return this.scanMap('resources', false);
+    async getAllMappedByResources(valueProp = null) {
+        return this.scanMap('resources', false, valueProp);
     }
 
     async getByIds(scopes) {
