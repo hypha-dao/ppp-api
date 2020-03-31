@@ -1,5 +1,6 @@
 import OauthRequest from './OauthRequest';
 import { OauthError } from '../error';
+import { Util } from '../util';
 
 class ApiAccessRequest extends OauthRequest {
 
@@ -14,8 +15,8 @@ class ApiAccessRequest extends OauthRequest {
     payload
   }) {
     await this._loadOauth(accessToken);
-    const requiredScope = this._getScopeByResource(resource);
-    this._validateOauth(requiredScope);
+    const resourceScopes = this._getScopesByResource(resource);
+    this._validateOauth(resourceScopes);
 
     const {
       eosAccount,
@@ -41,15 +42,15 @@ class ApiAccessRequest extends OauthRequest {
     this.oauth = await this.oauthDao.getByAccessToken(accessToken);
   }
 
-  _getScopeByResource(resource) {
-    const scope = this.scopes[resource];
-    if (!scope) {
+  _getScopesByResource(resource) {
+    const scopes = this.scopes[resource];
+    if (!scopes) {
       throw new OauthError(OauthError.types.INSUFFICIENT_SCOPE, 'Resource is out of bounds');
     }
-    return scope.scope;
+    return scopes.map(scope => scope.scope);
   }
 
-  _validateOauth(requiredScope) {
+  _validateOauth(resourceScopes) {
     const {
       accessTokenExpiration,
       oauthTokenStatus,
@@ -61,7 +62,8 @@ class ApiAccessRequest extends OauthRequest {
     if (this.hasExpired(accessTokenExpiration)) {
       throw new OauthError(OauthError.types.INVALID_TOKEN, 'Authorization code has expired');
     }
-    if (!scopes || scopes.indexOf(requiredScope) < 0) {
+    
+    if (!scopes || !Util.includesOne(scopes, resourceScopes)) {
       throw new OauthError(OauthError.types.INSUFFICIENT_SCOPE, `Required scope is: ${requiredScope}`);
     }
   }

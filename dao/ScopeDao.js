@@ -35,7 +35,7 @@ class ScopeDao extends BaseDao {
     }
 
     async getAllMappedByResources() {
-        return this.scanMap('resources');
+        return this.scanMap('resources', false);
     }
 
     async getByIds(scopes) {

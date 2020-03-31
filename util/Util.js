@@ -134,16 +134,25 @@ class Util {
         }
     }
 
-    static arrayToMap(objs, keyProp) {
+    static arrayToMap(objs, keyProp, isKeyUnique = true) {
         const map = {};
         for (const obj of objs) {
             let keys = obj[keyProp];
             keys = Array.isArray(keys) ? keys : [keys];
             for (const key of keys) {
-                map[key] = obj;
+                if(!isKeyUnique){
+                    map[key] = map[key] || [];
+                    map[key].push(obj);
+                } else {
+                    map[key] = obj;
+                }                
             }
         }
         return map;
+    }
+
+    static includesOne(arr1, arr2){
+        return arr1.some(x => arr2.includes(x));
     }
 }
 

@@ -45,9 +45,9 @@ class BaseDao {
         return this._queryOrScan('scan', query || {}, limit, lastEvaluatedKey, retries);
     }
 
-    async scanMap(keyProp) {
+    async scanMap(keyProp, isKeyUnique = true) {
         const { items } = await this.scan();
-        return Util.arrayToMap(items, keyProp);
+        return Util.arrayToMap(items, keyProp, isKeyUnique);
     }
 
     async _queryOrScan(op, query, limit, lastEvaluatedKey, retries = MAX_RETRIES) {
