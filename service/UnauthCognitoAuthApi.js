@@ -3,7 +3,7 @@ import BaseCognitoAuthApi from './BaseCognitoAuthApi';
 class UnauthCognitoAuthApi extends BaseCognitoAuthApi {
 
     static isThisAuth() {
-        throw "This should be used when no other authentication is found";
+        return true
     }
 
     async getUserName() {

@@ -5,8 +5,9 @@ class OauthAuthApi extends BaseAuthApi {
     static isThisAuth(event) {
         return !!event.requestContext.authorizer;
     }
-    constructor(event, body){
-        super(event, body);
+
+    init(event, body){
+        super.init(event, body)
         this.authorizer = event.requestContext.authorizer;
     }
 

@@ -7,9 +7,12 @@ class BaseAuthApi {
         throw 'Must be implemented by subclass';
     }
 
-    constructor(event, body) {
+    constructor() {
         this.secretsmanager = new AWS.SecretsManager({ region: 'us-east-1' });
         this.appDao = new AppDao();
+    }
+
+    init(event, body) {
         this.event = event;
         this.body = body;
     }

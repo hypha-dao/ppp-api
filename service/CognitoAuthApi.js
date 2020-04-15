@@ -7,8 +7,8 @@ class CognitoAuthApi extends BaseCognitoAuthApi {
         return event.requestContext.identity && event.requestContext.identity.cognitoAuthenticationProvider;
     }
 
-    constructor(event, body) {
-        super(event, body);
+    constructor() {
+        super();
         this.cognitoClient = new AWS.CognitoIdentityServiceProvider({ region: 'us-east-1' });
     }
 
