@@ -188,7 +188,6 @@ class Profile extends BaseDomain {
             profile.appData.app = Profile.getEntityDetails('app', this.app);
             console.log('Profile: ', this.profile);
         }
-        Util.deleteNullsAndEmptyStrings(profile);
         this._setIsVerified();
     }
 

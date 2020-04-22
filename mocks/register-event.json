@@ -29,5 +29,5 @@
         "domainName": "qberjy1f98.execute-api.us-east-1.amazonaws.com",
         "apiId": "qberjy1f98"
     },
-    "body": "{\"originAppId\": \"base-app\",\"emailAddress\":\"sebastian.montero@gmail.com\",\"smsNumber\":\"\",\"commPref\":\"EMAIL\",\"publicData\":{\"firstName\":\"Sebastian\",\"lastName\":\"Montero\",\"countryCode\":\"Mexico\",\"profileImage\":\"\",\"s3Identity\":\"\",\"hobbies\":[\"football\"],\"bio\":\"Hola\"}}"
+    "body": "{\"originAppId\": \"base-app\",\"emailAddress\":\"sebastian.montero@gmail.com\",\"smsNumber\":\"\",\"commPref\":\"EMAIL\",\"publicData\":{\"firstName\":\"Sebastian\",\"lastName\":\"Montero\",\"countryCode\":\"Mexico\",\"profileImage\":\"\",\"s3Identity\":\"\",\"hobbies\":[\"football\"],\"bio\":\"Hola\",\"emptyField\":null, \"emptyFieldArray\": [{\"emptyField\":null}]}}"
 }

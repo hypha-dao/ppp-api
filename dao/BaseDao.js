@@ -8,7 +8,7 @@ const MAX_RETRIES = 5;
 
 class BaseDao {
     constructor(tableName, idProps, optimisticLocking = false) {
-        this.db = new AWS.DynamoDB.DocumentClient();
+        this.db = new AWS.DynamoDB.DocumentClient({convertEmptyValues:true});
         this.tableName = tableName;
         if (Util.isString(idProps)) {
             idProps = {
