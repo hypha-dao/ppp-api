@@ -79,6 +79,7 @@ provider:
     authCodeMinutesTTL: ${self:custom.environment.authCodeMinutesTTL}
     accessTokenMinutesTTL: ${self:custom.environment.accessTokenMinutesTTL}
     refreshTokenMinutesTTL: ${self:custom.environment.refreshTokenMinutesTTL}
+    sentryDsn: ${self:custom.environment.sentryDsn}
 
   iamRoleStatements:
     - Effect: Allow

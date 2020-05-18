@@ -1,7 +1,10 @@
+import * as Sentry from '@sentry/node';
 import { AppIds, ProfileFetchTypes } from '@smontero/ppp-common';
 import { AuthApiFactory } from "./service";
 import { ResponseUtil } from './util';
 import { ProfileDao } from "./dao";
+
+Sentry.init({ dsn: process.env.sentryDsn });
 
 const profileDao = new ProfileDao();
 
@@ -42,6 +45,7 @@ export async function main(event, context) {
         });
     } catch (e) {
         console.error(e);
+        Sentry.captureException(e);
         return ResponseUtil.failure(e);
     }
 }
