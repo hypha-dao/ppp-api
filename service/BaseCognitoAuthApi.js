@@ -8,7 +8,7 @@ class BaseCognitoAuthApi extends BaseAuthApi {
         let app = null;
         let { originAppId } = this.body;
         const { headers } = this.event;
-        const origin = headers ? headers.origin : null;
+        const origin = headers ? (headers.origin || headers.Origin) : null;
         if (!origin && !originAppId) {
             if (mustExist) {
                 throw 'originAppId parameter is required for standalone apps';
