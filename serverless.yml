@@ -79,69 +79,71 @@ provider:
     refreshTokenMinutesTTL: ${self:custom.environment.refreshTokenMinutesTTL}
     sentryDsn: ${self:custom.environment.sentryDsn}
 
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:DescribeTable
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:DeleteItem
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:BatchGetItem
-        - dynamodb:BatchWriteItem
-        - dynamodb:TransactWrite
-        - dynamodb:TransactGet
-        - dynamodb:ListStreams
-      Resource:
-        - "Fn::GetAtt": [ ProfileTable, Arn ]
-        - "Fn::GetAtt": [ MessageTable, Arn ]
-        - "Fn::GetAtt": [ ChatTable, Arn ]
-        - "Fn::GetAtt": [ AppTable, Arn ]
-        - "Fn::GetAtt": [ UniqueAppDomainTable, Arn ]
-        - "Fn::GetAtt": [ OauthTable, Arn ]
-        - "Fn::GetAtt": [ ScopeTable, Arn ]
-    - Effect: Allow
-      Action:
-        - dynamodb:Query
-      Resource: 
-        - { "Fn::Join": [ "/", [ 
-            { "Fn::GetAtt": ["ProfileTable", "Arn" ] }, "index", "*" 
-          ]]}
-        - { "Fn::Join": [ "/", [ 
-            { "Fn::GetAtt": ["MessageTable", "Arn" ] }, "index", "*" 
-          ]]}
-        - { "Fn::Join": [ "/", [ 
-            { "Fn::GetAtt": ["ChatTable", "Arn" ] }, "index", "*" 
-          ]]}
-        - { "Fn::Join": [ "/", [ 
-            { "Fn::GetAtt": ["AppTable", "Arn" ] }, "index", "*" 
-          ]]}
-        - { "Fn::Join": [ "/", [ 
-            { "Fn::GetAtt": ["UniqueAppDomainTable", "Arn" ] }, "index", "*" 
-          ]]}
-        - { "Fn::Join": [ "/", [ 
-            { "Fn::GetAtt": ["OauthTable", "Arn" ] }, "index", "*" 
-          ]]}
-        - { "Fn::Join": [ "/", [ 
-            { "Fn::GetAtt": ["ScopeTable", "Arn" ] }, "index", "*" 
-          ]]}
-    - Effect: Allow
-      Action:
-        - secretsmanager:Describe*
-        - secretsmanager:Get*
-        - secretsmanager:List
-      Resource: "*"
-    - Effect: Allow
-      Action:
-        - cognito-idp:ListUsers
-      Resource: "*"
-    - Effect: Allow
-      Action:
-        - ssm:GetParameter
-      Resource: "*"
-    
+  iam:
+    role: 
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:DescribeTable
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:DeleteItem
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:BatchGetItem
+            - dynamodb:BatchWriteItem
+            - dynamodb:TransactWrite
+            - dynamodb:TransactGet
+            - dynamodb:ListStreams
+          Resource:
+            - "Fn::GetAtt": [ ProfileTable, Arn ]
+            - "Fn::GetAtt": [ MessageTable, Arn ]
+            - "Fn::GetAtt": [ ChatTable, Arn ]
+            - "Fn::GetAtt": [ AppTable, Arn ]
+            - "Fn::GetAtt": [ UniqueAppDomainTable, Arn ]
+            - "Fn::GetAtt": [ OauthTable, Arn ]
+            - "Fn::GetAtt": [ ScopeTable, Arn ]
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+          Resource: 
+            - { "Fn::Join": [ "/", [ 
+                { "Fn::GetAtt": ["ProfileTable", "Arn" ] }, "index", "*" 
+              ]]}
+            - { "Fn::Join": [ "/", [ 
+                { "Fn::GetAtt": ["MessageTable", "Arn" ] }, "index", "*" 
+              ]]}
+            - { "Fn::Join": [ "/", [ 
+                { "Fn::GetAtt": ["ChatTable", "Arn" ] }, "index", "*" 
+              ]]}
+            - { "Fn::Join": [ "/", [ 
+                { "Fn::GetAtt": ["AppTable", "Arn" ] }, "index", "*" 
+              ]]}
+            - { "Fn::Join": [ "/", [ 
+                { "Fn::GetAtt": ["UniqueAppDomainTable", "Arn" ] }, "index", "*" 
+              ]]}
+            - { "Fn::Join": [ "/", [ 
+                { "Fn::GetAtt": ["OauthTable", "Arn" ] }, "index", "*" 
+              ]]}
+            - { "Fn::Join": [ "/", [ 
+                { "Fn::GetAtt": ["ScopeTable", "Arn" ] }, "index", "*" 
+              ]]}
+        - Effect: Allow
+          Action:
+            - secretsmanager:Describe*
+            - secretsmanager:Get*
+            - secretsmanager:List
+          Resource: "*"
+        - Effect: Allow
+          Action:
+            - cognito-idp:ListUsers
+          Resource: "*"
+        - Effect: Allow
+          Action:
+            - ssm:GetParameter
+          Resource: "*"
+      
 
 functions:
   oauth-authorizer:
