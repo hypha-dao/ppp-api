@@ -5,9 +5,6 @@ service: ppp-service
 plugins:
   - serverless-webpack
   - serverless-offline
-
-# serverless-webpack configuration
-# Enable auto-packing of external modules
 custom:
   # Our stage is based on what is passed in when running serverless
   # commands. Or fallsback to what we have set in the provider section.
@@ -38,18 +35,19 @@ custom:
 
 provider:
   name: aws
-  runtime: nodejs10.x
+  runtime: nodejs16.x
   stage: dev
   region: us-east-1
-  apiKeys:
-    - ${self:custom.stage}-ppp-service-trada
-  usagePlan:
-    quota:
-      limit: 1000
-      period: DAY
-    throttle:
-      burstLimit: 200
-      rateLimit: 100
+  apiGateway:
+    apiKeys:
+      - ${self:custom.stage}-ppp-service-trada
+    usagePlan:
+      quota:
+        limit: 1000
+        period: DAY
+      throttle:
+        burstLimit: 200
+        rateLimit: 100
 
   environment:
     profileTableName: ${self:custom.profileTableName}
@@ -61,7 +59,7 @@ provider:
     scopeTableName: ${self:custom.scopeTableName}
     twilioAccountSid: ${self:custom.environment.twilioAccountSid}
     twilioAuthToken: ${self:custom.environment.twilioAuthToken}
-    msgPrefix: ${self:custom.environment.msgPrefix}
+    # msgPrefix: ${self:custom.environment.msgPrefix}
     sendGridKey: ${self:custom.environment.sendGridKey}
     openIdSignaturePrivateKeyParamName: ${self:custom.environment.openIdSignaturePrivateKeyParamName}
     openIdIssuingAuthority: ${self:custom.environment.openIdIssuingAuthority}

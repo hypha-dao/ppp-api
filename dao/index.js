@@ -4,6 +4,7 @@ import ChatDao from './ChatDao';
 import MessageDao from './MessageDao'
 import OauthDao from './OauthDao';
 import ScopeDao from './ScopeDao';
+import UniqueAppDomainDao from './UniqueAppDomainDao';
 
 export {
     AppDao,
@@ -12,4 +13,5 @@ export {
     MessageDao,
     OauthDao,
     ScopeDao,
+    UniqueAppDomainDao,
 };

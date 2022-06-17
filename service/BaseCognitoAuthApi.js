@@ -1,7 +1,12 @@
 import BaseAuthApi from './BaseAuthApi';
+import { UniqueAppDomainDao } from '../dao';
 
 class BaseCognitoAuthApi extends BaseAuthApi {
 
+    constructor(){
+       super();
+       this.uniqueAppDomainDao = new UniqueAppDomainDao()
+    }
 
     async getApp(mustExist = true) {
 
@@ -20,7 +25,8 @@ class BaseCognitoAuthApi extends BaseAuthApi {
             app = await this._getAppById(originAppId, mustExist);
         } else {
             const url = new URL(origin);
-            app = await this.appDao.getByDomain(url.hostname, mustExist);
+            const uniqueAppDomain = await this.uniqueAppDomainDao.getByDomain(url.hostname, mustExist);
+            app = await this._getAppById(uniqueAppDomain.appId, mustExist);
         }
         return app;
     }
