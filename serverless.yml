@@ -39,8 +39,8 @@ provider:
   stage: dev
   region: us-east-1
   apiGateway:
-    apiKeys:
-      - ${self:custom.stage}-ppp-service-trada
+    # apiKeys:
+    #   - ${self:custom.stage}-ppp-service-trada
     usagePlan:
       quota:
         limit: 1000
