@@ -37,7 +37,7 @@ Provides the backend services for the profile service.
   - [Deployment](#deployment)
 ## Technologies
 
-- **Compute**: Each of the services/endpoints runs as a [AWS Lambda](https://aws.amazon.com/lambda/)
+- **Compute**: Each of the services/endpoints runs as a NodeJS 16 [AWS Lambda](https://aws.amazon.com/lambda/) function
 - **Persistence**: [DynamoDB](https://aws.amazon.com/dynamodb) is used for storage
 - **Messaging**: For emails and SMSs [Twilio](https://www.twilio.com/) is leveraged
 - **Deployment**: [Serverless framework](https://www.serverless.com/) is used for IaC definition and deployment
