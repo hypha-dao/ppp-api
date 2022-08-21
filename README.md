@@ -34,6 +34,7 @@ Provides the backend services for the profile service.
       - [get-chats](#get-chats)
       - [get-messages](#get-messages)
       - [send-message](#send-message)
+  - [Deployment](#deployment)
 ## Technologies
 
 - **Compute**: Each of the services/endpoints runs as a [AWS Lambda](https://aws.amazon.com/lambda/)
@@ -274,3 +275,19 @@ Enables the sending of a message to another user
 - Request body properties:
  - eosAccount: the eos account to whom to send the message
  - message: the message
+
+## Deployment
+
+Install serverless:
+
+`npm install -g serverless`
+
+Deploy to dev:
+
+`serverless deploy --verbose -s dev --aws-profile=telos-net-dev`
+
+Deploy to prod:
+
+`serverless deploy --verbose -s prod --aws-profile=telos-net-prod`
+
+Make sure you have configured the aws profile with the aws cli
