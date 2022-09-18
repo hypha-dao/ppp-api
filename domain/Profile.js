@@ -1,5 +1,5 @@
 import merge from 'merge';
-import { AppIds, PublicFields } from "@smontero/ppp-common";
+import { AppIds, PublicFields } from "@hypha-dao/ppp-common";
 import BaseDomain from './BaseDomain';
 import { VerificationApi } from "../service";
 import { AccessTypes } from "../const";

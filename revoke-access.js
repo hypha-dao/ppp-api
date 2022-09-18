@@ -1,4 +1,4 @@
-import { OauthTokenStatus } from '@smontero/ppp-common';
+import { OauthTokenStatus } from '@hypha-dao/ppp-common';
 import { ResponseUtil } from './util';
 import { OauthDao } from "./dao";
 import { AuthApiFactory } from "./service";

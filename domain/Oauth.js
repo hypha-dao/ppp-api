@@ -1,4 +1,4 @@
-import { OauthAppStatus, OauthTokenStatus } from '@smontero/ppp-common';
+import { OauthAppStatus, OauthTokenStatus } from '@hypha-dao/ppp-common';
 import { Util } from '../util';
 
 class Oauth {

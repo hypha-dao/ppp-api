@@ -1,4 +1,4 @@
-import { OauthTokenStatus } from '@smontero/ppp-common';
+import { OauthTokenStatus } from '@hypha-dao/ppp-common';
 import OauthRequest from './OauthRequest';
 import { App } from '../domain';
 import { OauthError } from '../error';

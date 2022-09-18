@@ -1,5 +1,5 @@
 import BaseDao from "./BaseDao";
-import { AppTypes } from '@smontero/ppp-common';
+import { AppTypes } from '@hypha-dao/ppp-common';
 import { Util } from "../util";
 
 

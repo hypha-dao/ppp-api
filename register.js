@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/node';
-import { ProfileFetchTypes } from "@smontero/ppp-common";
+import { ProfileFetchTypes } from "@hypha-dao/ppp-common";
 import { ResponseUtil } from './util';
 import { ProfileDao } from "./dao";
 import { Profile } from "./domain";

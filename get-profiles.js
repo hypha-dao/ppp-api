@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/node';
-import { AppIds, ProfileFetchTypes } from "@smontero/ppp-common";
+import { AppIds, ProfileFetchTypes } from "@hypha-dao/ppp-common";
 import { ResponseUtil } from './util';
 import { ProfileDao } from "./dao";
 import { AuthApiFactory } from "./service";

@@ -2,7 +2,7 @@ import { ResponseUtil } from './util';
 import { AppDao, OauthDao, ScopeDao, ProfileDao } from "./dao";
 import { AuthCodeRequest, Scopes } from './domain';
 import { AuthApiFactory } from "./service";
-import { AppIds } from '@smontero/ppp-common';
+import { AppIds } from '@hypha-dao/ppp-common';
 
 const appDao = new AppDao();
 const oauthDao = new OauthDao();

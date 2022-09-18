@@ -1,4 +1,4 @@
-import { OauthAppStatus } from '@smontero/ppp-common';
+import { OauthAppStatus } from '@hypha-dao/ppp-common';
 import { AccessTypes } from '../const';
 import { Util, ValidationUtil } from "../util";
 import assert from 'assert';

@@ -88,8 +88,8 @@ Returns the details of the specified apps
   - icon: App icon url
   - name: App name
   - shortName: App short name
-  - type: Indicates the type of application, whether its web based or not see @smontero/ppp-common/AppTypes
-  - oauthStatus: Whether the oauth is enabled for the app see @smontero/ppp-common/OauthAppStatus
+  - type: Indicates the type of application, whether its web based or not see @hypha-dao/ppp-common/AppTypes
+  - oauthStatus: Whether the oauth is enabled for the app see @hypha-dao/ppp-common/OauthAppStatus
 #### get-my-apps
 Returns apps owned by the logged in user
 - Type: POST
@@ -100,8 +100,8 @@ Returns apps owned by the logged in user
   - icon: App icon url
   - name: App name
   - shortName: App short name
-  - type: Indicates the type of application, whether its web based or not see @smontero/ppp-common/AppTypes
-  - oauthStatus: Whether the oauth is enabled for the app see @smontero/ppp-common/OauthAppStatus
+  - type: Indicates the type of application, whether its web based or not see @hypha-dao/ppp-common/AppTypes
+  - oauthStatus: Whether the oauth is enabled for the app see @hypha-dao/ppp-common/OauthAppStatus
 
 #### register-app
 Enables a user to register an app, in the case of a web app it leverages the chain-manifests.json file stored in the web server to validate that the user is the actual owner of the app, and reads the app-metadata.json file to pull more information about the app
@@ -112,7 +112,7 @@ Enables a user to register an app, in the case of a web app it leverages the cha
   - icon: App icon url, for non web apps only, for web apps it is pulled from the app-metadata.json file
   - name: App name, for non web apps only, for web apps it is pulled from the app-metadata.json file
   - shortName: App short name, for non web apps only, for web apps it is pulled from the app-metadata.json file
-  - type: Indicates the type of application, whether its web based or not see @smontero/ppp-common/AppTypes
+  - type: Indicates the type of application, whether its web based or not see @hypha-dao/ppp-common/AppTypes
   - oauthRedirectUrls: In case oauth is enabled for this app
 
 ### **OAuth management**
@@ -166,8 +166,8 @@ Provides oauth details configured for the specified app, and enables the validat
   - icon: App icon url
   - name: App name
   - shortName: App short name
-  - type: Indicates the type of application, whether its web based or not see @smontero/ppp-common/AppTypes
-  - oauthStatus: Whether the oauth is enabled for the app see @smontero/ppp-common/OauthAppStatus
+  - type: Indicates the type of application, whether its web based or not see @hypha-dao/ppp-common/AppTypes
+  - oauthStatus: Whether the oauth is enabled for the app see @hypha-dao/ppp-common/OauthAppStatus
   - scopes: The valid scopes
 
 #### oauth-authorizer
@@ -195,7 +195,7 @@ Describes the functions used to manage user profiles
 Returns the profile of the logged in user
 - Type: POST
 - Request body properties:
-  - fetch_type: Indicates the scope of data to return, whether to return only base profile data, or also app specific profile related data, see @smontero/ppp-common/FetchTypes
+  - fetch_type: Indicates the scope of data to return, whether to return only base profile data, or also app specific profile related data, see @hypha-dao/ppp-common/FetchTypes
 - Response: Depends on the stored information for the user and fetch type, but some basic properties are:
   - eosAccount: the users eos account
   - commPref: the users communication preference
@@ -207,7 +207,7 @@ Returns the profiles for the specified eos accounts, only public information is 
 - Type: POST
 - Request body properties:
   - eosAccounts: Array of eosAccounts to return profile data for
-  - fetch_type: Indicates the scope of data to return, whether to return only base profile data, or also app specific profile related data, see @smontero/ppp-common/FetchTypes
+  - fetch_type: Indicates the scope of data to return, whether to return only base profile data, or also app specific profile related data, see @hypha-dao/ppp-common/FetchTypes
 - Response: Depends on the stored information for the users and fetch type
 
 #### register
@@ -229,7 +229,7 @@ Enables the search of profiles by eos account
 - Type: POST
 - Request body properties:
   - appId: In case the fetchType is BASE_AND_APP, the app to return data for
-  - fetchType: Indicates the scope of data to return, whether to return only base profile data, or also app specific profile related data, see @smontero/ppp-common/FetchTypes
+  - fetchType: Indicates the scope of data to return, whether to return only base profile data, or also app specific profile related data, see @hypha-dao/ppp-common/FetchTypes
   - limit: the max number of results to return
   - lastEvaluatedKey: Where to start to return results from
   - search: the start of the eos account name to search for

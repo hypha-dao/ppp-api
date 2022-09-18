@@ -1,5 +1,5 @@
 import BaseDomain from './BaseDomain';
-import { PublicFields } from '@smontero/ppp-common';
+import { PublicFields } from '@hypha-dao/ppp-common';
 
 
 class Chat extends BaseDomain {

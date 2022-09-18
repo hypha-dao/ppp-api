@@ -1,6 +1,6 @@
 import axios from 'axios';
 import App from './App';
-import { AppTypes } from '@smontero/ppp-common';
+import { AppTypes } from '@hypha-dao/ppp-common';
 
 class WebApp extends App {
 

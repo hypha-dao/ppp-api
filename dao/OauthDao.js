@@ -1,4 +1,4 @@
-import { OauthTokenStatus } from '@smontero/ppp-common';
+import { OauthTokenStatus } from '@hypha-dao/ppp-common';
 import BaseDao from "./BaseDao";
 import { OauthError } from '../error';
 

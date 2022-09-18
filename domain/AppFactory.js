@@ -1,4 +1,4 @@
-import { AppTypes } from '@smontero/ppp-common'
+import { AppTypes } from '@hypha-dao/ppp-common'
 import { NonWebApp, WebApp } from './'
 
 class AppFactory {

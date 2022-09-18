@@ -1,4 +1,4 @@
-import { AppIds, ProfileFetchTypes } from "@smontero/ppp-common";
+import { AppIds, ProfileFetchTypes } from "@hypha-dao/ppp-common";
 import BaseDao from "./BaseDao";
 import { Util } from '../util';
 import { AccessTypes } from '../const';
