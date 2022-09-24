@@ -1,6 +1,7 @@
 # NOTE: update this with your service name
 service: ppp-service
 
+frameworkVersion: ^3.22.0
 # Use the serverless-webpack plugin to transpile ES6
 plugins:
   - serverless-webpack
