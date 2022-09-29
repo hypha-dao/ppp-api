@@ -1,0 +1,14 @@
+# This workflow will enforce description on pull requests.
+name: 'PR Description Enforcer'
+on:
+    pull_request:
+        types: [opened, edited, reopened]
+
+jobs:
+    enforce:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: cschubiner/pr-description-enforcer@v1
+              with:
+                  repo-token: '${{ secrets.GITHUB_TOKEN }}'
