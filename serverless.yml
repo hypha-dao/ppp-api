@@ -32,7 +32,7 @@ custom:
     includeModules: true
   # Load our secret environment variables based on the current stage.
   # Fallback to default if it is not in prod.
-  environment: ${file(env.yml):${self:custom.stage}, file(env.yml):default}
+  environment: ${env:} #${file(env.yml):${self:custom.stage}, file(env.yml):default}
 
 provider:
   name: aws
