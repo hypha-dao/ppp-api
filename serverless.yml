@@ -32,7 +32,7 @@ custom:
     includeModules: true
   # Load our secret environment variables based on the current stage.
   # Fallback to default if it is not in prod.
-  environment: ${env:} #${file(env.yml):${self:custom.stage}, file(env.yml):default}
+  # environment: ${env:} #${file(env.yml):${self:custom.stage}, file(env.yml):default}
 
 provider:
   name: aws
@@ -58,27 +58,27 @@ provider:
     uniqueAppDomainTableName: ${self:custom.uniqueAppDomainTableName}
     oauthTableName: ${self:custom.oauthTableName}
     scopeTableName: ${self:custom.scopeTableName}
-    twilioAccountSid: ${self:custom.environment.twilioAccountSid}
-    twilioAuthToken: ${self:custom.environment.twilioAuthToken}
+    twilioAccountSid: ${env.twilioAccountSid}
+    twilioAuthToken: ${env.twilioAuthToken}
     # msgPrefix: ${self:custom.environment.msgPrefix}
-    sendGridKey: ${self:custom.environment.sendGridKey}
-    openIdSignaturePrivateKeyParamName: ${self:custom.environment.openIdSignaturePrivateKeyParamName}
-    openIdIssuingAuthority: ${self:custom.environment.openIdIssuingAuthority}
+    sendGridKey: ${env.sendGridKey}
+    openIdSignaturePrivateKeyParamName: ${env.openIdSignaturePrivateKeyParamName}
+    openIdIssuingAuthority: ${env.openIdIssuingAuthority}
     userPoolName: ${self:custom.userPoolName}
     identityPoolName: ${self:custom.identityPoolName}
     userPoolClientName: ${self:custom.userPoolClientName}
-    eosHistoryEndpoint: ${self:custom.environment.eosHistoryEndpoint}
-    eosHttpEndpoint: ${self:custom.environment.eosHttpEndpoint}
-    authContract: ${self:custom.environment.authContract}
-    authVerifier: ${self:custom.environment.authVerifier}
-    authRetries: ${self:custom.environment.authRetries}
-    startAuthTimeout: ${self:custom.environment.startAuthTimeout}
-    minAuthTimeout: ${self:custom.environment.minAuthTimeout}
-    chainId: ${self:custom.environment.chainId}
-    authCodeMinutesTTL: ${self:custom.environment.authCodeMinutesTTL}
-    accessTokenMinutesTTL: ${self:custom.environment.accessTokenMinutesTTL}
-    refreshTokenMinutesTTL: ${self:custom.environment.refreshTokenMinutesTTL}
-    sentryDsn: ${self:custom.environment.sentryDsn}
+    eosHistoryEndpoint: ${env.eosHistoryEndpoint}
+    eosHttpEndpoint: ${env.eosHttpEndpoint}
+    authContract: ${env.authContract}
+    authVerifier: ${env.authVerifier}
+    authRetries: ${env.authRetries}
+    startAuthTimeout: ${env.startAuthTimeout}
+    minAuthTimeout: ${env.minAuthTimeout}
+    chainId: ${env.chainId}
+    authCodeMinutesTTL: ${env.authCodeMinutesTTL}
+    accessTokenMinutesTTL: ${env.accessTokenMinutesTTL}
+    refreshTokenMinutesTTL: ${env.refreshTokenMinutesTTL}
+    sentryDsn: ${env.sentryDsn}
 
   iam:
     role: 

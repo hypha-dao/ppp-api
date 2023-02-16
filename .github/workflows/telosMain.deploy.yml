@@ -1,4 +1,4 @@
-name: Telos MainNet - Deploy Production
+name: Telos MainNet -Deploy Production
 
 on:
   push:
@@ -27,7 +27,7 @@ env:
 jobs:
   deploy:
     name: deploy
-    environment: telosMainNet
+    environment: telosTestNet
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -42,4 +42,4 @@ jobs:
     - name: serverless deploy
       uses: serverless/github-action@v3.1
       with:
-        args: --stage telosMainNet --region eu-central-1
+        args: --stage telosMain --region eu-central-1
