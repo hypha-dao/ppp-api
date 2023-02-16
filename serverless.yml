@@ -182,7 +182,6 @@ functions:
       - http:
           path: get-profiles
           method: post
-          authorizer: aws_iam
           cors: true
 
   get-messages:

@@ -12,8 +12,8 @@ env:
   sendGridKey: ${{ secrets.SENDGRID_KEY }}
   twilioAccountSid: ${{ secrets.TWILIO_ACCOUNT_SID }}
   twilioAuthToken: ${{ secrets.TWILIO_AUTH_TOKEN }}
-  eosHistoryEndpoint: ${{vars.HISTORY_ENDPOINT}}
-  eosHttpEndpoint: ${{vars.HTTP_ENDPOINT}}
+  eosHistoryEndpoint: ${{ vars.HISTORY_ENDPOINT }}
+  eosHttpEndpoint: ${{ vars.HTTP_ENDPOINT }}
   authVerifier: TABLE
   authContract: logintester1
   authRetries: 5
@@ -33,13 +33,19 @@ jobs:
       matrix:
         node-version: [16.x]
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - name: serverless deploy
-      uses: serverless/github-action@v3.1
-      with:
-        args: --stage telosTestNet --region eu-central-1
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - run: npm ci
+      - name: serverless deploy
+        uses: serverless/github-action@v3.1
+        with:
+          args: deploy --stage telosTestNet --region eu-central-1

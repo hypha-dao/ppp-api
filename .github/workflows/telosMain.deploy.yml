@@ -1,4 +1,4 @@
-name: Telos MainNet -Deploy Production
+name: Telos MainNet - Deploy Production
 
 on:
   push:
@@ -27,19 +27,19 @@ env:
 jobs:
   deploy:
     name: deploy
-    environment: telosTestNet
+    environment: telosMainNet
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [16.x]
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - name: serverless deploy
-      uses: serverless/github-action@v3.1
-      with:
-        args: --stage telosMain --region eu-central-1
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - name: serverless deploy
+        uses: serverless/github-action@v3.1
+        with:
+          args: deploy --stage telosMain --region us-east-1
