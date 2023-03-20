@@ -15,7 +15,7 @@ env:
   eosHistoryEndpoint: ${{vars.HISTORY_ENDPOINT}}
   eosHttpEndpoint: ${{vars.HTTP_ENDPOINT}}
   authVerifier: TABLE
-  authContract: logintester1
+  authContract: eosio.login
   authRetries: 5
   startAuthTimeout: 1000
   minAuthTimeout: 400
