@@ -45,6 +45,11 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
+      - name: Create env file
+        run: | # cp sample.env.yml env.yml
+          cat > env.yml << EOF
+          ${{ secrets.ENV }}
+          EOF
       - run: npm ci
       - name: serverless deploy
         uses: serverless/github-action@v3.1
