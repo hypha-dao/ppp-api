@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - feature/deploy-with-github-actions
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -42,4 +43,4 @@ jobs:
       - name: serverless deploy
         uses: serverless/github-action@v3.1
         with:
-          args: deploy --stage telosMain --region us-east-1
+          args: deploy --stage telosMainNet --region us-east-1
