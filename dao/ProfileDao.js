@@ -25,6 +25,11 @@ class ProfileDao extends BaseDao {
         await this.transactPut(items);
     }
 
+    async delete(appId, eosAccount) {
+        const { appData } = profile;
+        await this.transactDelete(items);
+    }
+
     async _findByEOSAccountsRaw(appId, eosAccounts, fetchType) {
         eosAccounts = Util.removeDuplicates(eosAccounts);
         const keys = this._getKeysByFetchType(appId, eosAccounts, fetchType);

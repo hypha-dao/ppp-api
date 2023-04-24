@@ -32,13 +32,14 @@ custom:
     includeModules: true
   # Load our secret environment variables based on the current stage.
   # Fallback to default if it is not in prod.
-  # environment: ${env:} #${file(env.yml):${self:custom.stage}, file(env.yml):default}
+  # environment: ${file(env.yml):${self:custom.stage}, file(env.yml):default}
 
 provider:
   name: aws
   runtime: nodejs16.x
   stage: dev
   region: us-east-1
+  profile: hypha-telos-net-dev
   apiGateway:
     # apiKeys:
     #   - ${self:custom.stage}-ppp-service-trada
@@ -81,7 +82,7 @@ provider:
     sentryDsn: ${env.sentryDsn}
 
   iam:
-    role: 
+    role:
       statements:
         - Effect: Allow
           Action:
@@ -98,38 +99,64 @@ provider:
             - dynamodb:TransactGet
             - dynamodb:ListStreams
           Resource:
-            - "Fn::GetAtt": [ ProfileTable, Arn ]
-            - "Fn::GetAtt": [ MessageTable, Arn ]
-            - "Fn::GetAtt": [ ChatTable, Arn ]
-            - "Fn::GetAtt": [ AppTable, Arn ]
-            - "Fn::GetAtt": [ UniqueAppDomainTable, Arn ]
-            - "Fn::GetAtt": [ OauthTable, Arn ]
-            - "Fn::GetAtt": [ ScopeTable, Arn ]
+            - "Fn::GetAtt": [ProfileTable, Arn]
+            - "Fn::GetAtt": [MessageTable, Arn]
+            - "Fn::GetAtt": [ChatTable, Arn]
+            - "Fn::GetAtt": [AppTable, Arn]
+            - "Fn::GetAtt": [UniqueAppDomainTable, Arn]
+            - "Fn::GetAtt": [OauthTable, Arn]
+            - "Fn::GetAtt": [ScopeTable, Arn]
         - Effect: Allow
           Action:
             - dynamodb:Query
-          Resource: 
-            - { "Fn::Join": [ "/", [ 
-                { "Fn::GetAtt": ["ProfileTable", "Arn" ] }, "index", "*" 
-              ]]}
-            - { "Fn::Join": [ "/", [ 
-                { "Fn::GetAtt": ["MessageTable", "Arn" ] }, "index", "*" 
-              ]]}
-            - { "Fn::Join": [ "/", [ 
-                { "Fn::GetAtt": ["ChatTable", "Arn" ] }, "index", "*" 
-              ]]}
-            - { "Fn::Join": [ "/", [ 
-                { "Fn::GetAtt": ["AppTable", "Arn" ] }, "index", "*" 
-              ]]}
-            - { "Fn::Join": [ "/", [ 
-                { "Fn::GetAtt": ["UniqueAppDomainTable", "Arn" ] }, "index", "*" 
-              ]]}
-            - { "Fn::Join": [ "/", [ 
-                { "Fn::GetAtt": ["OauthTable", "Arn" ] }, "index", "*" 
-              ]]}
-            - { "Fn::Join": [ "/", [ 
-                { "Fn::GetAtt": ["ScopeTable", "Arn" ] }, "index", "*" 
-              ]]}
+          Resource:
+            - {
+                "Fn::Join":
+                  [
+                    "/",
+                    [{ "Fn::GetAtt": ["ProfileTable", "Arn"] }, "index", "*"],
+                  ],
+              }
+            - {
+                "Fn::Join":
+                  [
+                    "/",
+                    [{ "Fn::GetAtt": ["MessageTable", "Arn"] }, "index", "*"],
+                  ],
+              }
+            - {
+                "Fn::Join":
+                  ["/", [{ "Fn::GetAtt": ["ChatTable", "Arn"] }, "index", "*"]],
+              }
+            - {
+                "Fn::Join":
+                  ["/", [{ "Fn::GetAtt": ["AppTable", "Arn"] }, "index", "*"]],
+              }
+            - {
+                "Fn::Join":
+                  [
+                    "/",
+                    [
+                      { "Fn::GetAtt": ["UniqueAppDomainTable", "Arn"] },
+                      "index",
+                      "*",
+                    ],
+                  ],
+              }
+            - {
+                "Fn::Join":
+                  [
+                    "/",
+                    [{ "Fn::GetAtt": ["OauthTable", "Arn"] }, "index", "*"],
+                  ],
+              }
+            - {
+                "Fn::Join":
+                  [
+                    "/",
+                    [{ "Fn::GetAtt": ["ScopeTable", "Arn"] }, "index", "*"],
+                  ],
+              }
         - Effect: Allow
           Action:
             - secretsmanager:Describe*
@@ -144,11 +171,10 @@ provider:
           Action:
             - ssm:GetParameter
           Resource: "*"
-      
 
 functions:
   oauth-authorizer:
-      handler: oauth-authorizer.main
+    handler: oauth-authorizer.main
   register:
     handler: register.main
     events:
@@ -168,14 +194,14 @@ functions:
           cors: true
 
   #send-msg-prv:
-   # handler: send-msg.main
-    #events:
-     # - http:
-      #    path: send-msg-prv
-       #   method: post
-        #  private: true
-         # cors: true
-    
+  # handler: send-msg.main
+  #events:
+  # - http:
+  #    path: send-msg-prv
+  #   method: post
+  #  private: true
+  # cors: true
+
   get-profiles:
     handler: get-profiles.main
     events:
@@ -191,7 +217,7 @@ functions:
           path: get-messages
           method: post
           authorizer: aws_iam
-          cors: true  
+          cors: true
 
   verify-sms:
     handler: verify-otp.sms
@@ -200,7 +226,7 @@ functions:
           path: verify-sms
           method: post
           authorizer: aws_iam
-          cors: true  
+          cors: true
 
   verify-email:
     handler: verify-otp.email
@@ -210,14 +236,20 @@ functions:
           method: post
           authorizer: aws_iam
           cors: true
-          
+
   get-profile:
     handler: get-profile.main
     events:
       - http:
           path: get-profile
           method: post
-          authorizer: aws_iam
+          cors: true
+  delete-profile:
+    handler: delete-profile.main
+    events:
+      - http:
+          path: delete-profile
+          method: delete
           cors: true
   get-profile-oauth:
     handler: get-profile.main
@@ -226,7 +258,7 @@ functions:
           path: get-profile-oauth
           method: post
           authorizer:
-            type: request 
+            type: request
             name: oauth-authorizer
           cors: true
       - http:
@@ -266,7 +298,6 @@ functions:
       - http:
           path: get-apps
           method: post
-          authorizer: aws_iam
           cors: true
   get-my-apps:
     handler: get-my-apps.main
@@ -282,7 +313,6 @@ functions:
       - http:
           path: get-authorized-apps
           method: post
-          authorizer: aws_iam
           cors: true
   revoke-access:
     handler: revoke-access.main
@@ -387,7 +417,7 @@ functions:
             Fn::GetAtt:
               - ProfileTable
               - StreamArn
-          
+
 resources:
   # Congnito User Pool
   - ${file(resources/cognito-user-pool.yml)}
