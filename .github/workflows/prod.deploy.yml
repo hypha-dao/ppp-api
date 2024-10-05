@@ -3,8 +3,7 @@ name: Deploy Production
 on:
   push:
     branches:
-      - master
-
+      - feature/deploy-with-github-actions
 jobs:
   deploy:
     name: deploy
