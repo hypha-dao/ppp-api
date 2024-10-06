@@ -40,7 +40,25 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
-      - name: serverless deploy
-        uses: serverless/github-action@v3.1
-        with:
-          args: deploy --stage pangeaTest --region us-east-1
+      - name: Debug Environment Variables
+        run: |
+          echo "Debugging Environment Variables:"
+          echo "chainId: $chainId"
+          echo "eosHistoryEndpoint: $eosHistoryEndpoint"
+          echo "eosHttpEndpoint: $eosHttpEndpoint"
+          echo "authVerifier: $authVerifier"
+          echo "authContract: $authContract"
+          echo "authRetries: $authRetries"
+          echo "startAuthTimeout: $startAuthTimeout"
+          echo "minAuthTimeout: $minAuthTimeout"
+          echo "authCodeMinutesTTL: $authCodeMinutesTTL"
+          echo "accessTokenMinutesTTL: $accessTokenMinutesTTL"
+          echo "refreshTokenMinutesTTL: $refreshTokenMinutesTTL"
+          echo "sentryDsn is set"
+          echo "sendGridKey is set"
+          echo "twilioAuthToken is set"
+
+      # - name: serverless deploy
+      #   uses: serverless/github-action@v3.1
+      #   with:
+      #     args: deploy --stage pangeaTest --region us-east-1
