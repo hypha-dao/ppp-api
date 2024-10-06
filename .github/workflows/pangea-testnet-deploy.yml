@@ -58,7 +58,7 @@ jobs:
           echo "sendGridKey is set"
           echo "twilioAuthToken is set"
 
-      # - name: serverless deploy
-      #   uses: serverless/github-action@v3.1
-      #   with:
-      #     args: deploy --stage pangeaTest --region us-east-1
+      - name: serverless deploy
+        uses: serverless/github-action@v3.1
+        with:
+          args: deploy --stage pangeaTest --region us-east-1
