@@ -13,6 +13,7 @@ env:
   sendGridKey: ${{ secrets.SENDGRID_KEY }}
   twilioAccountSid: ${{ secrets.TWILIO_ACCOUNT_SID }}
   twilioAuthToken: ${{ secrets.TWILIO_AUTH_TOKEN }}
+  disableTwilio: true
   eosHistoryEndpoint: ${{vars.HISTORY_ENDPOINT}}
   eosHttpEndpoint: ${{vars.HTTP_ENDPOINT}}
   authVerifier: TABLE
