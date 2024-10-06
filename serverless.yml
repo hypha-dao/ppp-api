@@ -62,7 +62,7 @@ provider:
     twilioAuthToken: ${env:twilioAuthToken}
     # msgPrefix: ${self:custom.environment.msgPrefix}
     sendGridKey: ${env:sendGridKey}
-    openIdSignaturePrivateKeyParamName: ${env:openIdSignaturePrivateKeyParamName}
+    openIdSignaturePrivateKeyParamName: ${env.openIdSignaturePrivateKeyParamName}
     openIdIssuingAuthority: ${env.openIdIssuingAuthority}
     userPoolName: ${self:custom.userPoolName}
     identityPoolName: ${self:custom.identityPoolName}
