@@ -7,7 +7,11 @@ class CommApi {
     constructor() {
         const accountSid = process.env.twilioAccountSid; // Your Account SID from www.twilio.com/console
         const authToken = process.env.twilioAuthToken;   // Your Auth Token from www.twilio.com/console
-        this.twilio = new twilio(accountSid, authToken);
+        try {
+            this.twilio = new twilio(accountSid, authToken);
+        } catch (error) {
+            console.error("Twilio exception " + error + " accountSid " + accountSid);
+        }
     }
 
     async sendEmail(emailAddress, subject, message) {
