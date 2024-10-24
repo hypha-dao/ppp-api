@@ -1,10 +1,10 @@
-import * as Sentry from '@sentry/node';
+// import * as Sentry from '@sentry/node';
 import { ResponseUtil } from './util';
 import { ProfileDao, MessageDao } from "./dao";
 import { AuthApiFactory, PrivateAuthApi } from "./service";
 import { Message } from "./domain";
 
-Sentry.init({ dsn: process.env.sentryDsn });
+// Sentry.init({ dsn: process.env.sentryDsn });
 
 const profileDao = new ProfileDao();
 const messageDao = new MessageDao();
@@ -52,7 +52,7 @@ export async function main(event, context) {
         return ResponseUtil.success({ status: true, message: `Message sent successfully.`, messageKey: messageKey });
     } catch (e) {
         console.error(JSON.stringify(e, null, 2));
-        Sentry.captureException(e);
+        // Sentry.captureException(e);
         return ResponseUtil.failure(e);
     }
 }

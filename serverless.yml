@@ -58,27 +58,27 @@ provider:
     uniqueAppDomainTableName: ${self:custom.uniqueAppDomainTableName}
     oauthTableName: ${self:custom.oauthTableName}
     scopeTableName: ${self:custom.scopeTableName}
-    twilioAccountSid: ${env.twilioAccountSid}
-    twilioAuthToken: ${env.twilioAuthToken}
+    twilioAccountSid: ${env:twilioAccountSid}
+    twilioAuthToken: ${env:twilioAuthToken}
     # msgPrefix: ${self:custom.environment.msgPrefix}
-    sendGridKey: ${env.sendGridKey}
+    sendGridKey: ${env:sendGridKey}
     openIdSignaturePrivateKeyParamName: ${env.openIdSignaturePrivateKeyParamName}
     openIdIssuingAuthority: ${env.openIdIssuingAuthority}
     userPoolName: ${self:custom.userPoolName}
     identityPoolName: ${self:custom.identityPoolName}
     userPoolClientName: ${self:custom.userPoolClientName}
-    eosHistoryEndpoint: ${env.eosHistoryEndpoint}
-    eosHttpEndpoint: ${env.eosHttpEndpoint}
-    authContract: ${env.authContract}
-    authVerifier: ${env.authVerifier}
-    authRetries: ${env.authRetries}
-    startAuthTimeout: ${env.startAuthTimeout}
-    minAuthTimeout: ${env.minAuthTimeout}
-    chainId: ${env.chainId}
-    authCodeMinutesTTL: ${env.authCodeMinutesTTL}
-    accessTokenMinutesTTL: ${env.accessTokenMinutesTTL}
-    refreshTokenMinutesTTL: ${env.refreshTokenMinutesTTL}
-    sentryDsn: ${env.sentryDsn}
+    eosHistoryEndpoint: ${env:eosHistoryEndpoint}
+    eosHttpEndpoint: ${env:eosHttpEndpoint}
+    authContract: ${env:authContract}
+    authVerifier: ${env:authVerifier}
+    authRetries: ${env:authRetries}
+    startAuthTimeout: ${env:startAuthTimeout}
+    minAuthTimeout: ${env:minAuthTimeout}
+    chainId: ${env:chainId}
+    authCodeMinutesTTL: ${env:authCodeMinutesTTL}
+    accessTokenMinutesTTL: ${env:accessTokenMinutesTTL}
+    refreshTokenMinutesTTL: ${env:refreshTokenMinutesTTL}
+    sentryDsn: ${env:sentryDsn}
 
   iam:
     role: 

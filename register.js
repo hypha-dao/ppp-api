@@ -1,4 +1,4 @@
-import * as Sentry from '@sentry/node';
+// import * as Sentry from '@sentry/node';
 import { ProfileFetchTypes } from "@hypha-dao/ppp-common";
 import { ResponseUtil } from './util';
 import { ProfileDao } from "./dao";
@@ -6,7 +6,7 @@ import { Profile } from "./domain";
 import { AuthApiFactory } from "./service";
 import { AccessTypes } from "./const";
 
-Sentry.init({ dsn: process.env.sentryDsn });
+// Sentry.init({ dsn: process.env.sentryDsn });
 
 const profileDao = new ProfileDao();
 
@@ -41,7 +41,7 @@ export async function main(event, context) {
         });
     } catch (e) {
         console.error(e);
-        Sentry.captureException(e);
+        // Sentry.captureException(e);
         return ResponseUtil.failure(e);
     }
 }
